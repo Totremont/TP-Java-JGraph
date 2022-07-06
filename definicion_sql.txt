@@ -1,0 +1,45 @@
+CREATE SCHEMA tp;
+
+CREATE TABLE tp.parada(
+	id_parada SERIAL PRIMARY KEY,
+	nroParada INTEGER UNIQUE NOT NULL,
+	calle varchar(100) NOT NULL
+);
+
+CREATE TABLE tp.incidencia(
+	id_incidencia SERIAL PRIMARY KEY,
+	id_parada INTEGER NOT NULL REFERENCES tp.parada(id_parada),
+	fechaInicio DATE NOT NULL DEFAULT CURRENT_DATE,
+	fechaFin DATE,
+	estaResuelto BOOLEAN NOT NULL
+);
+
+CREATE TABLE tp.camino(
+	origen SERIAL REFERENCES tp.parada(id_parada),
+	destino SERIAL REFERENCES tp.parada(id_parada),
+	CONSTRAINT pk_camino PRIMARY KEY (origen, destino)
+);
+
+CREATE TABLE tp.linea(
+	id_linea SERIAL PRIMARY KEY,
+	tipo varchar(50) NOT NULL CONSTRAINT check_lineatipo CHECK (tipo = 'ECONOMICA' or tipo = 'SUPERIOR'),
+	capSentado INTEGER NOT NULL,
+	capParado INTEGER,
+	nombre varchar(100) NOT NULL,
+	color varchar(100) NOT NULL,
+	tieneAire BOOLEAN,
+	tieneWifi BOOLEAN
+);
+
+CREATE TABLE tp.trayecto(
+	id_parada SERIAL REFERENCES tp.parada(id_parada),
+	id_linea SERIAL REFERENCES tp.linea(id_linea),
+	CONSTRAINT pk_trayecto PRIMARY KEY (id_parada, id_linea)
+);
+
+CREATE TABLE tp.boleto(
+	id_boleto SERIAL PRIMARY KEY,
+	id_linea INTEGER NOT NULL REFERENCES tp.linea(id_linea),
+	monto NUMERIC(4,2)
+);
+
