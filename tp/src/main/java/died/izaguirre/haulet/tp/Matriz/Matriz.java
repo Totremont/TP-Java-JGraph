@@ -94,7 +94,10 @@ public class Matriz {
 			for(int i = 0; i < mat.length ; i++) // i recorre horizontalmente a la altura de k
 				if(mat[k][i]) {
 					for(int j = 0 ; j < mat.length ; j++)
-						resultante[j][i] = mat[k][i] & mat[j][k] ? true : false;
+						if(!mat[j][i])
+							resultante[j][i] = mat[k][i] & mat[j][k] ? true : false;
+						else
+							resultante[j][i] = true;
 				}
 		
 		return resultante;
