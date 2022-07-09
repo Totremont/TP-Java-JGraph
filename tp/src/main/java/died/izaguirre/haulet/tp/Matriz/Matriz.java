@@ -66,6 +66,10 @@ public class Matriz {
 
 	}
 	
+	public int[][] potencia(int n){
+		return this.potencia(valores, n);
+	}
+	
 	// Transforma una matriz de enteros a una booleana, util para la transitividad
 	private boolean[][] matrizBooleana(int[][] mat){
 		
@@ -79,6 +83,10 @@ public class Matriz {
 		
 	}
 	
+	public boolean[][] matrizBooleana(){
+		return this.matrizBooleana(valores);
+	}
+	
 	public void insertar(int value, int x, int y){
 		if(x < valores.length & y < valores.length)
 			valores[x][y] = value;		
@@ -88,17 +96,12 @@ public class Matriz {
 	
 	public boolean[][] warshall(boolean[][] mat){
 		
-		boolean[][] resultante = new boolean[mat.length][mat.length];
+		boolean[][] resultante = mat;
 		
 		for(int k = 0 ; k < mat.length ; k++) // k para recorrer por la diagonal principal
 			for(int i = 0; i < mat.length ; i++) // i recorre horizontalmente a la altura de k
-				if(mat[k][i]) {
 					for(int j = 0 ; j < mat.length ; j++)
-						if(!mat[j][i])
-							resultante[j][i] = mat[k][i] & mat[j][k] ? true : false;
-						else
-							resultante[j][i] = true;
-				}
+						resultante[i][j] = (mat[i][j] || (mat[i][k] && mat[k][j])); 
 		
 		return resultante;
 		
@@ -106,6 +109,10 @@ public class Matriz {
 	
 	public boolean[][] warshall(int[][] mat){
 		return this.warshall(this.matrizBooleana(mat));
+	}
+	
+	public boolean[][] warshall(){
+		return this.warshall(valores);
 	}
 	
 }
