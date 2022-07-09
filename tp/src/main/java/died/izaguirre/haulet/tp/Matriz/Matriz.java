@@ -79,8 +79,31 @@ public class Matriz {
 		
 	}
 	
+	public void insertar(int value, int x, int y){
+		if(x < valores.length & y < valores.length)
+			valores[x][y] = value;		
+	}
+	
 	// Algoritmo de warshall
 	
+	public boolean[][] warshall(boolean[][] mat){
+		
+		boolean[][] resultante = new boolean[mat.length][mat.length];
+		
+		for(int k = 0 ; k < mat.length ; k++) // k para recorrer por la diagonal principal
+			for(int i = 0; i < mat.length ; i++) // i recorre horizontalmente a la altura de k
+				if(mat[k][i]) {
+					for(int j = 0 ; j < mat.length ; j++)
+						resultante[j][i] = mat[k][i] & mat[j][k] ? true : false;
+				}
+		
+		return resultante;
+		
+	}
 	
+	public boolean[][] warshall(int[][] mat){
+		return this.warshall(this.matrizBooleana(mat));
+	}
 	
 }
+
