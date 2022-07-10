@@ -25,7 +25,7 @@ public class Matriz {
 	}
 
 	// Metodos básicos -- Deberian usarse como auxiliar en esta clase nomas
-	private int[][] duplicarMatriz(int[][] mat) {
+	public int[][] duplicarMatriz(int[][] mat) {
 
 		int[][] resultante = new int[mat.length][mat.length];
 
@@ -37,7 +37,7 @@ public class Matriz {
 
 	}
 
-	private int[][] multiplicar(int[][] matA, int[][] matB) {
+	public int[][] multiplicar(int[][] matA, int[][] matB) {
 
 		int[][] resultante = new int[matA.length][matB[0].length];
 
@@ -55,7 +55,7 @@ public class Matriz {
 
 	}
 
-	private int[][] potencia(int[][] mat, int n) {
+	public int[][] potencia(int[][] mat, int n) {
 
 		if (n <= 0)
 			return mat;
@@ -71,7 +71,7 @@ public class Matriz {
 	}
 	
 	// Transforma una matriz de enteros a una booleana, util para la transitividad
-	private boolean[][] matrizBooleana(int[][] mat){
+	public boolean[][] matrizBooleana(int[][] mat){
 		
 		boolean[][] resultante = new boolean[mat.length][mat.length];
 		
