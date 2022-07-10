@@ -25,7 +25,7 @@ public class Matriz {
 	}
 
 	// Metodos básicos -- Deberian usarse como auxiliar en esta clase nomas
-	private int[][] duplicarMatriz(int[][] mat) {
+	public int[][] duplicarMatriz(int[][] mat) {
 
 		int[][] resultante = new int[mat.length][mat.length];
 
@@ -37,7 +37,7 @@ public class Matriz {
 
 	}
 
-	private int[][] multiplicar(int[][] matA, int[][] matB) {
+	public int[][] multiplicar(int[][] matA, int[][] matB) {
 
 		int[][] resultante = new int[matA.length][matB[0].length];
 
@@ -55,7 +55,7 @@ public class Matriz {
 
 	}
 
-	private int[][] potencia(int[][] mat, int n) {
+	public int[][] potencia(int[][] mat, int n) {
 
 		if (n <= 0)
 			return mat;
@@ -66,8 +66,12 @@ public class Matriz {
 
 	}
 	
+	public int[][] potencia(int n){
+		return this.potencia(valores, n);
+	}
+	
 	// Transforma una matriz de enteros a una booleana, util para la transitividad
-	private boolean[][] matrizBooleana(int[][] mat){
+	public boolean[][] matrizBooleana(int[][] mat){
 		
 		boolean[][] resultante = new boolean[mat.length][mat.length];
 		
@@ -79,8 +83,37 @@ public class Matriz {
 		
 	}
 	
+	public boolean[][] matrizBooleana(){
+		return this.matrizBooleana(valores);
+	}
+	
+	public void insertar(int value, int x, int y){
+		if(x < valores.length & y < valores.length)
+			valores[x][y] = value;		
+	}
+	
 	// Algoritmo de warshall
 	
+	public boolean[][] warshall(boolean[][] mat){
+		
+		boolean[][] resultante = mat;
+		
+		for(int k = 0 ; k < mat.length ; k++) // k para recorrer por la diagonal principal
+			for(int i = 0; i < mat.length ; i++) // i recorre horizontalmente a la altura de k
+					for(int j = 0 ; j < mat.length ; j++)
+						resultante[i][j] = (mat[i][j] || (mat[i][k] && mat[k][j])); 
+		
+		return resultante;
+		
+	}
 	
+	public boolean[][] warshall(int[][] mat){
+		return this.warshall(this.matrizBooleana(mat));
+	}
+	
+	public boolean[][] warshall(){
+		return this.warshall(valores);
+	}
 	
 }
+
