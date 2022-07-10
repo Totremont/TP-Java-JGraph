@@ -1,4 +1,4 @@
-package died.izaguirre.haulet.tp.Matriz;
+package died.izaguirre.haulet.tp.estructuras;
 
 public class Matriz {
 
