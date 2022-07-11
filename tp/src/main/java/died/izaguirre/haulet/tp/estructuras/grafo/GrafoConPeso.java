@@ -2,6 +2,7 @@ package died.izaguirre.haulet.tp.estructuras.grafo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 import died.izaguirre.haulet.tp.estructuras.matriz.Matriz;
 import died.izaguirre.haulet.tp.tablas.Camino;
@@ -20,8 +21,10 @@ public class GrafoConPeso extends GrafoDirigido {
 		{
 			if(adyacencia.getValor(i,j) > 0) 
 			{
-				int posDistancia = aristas.get(i).getDestinos().indexOf(nodos.get(j));
-				return aristas.get(i).getDistancia().get(posDistancia);
+				int posDistancia = aristas.stream().filter(it -> 
+					(it.getOrigen().equals(nodos.get(i)) && it.getDestinos().equals(nodos.get(j)))
+				).map(w -> w.getDistancia()).collect(Collectors.toList()).get(0);				
+				return posDistancia;
 			} else return INFINITO;
 		});
 	}

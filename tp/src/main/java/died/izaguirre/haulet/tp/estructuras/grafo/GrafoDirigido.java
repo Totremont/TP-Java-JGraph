@@ -1,6 +1,8 @@
 package died.izaguirre.haulet.tp.estructuras.grafo;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import died.izaguirre.haulet.tp.estructuras.matriz.Matriz;
 import died.izaguirre.haulet.tp.tablas.Camino;
@@ -11,13 +13,29 @@ public class GrafoDirigido {
 	protected ArrayList<Parada> nodos;
 	protected ArrayList<Camino> aristas;
 	protected Matriz adyacencia;			//El orden de las filas y columnas es el orden de los nodos
+	protected ArrayList<ArrayList<Parada>> caminos;
+	
 	public GrafoDirigido(ArrayList<Parada> nodos, ArrayList<Camino> aristas) {
 		super();
 		this.nodos = nodos;
 		this.aristas = aristas;
 		this.adyacencia = new Matriz(nodos.size());
+		listaCaminos();
 		this.adyacencia.modificarMatriz((i,j) -> {
-			if(aristas.get(i).getDestinos().contains(nodos.get(j))) return 1; else return 0; });
+			if(caminos.get(i).contains(nodos.get(j))) return 1; else return 0; });
+	}
+	
+	//Este metodo guarda en un arreglo de arreglos la lista de paradas con las que es adyacente cada nodo
+	private void listaCaminos()
+	{
+		ArrayList<ArrayList<Parada>> resultado = new ArrayList<>();
+		nodos.forEach(it -> 
+		{
+			List<Parada> aux = aristas.stream().filter(i -> i.getOrigen().equals(it)).map(j -> j.getDestinos())
+					.collect(Collectors.toList());
+			resultado.add(new ArrayList<>(aux));
+		});
+		caminos = resultado;
 	}
 	
 	public Matriz potencia(int n)

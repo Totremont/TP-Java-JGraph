@@ -43,47 +43,25 @@ public class App
     	nodos.add(parada3);
     	nodos.add(parada4);
     	
-    	ArrayList<Parada> aristas1 = new ArrayList<>();
-    	aristas1.add(parada2);
-    	aristas1.add(parada4);
+    	Camino arista1 = new Camino(parada1, parada2, 300);
+    	Camino arista2 = new Camino(parada1, parada4, 1200);
+    	Camino arista3 = new Camino(parada2, parada3, 200);
+    	Camino arista4 = new Camino(parada2, parada4, 500);
+    	Camino arista5 = new Camino(parada3, parada4, 200);
     	
-    	ArrayList<Integer> distancias1 = new ArrayList<>();
-    	distancias1.add(300);
-    	distancias1.add(1200);
+    	ArrayList<Camino> aristas = new ArrayList<>();
+    	aristas.add(arista1);
+    	aristas.add(arista2);
+    	aristas.add(arista3);
+    	aristas.add(arista4);
+    	aristas.add(arista5);
+
     	
-    	
-    	ArrayList<Parada> aristas2 = new ArrayList<>();
-    	aristas2.add(parada3);
-    	aristas2.add(parada4);
-    	
-    	ArrayList<Integer> distancias2 = new ArrayList<>();
-    	distancias2.add(200);
-    	distancias2.add(500);
-    	
-    	ArrayList<Parada> aristas3 = new ArrayList<>();
-    	aristas3.add(parada4);
-    	
-    	ArrayList<Integer> distancias3 = new ArrayList<>();
-    	distancias3.add(200);
-    	
-    	ArrayList<Parada> aristas4 = new ArrayList<>();
-    	
-    	Camino camino1 = new Camino(parada1,aristas1,distancias1);
-    	Camino camino2 = new Camino(parada2,aristas2,distancias2);
-    	Camino camino3 = new Camino(parada3, aristas3, distancias3);
-    	Camino camino4 = new Camino(parada4, aristas4, null);
-    	
-    	ArrayList<Camino> caminos = new ArrayList<>();
-    	caminos.add(camino1);
-    	caminos.add(camino2);
-    	caminos.add(camino3);
-    	caminos.add(camino4);
-    	
-//    	GrafoDirigido gp = new GrafoDirigido(nodos,caminos);
-//    	gp.getMatrizAdyacencia().recorrerMatriz((i,j) -> System.out.println(i));	Anda
-    	
-    	GrafoConPeso gp = new GrafoConPeso(nodos,caminos);
-    	//gp.getMatrizPeso().recorrerMatriz((i,j) -> System.out.println(i));	Anda
-    	//gp.dijkstra(parada1, parada2).forEach(j -> System.out.println(j.getNroParada())); Anda
+//    	GrafoDirigido gp = new GrafoDirigido(nodos,aristas);
+//    	gp.getMatrizAdyacencia().recorrerMatriz((i,j) -> System.out.println(i));
+//    	
+//    	GrafoConPeso gp = new GrafoConPeso(nodos,aristas);
+//    	gp.getMatrizPeso().recorrerMatriz((i,j) -> System.out.println(i));
+//    	gp.dijkstra(parada1, parada4).forEach(j -> System.out.println(j.getNroParada()));
     }
 }
