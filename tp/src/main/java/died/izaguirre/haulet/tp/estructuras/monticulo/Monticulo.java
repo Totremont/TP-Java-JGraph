@@ -1,4 +1,4 @@
-package died.izaguirre.haulet.tp.estructuras;
+package died.izaguirre.haulet.tp.estructuras.monticulo;
 
 import java.util.ArrayList;
 

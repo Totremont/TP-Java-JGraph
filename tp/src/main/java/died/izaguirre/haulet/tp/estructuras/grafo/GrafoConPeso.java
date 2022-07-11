@@ -1,0 +1,109 @@
+package died.izaguirre.haulet.tp.estructuras.grafo;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import died.izaguirre.haulet.tp.estructuras.matriz.Matriz;
+import died.izaguirre.haulet.tp.tablas.Camino;
+import died.izaguirre.haulet.tp.tablas.Parada;
+
+public class GrafoConPeso extends GrafoDirigido {
+	
+	private Matriz matrizPesos;
+	public static final int INFINITO = Integer.MAX_VALUE;
+	
+	public GrafoConPeso(ArrayList<Parada> nodos, ArrayList<Camino> aristas) 
+	{		
+		super(nodos, aristas);
+		matrizPesos = new Matriz(nodos.size());
+		matrizPesos.modificarMatriz((i,j) -> 
+		{
+			if(adyacencia.getValor(i,j) > 0) 
+			{
+				int posDistancia = aristas.get(i).getDestinos().indexOf(nodos.get(j));
+				return aristas.get(i).getDistancia().get(posDistancia);
+			} else return INFINITO;
+		});
+	}
+	
+	public int getPesoArco(Parada origen, Parada destino) 
+	{
+		int posFila = nodos.indexOf(origen);
+		int posColumna = nodos.indexOf(destino);
+		return matrizPesos.getValor(posFila, posColumna);
+		
+	}
+	
+	public Matriz getMatrizPeso() 
+	{
+		return matrizPesos;
+	}
+		
+	public ArrayList<Parada> dijkstra(Parada origen, Parada destino)
+	{
+		boolean[] marcados = new boolean[nodos.size()];
+		int[] distancias = new int[nodos.size()];
+		Parada[] trayecto = new Parada[nodos.size()];
+		int posOrigen = nodos.indexOf(origen);
+		
+		// valores iniciales
+		for (int i = 0; i < nodos.size(); i++)
+		{
+			marcados[i] = false;
+			distancias[i] = getPesoArco(origen, nodos.get(i));
+			trayecto[i] = origen;
+		}
+	
+		marcados[posOrigen] = true; 
+		distancias[posOrigen] = 0;
+		
+		// Pasos para marcar los n-1 vértices
+		for (int i = 1; i < nodos.size(); i++)
+		{
+			Parada v = minimo(marcados,distancias); /* selecciona vértice no marcado de menor distancia */		
+			marcados[nodos.indexOf(v)] = true;
+			
+		// actualiza distancia de vértices no marcados
+			for (int w = 1; w < nodos.size(); w++) 
+				if (!marcados[w])
+					if ((distancias[nodos.indexOf(v)] + getPesoArco(v, nodos.get(w))) < distancias[w])
+					{
+						distancias[w] = distancias[w] + getPesoArco(v, nodos.get(w));
+						trayecto[w] = v;
+					}
+		}
+		//Camino minimo para pares de nodos
+		ArrayList<Parada> minimo = recuperaCamino(trayecto, origen, destino);
+		Collections.reverse(minimo);
+		return minimo;
+	}
+	
+	//Obtiene el nodo mas cercano al nodo dado
+	private Parada minimo(boolean[] marcados, int[] distancias)
+	{
+		int valor = GrafoConPeso.INFINITO;
+		int v = 1;
+		for (int j = 1; j < nodos.size(); j++)
+			if (!marcados[j] && (distancias[j]<= valor))
+			{
+					valor = distancias[j];
+					v = j;
+			}
+		return nodos.get(v);
+	}
+	
+	private ArrayList<Parada> recuperaCamino(Parada[] trayectos, Parada origen, Parada destino)
+	{
+		ArrayList<Parada> trayecto = new ArrayList<>();
+		trayecto.add(destino);
+		Parada anterior = trayectos[nodos.indexOf(destino)];
+		if (anterior != origen)
+		{
+			trayecto.addAll(recuperaCamino(trayectos, origen, anterior));
+		}
+		else trayecto.add(origen);
+		
+		return trayecto;
+	}
+
+}

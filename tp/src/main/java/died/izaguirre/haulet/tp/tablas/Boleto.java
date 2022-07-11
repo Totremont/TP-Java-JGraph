@@ -4,6 +4,7 @@ public class Boleto {
 	
 	private int id;
 	private Linea linea;
+	private Trayecto trayecto;
 	private float monto;
 
 }
