@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Incidencia implements Comparable<Incidencia> {
 	
-	private int id;
+	private Integer id;
 	private Parada parada;
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;

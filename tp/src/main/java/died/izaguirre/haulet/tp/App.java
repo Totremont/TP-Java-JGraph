@@ -2,10 +2,18 @@ package died.izaguirre.haulet.tp;
 
 import java.util.ArrayList;
 
+import died.izaguirre.haulet.tp.dao.DBConnection;
+import died.izaguirre.haulet.tp.dao.impl.BoletoDaoImpl;
+import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
+import died.izaguirre.haulet.tp.dao.interfaces.BoletoDao;
+import died.izaguirre.haulet.tp.dao.interfaces.CRUD;
+import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
 import died.izaguirre.haulet.tp.estructuras.*;
 import died.izaguirre.haulet.tp.estructuras.grafo.*;
 import died.izaguirre.haulet.tp.estructuras.matriz.Matriz;
+import died.izaguirre.haulet.tp.tablas.Boleto;
 import died.izaguirre.haulet.tp.tablas.Camino;
+import died.izaguirre.haulet.tp.tablas.Linea;
 import died.izaguirre.haulet.tp.tablas.Parada;
 
 /**
@@ -26,16 +34,27 @@ public class App
 //        resultado.recorrerMatriz((i,j) -> System.out.println(i));
         
 //        Matriz resultado = m.multiplicar(m, m);
-//        resultado.recorrerMatriz((i,j) -> System.out.println(i));                
+//        resultado.recorrerMatriz((i,j) -> System.out.println(i));
+        
+        Linea l1 = new Linea("Linea Economica",10,"Linea 9","Rojo",10,true,true);
+        LineaDao daoLinea = new LineaDaoImpl();
+        daoLinea.add(l1);
+//        System.out.println(daoLinea.find("Linea 9", "Rojo").getNombre());
+        Boleto b1 = new Boleto(l1,50D);
+        BoletoDao daoBoleto = new BoletoDaoImpl();
+        daoBoleto.add(b1);
+        
+        
+        DBConnection.close();
         
     }
     
     public static void pruebaGrafo() 
     {
-    	Parada parada1 = new Parada(1,1,"Alvear");
-    	Parada parada2 = new Parada(2,2,"Banderas");
-    	Parada parada3 = new Parada(3,3,"Irigoyen");
-    	Parada parada4 = new Parada(4,4,"Alberdi");
+    	Parada parada1 = new Parada(1,"Alvear");
+    	Parada parada2 = new Parada(2,"Banderas");
+    	Parada parada3 = new Parada(3,"Irigoyen");
+    	Parada parada4 = new Parada(4,"Alberdi");
     	
     	ArrayList<Parada> nodos = new ArrayList<>();
     	nodos.add(parada1);

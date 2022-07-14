@@ -1,14 +1,13 @@
 package died.izaguirre.haulet.tp.tablas;
 
 public class Parada {
-	
+
 	private int id;
 	private int nroParada;
 	private String calle;
-	
-	public Parada(int id, int nroParada, String calle) {
+
+	public Parada(int nroParada, String calle) {
 		super();
-		this.id = id;
 		this.nroParada = nroParada;
 		this.calle = calle;
 	}
@@ -28,9 +27,13 @@ public class Parada {
 	public void setCalle(String calle) {
 		this.calle = calle;
 	}
-	
-	
-	
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 }

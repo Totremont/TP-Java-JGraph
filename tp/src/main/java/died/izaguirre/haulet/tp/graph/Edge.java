@@ -1,4 +1,4 @@
-package died.izaguirre.haulet.tp.Graph;
+package died.izaguirre.haulet.tp.graph;
 
 public class Edge<T> {
 

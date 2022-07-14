@@ -1,4 +1,4 @@
-package died.izaguirre.haulet.tp.Graph;
+package died.izaguirre.haulet.tp.graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;

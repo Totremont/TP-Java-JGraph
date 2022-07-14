@@ -1,45 +1,70 @@
 CREATE SCHEMA tp;
 
-CREATE TABLE tp.parada(
-	id_parada SERIAL PRIMARY KEY,
-	nroParada INTEGER UNIQUE NOT NULL,
-	calle varchar(100) NOT NULL
+CREATE TABLE tp.incidencia(
+    id_incidencia serial,
+    id_parada integer,
+    fecha_inicio date,
+    fecha_fin date,
+    esta_resuelto bool,
+    CONSTRAINT pk_incidencia PRIMARY KEY (id_incidencia)
 );
 
-CREATE TABLE tp.incidencia(
-	id_incidencia SERIAL PRIMARY KEY,
-	id_parada INTEGER NOT NULL REFERENCES tp.parada(id_parada),
-	fechaInicio DATE NOT NULL DEFAULT CURRENT_DATE,
-	fechaFin DATE,
-	estaResuelto BOOLEAN NOT NULL
+CREATE TABLE tp.parada(
+    id_parada serial,
+    nro_parada integer NOT NULL,
+    calle varchar(100),
+    CONSTRAINT pk_parada PRIMARY KEY (id_parada)
 );
 
 CREATE TABLE tp.camino(
-	origen SERIAL REFERENCES tp.parada(id_parada),
-	destino SERIAL REFERENCES tp.parada(id_parada),
-	CONSTRAINT pk_camino PRIMARY KEY (origen, destino)
+    origen integer,
+    destino integer,
+    capacidad integer,
+    distancia integer,
+    CONSTRAINT pk_camino PRIMARY KEY (origen,destino)
+);
+
+CREATE TABLE tp.posee(
+    id_parada integer,
+    id_linea integer,
+    CONSTRAINT pk_posee PRIMARY KEY (id_parada,id_linea)
 );
 
 CREATE TABLE tp.linea(
-	id_linea SERIAL PRIMARY KEY,
-	tipo varchar(50) NOT NULL CONSTRAINT check_lineatipo CHECK (tipo = 'ECONOMICA' or tipo = 'SUPERIOR'),
-	capSentado INTEGER NOT NULL,
-	capParado INTEGER,
-	nombre varchar(100) NOT NULL,
-	color varchar(100) NOT NULL,
-	tieneAire BOOLEAN,
-	tieneWifi BOOLEAN
-);
-
-CREATE TABLE tp.trayecto(
-	id_parada SERIAL REFERENCES tp.parada(id_parada),
-	id_linea SERIAL REFERENCES tp.linea(id_linea),
-	CONSTRAINT pk_trayecto PRIMARY KEY (id_parada, id_linea)
+    id_linea serial,
+    tipo varchar(50),
+    cap_sentado integer,
+    cap_parado integer,
+    nombre varchar(100),
+    color varchar(100),
+    tiene_aire bool,
+    tiene_wifi bool,
+    CONSTRAINT pk_linea PRIMARY KEY (id_linea)
 );
 
 CREATE TABLE tp.boleto(
-	id_boleto SERIAL PRIMARY KEY,
-	id_linea INTEGER NOT NULL REFERENCES tp.linea(id_linea),
-	monto NUMERIC(4,2)
+    id_boleto serial,
+    id_linea integer,
+    monto float8,
+    CONSTRAINT pk_boleto PRIMARY KEY (id_boleto)
 );
 
+ALTER TABLE tp.linea
+	ADD CONSTRAINT uq_linea UNIQUE(nombre,color);
+
+ALTER TABLE tp.parada
+	ADD CONSTRAINT uq_parada UNIQUE(nro_parada);
+
+ALTER TABLE tp.incidencia
+    ADD CONSTRAINT fk_incidencia FOREIGN KEY (id_parada) REFERENCES tp.parada(id_parada);
+    
+ALTER TABLE tp.camino
+    ADD CONSTRAINT fk_camino_origen FOREIGN KEY (origen) REFERENCES tp.parada(id_parada),
+    ADD CONSTRAINT fk_camino_destino FOREIGN KEY (destino) REFERENCES tp.parada(id_parada);
+    
+ALTER TABLE tp.posee
+    ADD CONSTRAINT fk_posee_parada FOREIGN KEY (id_parada) REFERENCES tp.parada(id_parada),
+    ADD CONSTRAINT fk_posee_linea FOREIGN KEY (id_linea) REFERENCES tp.linea(id_linea);
+    
+ALTER TABLE tp.boleto
+    ADD CONSTRAINT fk_boleto FOREIGN KEY (id_linea) REFERENCES tp.linea(id_linea);
