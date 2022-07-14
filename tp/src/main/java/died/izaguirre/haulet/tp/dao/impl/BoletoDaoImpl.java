@@ -23,11 +23,14 @@ public class BoletoDaoImpl implements BoletoDao {
 	@Override
 	public void add(Boleto t) {
 		// TODO Auto-generated method stub
-		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.boleto (id_linea,monto) VALUES (?,?)")) {
-			LineaDao aux = new LineaDaoImpl();
-			pstm.setInt(1, aux.find(t.getLinea().getNombre(), t.getLinea().getColor()).getId());
+		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.boleto (id_linea,monto) VALUES (?,?)",
+				PreparedStatement.RETURN_GENERATED_KEYS)) {
+			pstm.setInt(1, t.getLinea().getId());
 			pstm.setDouble(2, t.getMonto());
 			pstm.executeUpdate();
+			ResultSet rs = pstm.getGeneratedKeys();
+			rs.next();
+			t.setId(rs.getInt(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -44,7 +47,7 @@ public class BoletoDaoImpl implements BoletoDao {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Ver como implementar este metodo para un objeto boleto que no se conoce el ID
 	@Override
 	public void remove(Boleto t) {

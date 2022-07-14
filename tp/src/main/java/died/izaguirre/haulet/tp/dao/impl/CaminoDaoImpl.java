@@ -24,11 +24,11 @@ public class CaminoDaoImpl implements CaminoDao {
 	@Override
 	public void add(Camino t) {
 		// TODO Auto-generated method stub
-		try (PreparedStatement pstm = con
-				.prepareStatement("INSERT INTO tp.camino (origen,destino,capacidad,distancia) VALUES (?,?,?,?)")) {
-			ParadaDao aux = new ParadaDaoImpl();
-			pstm.setInt(1, aux.findByNroParada(t.getOrigen().getId()).getId());
-			pstm.setInt(2, aux.findByNroParada(t.getDestino().getId()).getId());
+		try (PreparedStatement pstm = con.prepareStatement(
+				"INSERT INTO tp.camino (origen,destino,capacidad,distancia) VALUES (?,?,?,?)",
+				PreparedStatement.RETURN_GENERATED_KEYS)) {
+			pstm.setInt(1, t.getOrigen().getId());
+			pstm.setInt(2, t.getDestino().getId());
 			pstm.setInt(3, t.getCapacidad());
 			pstm.setInt(4, t.getDistancia());
 			pstm.executeUpdate();
@@ -43,6 +43,7 @@ public class CaminoDaoImpl implements CaminoDao {
 		try (PreparedStatement pstm = con.prepareStatement("DELETE FROM tp.camino WHERE origen=? AND destino=?")) {
 			pstm.setInt(1, id_origen);
 			pstm.setInt(2, id_destino);
+			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -50,9 +51,8 @@ public class CaminoDaoImpl implements CaminoDao {
 
 	@Override
 	public void remove(Parada origen, Parada destino) {
-		ParadaDao aux = new ParadaDaoImpl();
-		this.remove(aux.findByNroParada(origen.getNroParada()).getId(),
-				aux.findByNroParada(destino.getNroParada()).getId());
+		// TODO Auto-generated method stub
+		this.remove(origen.getId(), destino.getId());
 	}
 
 	@Override
@@ -76,6 +76,11 @@ public class CaminoDaoImpl implements CaminoDao {
 
 		return auxCamino;
 	}
+	
+	@Override
+	public Camino find(Parada origen, Parada destino) {
+		return this.find(origen.getId(),destino.getId());
+	}
 
 	@Override
 	public List<Camino> getAll() {
@@ -86,7 +91,7 @@ public class CaminoDaoImpl implements CaminoDao {
 				.prepareStatement("SELECT origen,destino,capacidad,distancia FROM tp.camino")) {
 			ResultSet rs = pstm.executeQuery();
 			ParadaDao aux = new ParadaDaoImpl();
-			while(rs.next()) {
+			while (rs.next()) {
 				Camino auxCamino = new Camino();
 				auxCamino.setOrigen(aux.findByNroParada(rs.getInt(1)));
 				auxCamino.setDestino(aux.findByNroParada(rs.getInt(2)));
@@ -94,7 +99,7 @@ public class CaminoDaoImpl implements CaminoDao {
 				auxCamino.setDistancia(rs.getInt(4));
 				caminos.add(auxCamino);
 			}
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 

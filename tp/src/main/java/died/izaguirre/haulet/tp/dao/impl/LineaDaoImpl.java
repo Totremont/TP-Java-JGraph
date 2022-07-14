@@ -38,11 +38,11 @@ public class LineaDaoImpl implements LineaDao {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void remove(Linea t) {
 		// TODO Auto-generated method stub
-		this.remove(this.find(t.getNombre(), t.getColor()));
+		this.remove(t.getId());
 	}
 
 	@Override
@@ -104,13 +104,17 @@ public class LineaDaoImpl implements LineaDao {
 	private void addEconomica(Linea t) {
 
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,cap_parado) VALUES (?,?,?,?,?)")) {
+				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,cap_parado) VALUES (?,?,?,?,?)",
+				PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setString(1, t.getTipo());
 			pstm.setString(2, t.getNombre());
 			pstm.setString(3, t.getColor());
 			pstm.setInt(4, t.getCapSentado());
 			pstm.setInt(5, t.getCapParado());
 			pstm.executeUpdate();
+			ResultSet rs = pstm.getGeneratedKeys();
+			rs.next();
+			t.setId(rs.getInt(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -120,41 +124,20 @@ public class LineaDaoImpl implements LineaDao {
 	private void addSuperior(Linea t) {
 
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,tiene_aire,tiene_wifi) VALUES (?,?,?,?,?,?)")) {
+				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,tiene_aire,tiene_wifi) VALUES (?,?,?,?,?,?)",
+				PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setString(2, t.getNombre());
 			pstm.setString(3, t.getColor());
 			pstm.setInt(4, t.getCapSentado());
 			pstm.setBoolean(5, t.getTieneAire());
 			pstm.setBoolean(6, t.getTieneWifi());
 			pstm.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	@Override
-	public Linea find(String nombre, String color) {
-		// TODO Auto-generated method stub
-		Linea auxLinea = new Linea();
-
-		try (PreparedStatement pstm = con.prepareStatement(
-				"SELECT id_linea,tipo,cap_sentado,cap_parado,nombre,color,tiene_aire,tiene_wifi FROM tp.linea")) {
-			ResultSet rs = pstm.executeQuery();
+			ResultSet rs = pstm.getGeneratedKeys();
 			rs.next();
-			auxLinea.setId(rs.getInt(1));
-			auxLinea.setTipo(rs.getString(2));
-			auxLinea.setCapSentado(rs.getInt(3));
-			auxLinea.setCapParado(rs.getInt(4));
-			auxLinea.setNombre(rs.getString(5));
-			auxLinea.setColor(rs.getString(6));
-			auxLinea.setTieneAire(rs.getBoolean(7));
-			auxLinea.setTieneWifi(rs.getBoolean(8));
+			t.setId(rs.getInt(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		return auxLinea;
 
 	}
 

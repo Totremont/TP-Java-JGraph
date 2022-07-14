@@ -14,6 +14,8 @@ public interface CaminoDao {
 	public void remove(Parada origen, Parada destino);
 
 	public Camino find(Integer id_origen, Integer id_destino);
+	
+	public Camino find(Parada origen, Parada destino);
 
 	public List<Camino> getAll();
 }

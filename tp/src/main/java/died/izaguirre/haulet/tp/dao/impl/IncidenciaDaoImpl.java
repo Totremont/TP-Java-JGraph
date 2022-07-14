@@ -27,13 +27,16 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 	public void add(Incidencia t) {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.incidencia (id_parada,fecha_inicio,fecha_fin,esta_resuelto VALUES (?,?,?,?))")) {
-			ParadaDao aux = new ParadaDaoImpl();
-			pstm.setInt(1, aux.findByNroParada(t.getParada().getNroParada()).getId());
+				"INSERT INTO tp.incidencia (id_parada,fecha_inicio,fecha_fin,esta_resuelto VALUES (?,?,?,?))",PreparedStatement.RETURN_GENERATED_KEYS)) {
+			pstm.setInt(1, t.getParada().getId());
 			pstm.setDate(2, Date.valueOf(t.getFechaInicio()));
 			pstm.setDate(3, Date.valueOf(t.getFechaFin()));
 			pstm.setBoolean(4, t.getEstaResuelto());
 			pstm.executeUpdate();
+			ResultSet rs = pstm.getGeneratedKeys();
+			rs.next();
+			t.setId(rs.getInt(1));
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -50,8 +53,6 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 		}
 	}
 
-	// Ver como implementar este metodo para un objeto incidencia que no se conoce
-	// el ID
 	@Override
 	public void remove(Incidencia t) {
 		// TODO Auto-generated method stub

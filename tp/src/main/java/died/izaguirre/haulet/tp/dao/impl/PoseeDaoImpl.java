@@ -25,11 +25,9 @@ public class PoseeDaoImpl implements PoseeDao {
 	public void add(Posee t) {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.posee (id_parada,id_linea)")) {
-			ParadaDao aux = new ParadaDaoImpl();
-			LineaDao auxL = new LineaDaoImpl();
-			pstm.setInt(1, aux.findByNroParada(t.getParada().getNroParada()).getId());
-			pstm.setInt(2, auxL.find(t.getLinea().getNombre(), t.getLinea().getColor()).getId());
-			pstm.executeQuery();
+			pstm.setInt(1, t.getParada().getId());
+			pstm.setInt(2, t.getLinea().getId());
+			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
