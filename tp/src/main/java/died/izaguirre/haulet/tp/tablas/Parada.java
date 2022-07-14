@@ -6,6 +6,9 @@ public class Parada {
 	private int nroParada;
 	private String calle;
 
+	public Parada() {
+	}
+
 	public Parada(int nroParada, String calle) {
 		super();
 		this.nroParada = nroParada;

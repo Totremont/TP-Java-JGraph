@@ -39,11 +39,12 @@ public class App
         Linea l1 = new Linea("Linea Economica",10,"Linea 9","Rojo",10,true,true);
         LineaDao daoLinea = new LineaDaoImpl();
         daoLinea.add(l1);
-//        System.out.println(daoLinea.find("Linea 9", "Rojo").getNombre());
-        Boleto b1 = new Boleto(l1,50D);
-        BoletoDao daoBoleto = new BoletoDaoImpl();
-        daoBoleto.add(b1);
-        
+        System.out.println(daoLinea.find("Linea 9", "Rojo").getNombre());
+//        daoLinea.remove(daoLinea.find("Linea 9", "Rojo").getId());
+//        Boleto b1 = new Boleto(l1,50D);
+//        BoletoDao daoBoleto = new BoletoDaoImpl();
+//        daoBoleto.add(b1);
+//        
         
         DBConnection.close();
         

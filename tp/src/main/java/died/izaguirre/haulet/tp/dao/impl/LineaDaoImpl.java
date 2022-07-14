@@ -47,16 +47,15 @@ public class LineaDaoImpl implements LineaDao {
 				"SELECT id_linea,tipo,cap_sentado,cap_parado,nombre,color,tiene_aire,tiene_wifi FROM tp.linea WHERE id_linea=?")) {
 			pstm.setInt(1, id);
 			ResultSet rs = pstm.executeQuery();
-			while (rs.next()) {
-				auxLinea.setId(rs.getInt(1));
-				auxLinea.setTipo(rs.getString(2));
-				auxLinea.setCapSentado(rs.getInt(3));
-				auxLinea.setCapParado(rs.getInt(4));
-				auxLinea.setNombre(rs.getString(5));
-				auxLinea.setColor(rs.getString(6));
-				auxLinea.setTieneAire(rs.getBoolean(7));
-				auxLinea.setTieneWifi(rs.getBoolean(8));
-			}
+			rs.next();
+			auxLinea.setId(rs.getInt(1));
+			auxLinea.setTipo(rs.getString(2));
+			auxLinea.setCapSentado(rs.getInt(3));
+			auxLinea.setCapParado(rs.getInt(4));
+			auxLinea.setNombre(rs.getString(5));
+			auxLinea.setColor(rs.getString(6));
+			auxLinea.setTieneAire(rs.getBoolean(7));
+			auxLinea.setTieneWifi(rs.getBoolean(8));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -135,16 +134,15 @@ public class LineaDaoImpl implements LineaDao {
 		try (PreparedStatement pstm = con.prepareStatement(
 				"SELECT id_linea,tipo,cap_sentado,cap_parado,nombre,color,tiene_aire,tiene_wifi FROM tp.linea")) {
 			ResultSet rs = pstm.executeQuery();
-			while (rs.next()) {
-				auxLinea.setId(rs.getInt(1));
-				auxLinea.setTipo(rs.getString(2));
-				auxLinea.setCapSentado(rs.getInt(3));
-				auxLinea.setCapParado(rs.getInt(4));
-				auxLinea.setNombre(rs.getString(5));
-				auxLinea.setColor(rs.getString(6));
-				auxLinea.setTieneAire(rs.getBoolean(7));
-				auxLinea.setTieneWifi(rs.getBoolean(8));
-			}
+			rs.next();
+			auxLinea.setId(rs.getInt(1));
+			auxLinea.setTipo(rs.getString(2));
+			auxLinea.setCapSentado(rs.getInt(3));
+			auxLinea.setCapParado(rs.getInt(4));
+			auxLinea.setNombre(rs.getString(5));
+			auxLinea.setColor(rs.getString(6));
+			auxLinea.setTieneAire(rs.getBoolean(7));
+			auxLinea.setTieneWifi(rs.getBoolean(8));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

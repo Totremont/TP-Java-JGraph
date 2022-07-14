@@ -76,20 +76,19 @@ public class BoletoDaoImpl implements BoletoDao {
 		try (PreparedStatement pstm = con
 				.prepareStatement("SELECT id_boleto,id_linea,monto FROM tp.boleto WHERE id_boleto=?")) {
 			pstm.setInt(1, id);
-			
+
 			ResultSet rs = pstm.executeQuery();
-			while(rs.next()) {
-				auxBoleto.setId(rs.getInt(1));
-				auxBoleto.setLinea(this.getLinea(rs.getInt(2)));
-				auxBoleto.setMonto(rs.getDouble(3));
-			}
-			
-		}catch(SQLException e) {
+			rs.next();
+			auxBoleto.setId(rs.getInt(1));
+			auxBoleto.setLinea(this.getLinea(rs.getInt(2)));
+			auxBoleto.setMonto(rs.getDouble(3));
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return auxBoleto;
-		
+
 	}
 
 	private Linea getLinea(Integer idLinea) {
