@@ -49,9 +49,6 @@ CREATE TABLE tp.boleto(
     CONSTRAINT pk_boleto PRIMARY KEY (id_boleto)
 );
 
-ALTER TABLE tp.linea
-	ADD CONSTRAINT uq_linea UNIQUE(nombre,color);
-
 ALTER TABLE tp.parada
 	ADD CONSTRAINT uq_parada UNIQUE(nro_parada);
 
