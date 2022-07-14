@@ -66,4 +66,23 @@ public class ParadaDaoImpl implements ParadaDao {
 		return null;
 	}
 
+	@Override
+	public Parada findByNroParada(Integer nro_parada) {
+		Parada aux = new Parada();
+
+		try (PreparedStatement pstm = con
+				.prepareStatement("SELECT id_parada,nro_parada,calle FROM tp.parada WHERE nro_parada=?")) {
+			pstm.setInt(1, nro_parada);
+			ResultSet rs = pstm.executeQuery();
+			rs.next();
+			aux.setId(rs.getInt(1));
+			aux.setNroParada(rs.getInt(2));
+			aux.setCalle(rs.getString(3));
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+
+		return aux;
+	}
+
 }

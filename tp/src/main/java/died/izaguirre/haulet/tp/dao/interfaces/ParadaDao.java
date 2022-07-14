@@ -4,5 +4,6 @@ import died.izaguirre.haulet.tp.tablas.Parada;
 
 public interface ParadaDao extends CRUD<Parada> {
 	
+	public Parada findByNroParada(Integer nro_parada);
 	
 }
