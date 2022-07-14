@@ -31,7 +31,7 @@ public class GrafoDirigido {
 		ArrayList<ArrayList<Parada>> resultado = new ArrayList<>();
 		nodos.forEach(it -> 
 		{
-			List<Parada> aux = aristas.stream().filter(i -> i.getOrigen().equals(it)).map(j -> j.getDestinos())
+			List<Parada> aux = aristas.stream().filter(i -> i.getOrigen().equals(it)).map(j -> j.getDestino())
 					.collect(Collectors.toList());
 			resultado.add(new ArrayList<>(aux));
 		});

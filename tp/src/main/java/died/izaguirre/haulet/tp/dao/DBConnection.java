@@ -15,7 +15,7 @@ public class DBConnection {
 	
 	private DBConnection() {}
 	
-	public static Connection get() {
+	public synchronized static Connection get() {
 		
 		if(conn != null)
 			return conn;

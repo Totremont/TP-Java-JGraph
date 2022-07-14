@@ -1,6 +1,8 @@
 package died.izaguirre.haulet.tp.dao.interfaces;
 
-public interface IncidenciaDao extends CRUD<IncidenciaDao> {
+import died.izaguirre.haulet.tp.tablas.Incidencia;
+
+public interface IncidenciaDao extends CRUD<Incidencia> {
 	
 	
 }

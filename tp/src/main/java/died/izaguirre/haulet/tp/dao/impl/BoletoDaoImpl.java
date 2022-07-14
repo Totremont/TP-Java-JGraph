@@ -44,6 +44,13 @@ public class BoletoDaoImpl implements BoletoDao {
 			e.printStackTrace();
 		}
 	}
+	
+	// Ver como implementar este metodo para un objeto boleto que no se conoce el ID
+	@Override
+	public void remove(Boleto t) {
+		// TODO Auto-generated method stub
+		this.remove(t.getId());
+	}
 
 	@Override
 	public List<Boleto> getAll() {

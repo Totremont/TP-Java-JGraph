@@ -22,7 +22,7 @@ public class GrafoConPeso extends GrafoDirigido {
 			if(adyacencia.getValor(i,j) > 0) 
 			{
 				int posDistancia = aristas.stream().filter(it -> 
-					(it.getOrigen().equals(nodos.get(i)) && it.getDestinos().equals(nodos.get(j)))
+					(it.getOrigen().equals(nodos.get(i)) && it.getDestino().equals(nodos.get(j)))
 				).map(w -> w.getDistancia()).collect(Collectors.toList()).get(0);				
 				return posDistancia;
 			} else return INFINITO;

@@ -6,18 +6,21 @@ public class Camino {
 
 	// Paradas adyacentes
 	private Parada origen;
-	private Parada destinos;
+	private Parada destino;
 	private Integer distancia;
 	private Integer capacidad;
 
 	public Parada getOrigen() {
 		return origen;
 	}
-
+	
+	public Camino() {
+	}
+	
 	public Camino(Parada origen, Parada destino, Integer distancia) {
 		super();
 		this.origen = origen;
-		this.destinos = destino;
+		this.destino = destino;
 		this.distancia = distancia;
 		this.capacidad = 0;
 	}
@@ -27,12 +30,12 @@ public class Camino {
 		this.capacidad = capacidad;
 	}
 
-	public Parada getDestinos() {
-		return destinos;
+	public Parada getDestino() {
+		return destino;
 	}
 
-	public void setDestinos(Parada destinos) {
-		this.destinos = destinos;
+	public void setDestino(Parada destinos) {
+		this.destino = destinos;
 	}
 
 	public Integer getDistancia() {

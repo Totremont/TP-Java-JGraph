@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import died.izaguirre.haulet.tp.dao.DBConnection;
@@ -39,6 +40,12 @@ public class ParadaDaoImpl implements ParadaDao {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void remove(Parada t) {
+		// TODO Auto-generated method stub
+		this.remove(this.findByNroParada(t.getNroParada()).getId());
+	}
 
 	@Override
 	public Parada find(Integer id) {
@@ -53,7 +60,7 @@ public class ParadaDaoImpl implements ParadaDao {
 			aux.setId(rs.getInt(1));
 			aux.setNroParada(rs.getInt(2));
 			aux.setCalle(rs.getString(3));
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
@@ -63,7 +70,22 @@ public class ParadaDaoImpl implements ParadaDao {
 	@Override
 	public List<Parada> getAll() {
 		// TODO Auto-generated method stub
-		return null;
+		List<Parada> paradas = new ArrayList<Parada>();
+
+		try (PreparedStatement pstm = con.prepareStatement("SELECT id_parada,nro_parada,calle FROM tp.parada")) {
+			ResultSet rs = pstm.executeQuery();
+			while(rs.next()) {
+				Parada aux = new Parada();
+				aux.setId(rs.getInt(1));
+				aux.setNroParada(rs.getInt(2));
+				aux.setCalle(rs.getString(3));
+				paradas.add(aux);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+
+		return paradas;
 	}
 
 	@Override
@@ -78,7 +100,7 @@ public class ParadaDaoImpl implements ParadaDao {
 			aux.setId(rs.getInt(1));
 			aux.setNroParada(rs.getInt(2));
 			aux.setCalle(rs.getString(3));
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 

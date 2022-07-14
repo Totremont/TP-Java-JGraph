@@ -8,6 +8,8 @@ public interface CRUD<T> {
 	
 	public void remove(Integer id);
 	
+	public void remove(T t);
+	
 	public T find(Integer id);
 	
 	public List<T> getAll();

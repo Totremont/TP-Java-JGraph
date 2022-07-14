@@ -38,6 +38,12 @@ public class LineaDaoImpl implements LineaDao {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void remove(Linea t) {
+		// TODO Auto-generated method stub
+		this.remove(this.find(t.getNombre(), t.getColor()));
+	}
 
 	@Override
 	public Linea find(Integer id) {
@@ -85,6 +91,7 @@ public class LineaDaoImpl implements LineaDao {
 				aux.setColor(rs.getString(6)); // ECO Y SUP
 				aux.setTieneAire(rs.getBoolean(7)); // SUP
 				aux.setTieneWifi(rs.getBoolean(8)); // SUP
+				auxLinea.add(aux);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
