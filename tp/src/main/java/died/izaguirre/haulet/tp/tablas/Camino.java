@@ -57,5 +57,11 @@ public class Camino {
 	public void setCapacidad(Integer capacidad) {
 		this.capacidad = capacidad;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Camino otro = (Camino) obj;
+		return ((otro == this) || (this.getOrigen() == otro.getOrigen() && this.getDestino() == otro.getDestino()));
+	}
 
 }

@@ -38,5 +38,11 @@ public class Parada {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Parada otro = (Parada) obj;
+		return ((otro == this) || (this.getId() == otro.getId()));
+	}
 
 }

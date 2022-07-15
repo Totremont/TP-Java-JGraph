@@ -58,18 +58,21 @@ public class CaminoDaoImpl implements CaminoDao {
 	@Override
 	public Camino find(Integer id_origen, Integer id_destino) {
 		// TODO Auto-generated method stub
-		Camino auxCamino = new Camino();
+		Camino auxCamino = null;
 		try (PreparedStatement pstm = con.prepareStatement(
 				"SELECT origen,destino,capacidad,distancia FROM tp.camino WHERE origen=? AND destino=?")) {
 			pstm.setInt(1, id_origen);
 			pstm.setInt(2, id_destino);
 			ResultSet rs = pstm.executeQuery();
-			rs.next();
-			ParadaDao aux = new ParadaDaoImpl();
-			auxCamino.setOrigen(aux.findByNroParada(rs.getInt(1)));
-			auxCamino.setDestino(aux.findByNroParada(rs.getInt(2)));
-			auxCamino.setCapacidad(rs.getInt(3));
-			auxCamino.setDistancia(rs.getInt(4));
+			if(rs.next()) 
+			{
+				auxCamino = new Camino();
+				ParadaDao aux = new ParadaDaoImpl();
+				auxCamino.setOrigen(aux.findByNroParada(rs.getInt(1)));
+				auxCamino.setDestino(aux.findByNroParada(rs.getInt(2)));
+				auxCamino.setCapacidad(rs.getInt(3));
+				auxCamino.setDistancia(rs.getInt(4));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

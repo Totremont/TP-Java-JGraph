@@ -11,6 +11,7 @@ import died.izaguirre.haulet.tp.dao.DBConnection;
 import died.izaguirre.haulet.tp.dao.interfaces.BoletoDao;
 import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
 import died.izaguirre.haulet.tp.tablas.*;
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
 
 public class BoletoDaoImpl implements BoletoDao {
 
@@ -29,8 +30,7 @@ public class BoletoDaoImpl implements BoletoDao {
 			pstm.setDouble(2, t.getMonto());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
-			rs.next();
-			t.setId(rs.getInt(1));
+			if(rs.next()) t.setId(rs.getInt(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -81,17 +81,20 @@ public class BoletoDaoImpl implements BoletoDao {
 	@Override
 	public Boleto find(Integer id) {
 
-		Boleto auxBoleto = new Boleto();
+		Boleto auxBoleto = null;
 
 		try (PreparedStatement pstm = con
 				.prepareStatement("SELECT id_boleto,id_linea,monto FROM tp.boleto WHERE id_boleto=?")) {
 			pstm.setInt(1, id);
 
 			ResultSet rs = pstm.executeQuery();
-			rs.next();
-			auxBoleto.setId(rs.getInt(1));
-			auxBoleto.setLinea(this.getLinea(rs.getInt(2)));
-			auxBoleto.setMonto(rs.getDouble(3));
+			if(rs.next()) 
+			{
+				auxBoleto = new Boleto();
+				auxBoleto.setId(rs.getInt(1));
+				auxBoleto.setLinea(this.getLinea(rs.getInt(2)));
+				auxBoleto.setMonto(rs.getDouble(3));
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();

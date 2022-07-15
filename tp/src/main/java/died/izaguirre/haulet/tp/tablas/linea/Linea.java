@@ -1,4 +1,4 @@
-package died.izaguirre.haulet.tp.tablas;
+package died.izaguirre.haulet.tp.tablas.linea;
 
 public class Linea {
 
@@ -88,6 +88,12 @@ public class Linea {
 
 	public void setTieneWifi(Boolean tieneWifi) {
 		this.tieneWifi = tieneWifi;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Linea otro = (Linea) obj;
+		return ((otro == this) || (this.getId() == otro.getId()));
 	}
 
 }

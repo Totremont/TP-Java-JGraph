@@ -1,5 +1,7 @@
 package died.izaguirre.haulet.tp.tablas;
 
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
+
 public class Boleto {
 
 	private Integer id;
@@ -36,6 +38,12 @@ public class Boleto {
 
 	public void setMonto(Double monto) {
 		this.monto = monto;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Boleto otro = (Boleto) obj;
+		return ((otro == this) || (this.getId() == otro.getId()));
 	}
 
 }

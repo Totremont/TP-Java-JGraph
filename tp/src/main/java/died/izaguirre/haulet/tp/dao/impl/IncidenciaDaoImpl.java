@@ -34,8 +34,7 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 			pstm.setBoolean(4, t.getEstaResuelto());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
-			rs.next();
-			t.setId(rs.getInt(1));
+			if(rs.next()) t.setId(rs.getInt(1));
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -62,19 +61,22 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 	@Override
 	public Incidencia find(Integer id) {
 
-		Incidencia auxIncidencia = new Incidencia();
+		Incidencia auxIncidencia = null;
 
 		try (PreparedStatement pstm = con.prepareStatement(
 				"SELECT id_incidencia,id_parada,fecha_inicio,fecha_fin,esta_resuelto FROM tp.incidencia WHERE id_incidencia=?")) {
 			pstm.setInt(1, id);
 			ResultSet rs = pstm.executeQuery();
-			rs.next();
-			auxIncidencia.setId(rs.getInt(1));
-			ParadaDao aux = new ParadaDaoImpl();
-			auxIncidencia.setParada(aux.findByNroParada(rs.getInt(2)));
-			auxIncidencia.setFechaInicio(LocalDate.ofInstant(rs.getDate(3).toInstant(), ZoneId.systemDefault()));
-			auxIncidencia.setFechaFin(LocalDate.ofInstant(rs.getDate(4).toInstant(), ZoneId.systemDefault()));
-			auxIncidencia.setEstaResuelto(rs.getBoolean(5));
+			if(rs.next()) 
+			{
+				auxIncidencia = new Incidencia();
+				auxIncidencia.setId(rs.getInt(1));
+				ParadaDao aux = new ParadaDaoImpl();
+				auxIncidencia.setParada(aux.findByNroParada(rs.getInt(2)));
+				auxIncidencia.setFechaInicio(LocalDate.ofInstant(rs.getDate(3).toInstant(), ZoneId.systemDefault()));
+				auxIncidencia.setFechaFin(LocalDate.ofInstant(rs.getDate(4).toInstant(), ZoneId.systemDefault()));
+				auxIncidencia.setEstaResuelto(rs.getBoolean(5));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

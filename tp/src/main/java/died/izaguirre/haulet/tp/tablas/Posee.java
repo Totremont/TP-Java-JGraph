@@ -1,5 +1,7 @@
 package died.izaguirre.haulet.tp.tablas;
 
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
+
 public class Posee {
 
 	private Parada parada;
@@ -27,6 +29,12 @@ public class Posee {
 
 	public void setLinea(Linea linea) {
 		this.linea = linea;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Posee otro = (Posee) obj;
+		return ((otro == this) || (this.getParada().equals(otro.getParada()) && this.getLinea().equals(otro.getLinea())));
 	}
 
 }

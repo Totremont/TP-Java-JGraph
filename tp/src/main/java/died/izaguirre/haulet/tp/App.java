@@ -13,8 +13,8 @@ import died.izaguirre.haulet.tp.estructuras.grafo.*;
 import died.izaguirre.haulet.tp.estructuras.matriz.Matriz;
 import died.izaguirre.haulet.tp.tablas.Boleto;
 import died.izaguirre.haulet.tp.tablas.Camino;
-import died.izaguirre.haulet.tp.tablas.Linea;
 import died.izaguirre.haulet.tp.tablas.Parada;
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
 
 /**
  * Acá estará el main principal

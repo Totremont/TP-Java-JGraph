@@ -9,7 +9,8 @@ import java.util.List;
 
 import died.izaguirre.haulet.tp.dao.DBConnection;
 import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
-import died.izaguirre.haulet.tp.tablas.Linea;
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
+import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 
 public class LineaDaoImpl implements LineaDao {
 
@@ -22,7 +23,7 @@ public class LineaDaoImpl implements LineaDao {
 	@Override
 	public void add(Linea t) {
 		// TODO Auto-generated method stub
-		if (t.getTipo() == "Linea Economica")
+		if (t.getTipo() == LineaTipoEnum.ECONOMICA.name())
 			this.addEconomica(t);
 		else
 			this.addSuperior(t);
@@ -48,20 +49,23 @@ public class LineaDaoImpl implements LineaDao {
 	@Override
 	public Linea find(Integer id) {
 		// TODO Auto-generated method stub
-		Linea auxLinea = new Linea();
+		Linea auxLinea = null;
 		try (PreparedStatement pstm = con.prepareStatement(
 				"SELECT id_linea,tipo,cap_sentado,cap_parado,nombre,color,tiene_aire,tiene_wifi FROM tp.linea WHERE id_linea=?")) {
 			pstm.setInt(1, id);
 			ResultSet rs = pstm.executeQuery();
-			rs.next();
-			auxLinea.setId(rs.getInt(1));
-			auxLinea.setTipo(rs.getString(2));
-			auxLinea.setCapSentado(rs.getInt(3));
-			auxLinea.setCapParado(rs.getInt(4));
-			auxLinea.setNombre(rs.getString(5));
-			auxLinea.setColor(rs.getString(6));
-			auxLinea.setTieneAire(rs.getBoolean(7));
-			auxLinea.setTieneWifi(rs.getBoolean(8));
+			if(rs.next()) 
+			{
+				auxLinea = new Linea();
+				auxLinea.setId(rs.getInt(1));
+				auxLinea.setTipo(rs.getString(2));
+				auxLinea.setCapSentado(rs.getInt(3));
+				auxLinea.setCapParado(rs.getInt(4));
+				auxLinea.setNombre(rs.getString(5));
+				auxLinea.setColor(rs.getString(6));
+				auxLinea.setTieneAire(rs.getBoolean(7));
+				auxLinea.setTieneWifi(rs.getBoolean(8));
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -82,15 +86,16 @@ public class LineaDaoImpl implements LineaDao {
 			while (rs.next()) {
 				Linea aux = new Linea();
 				aux.setTipo(rs.getString(2));
-				// PUEDE DAR ERROR POR SETEAR VALORES NULL, DICHO CASO DIFERENCIAR LOS SETTER
-				// POR TIPO LINEA
 				aux.setId(rs.getInt(1)); // ECO Y SUP
 				aux.setCapSentado(rs.getInt(3)); // ECO Y SUP
-				aux.setCapParado(rs.getInt(4)); // ECO
 				aux.setNombre(rs.getString(5)); // ECO Y SUP
 				aux.setColor(rs.getString(6)); // ECO Y SUP
-				aux.setTieneAire(rs.getBoolean(7)); // SUP
-				aux.setTieneWifi(rs.getBoolean(8)); // SUP
+				if(aux.getTipo() == LineaTipoEnum.SUPERIOR.name()) 
+				{
+					aux.setTieneAire(rs.getBoolean(7)); // SUP
+					aux.setTieneWifi(rs.getBoolean(8)); // SUP
+				} 
+				else aux.setCapParado(rs.getInt(4));
 				auxLinea.add(aux);
 			}
 		} catch (SQLException e) {
@@ -113,8 +118,7 @@ public class LineaDaoImpl implements LineaDao {
 			pstm.setInt(5, t.getCapParado());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
-			rs.next();
-			t.setId(rs.getInt(1));
+			if(rs.next()) t.setId(rs.getInt(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -133,8 +137,7 @@ public class LineaDaoImpl implements LineaDao {
 			pstm.setBoolean(6, t.getTieneWifi());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
-			rs.next();
-			t.setId(rs.getInt(1));
+			if(rs.next()) t.setId(rs.getInt(1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

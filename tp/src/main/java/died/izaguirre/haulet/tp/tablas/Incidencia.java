@@ -63,5 +63,11 @@ public class Incidencia implements Comparable<Incidencia> {
 	public void setFechaFin(LocalDate fechaFin) {
 		this.fechaFin = fechaFin;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Incidencia otro = (Incidencia) obj;
+		return ((otro == this) || (this.getId() == otro.getId()));
+	}
 
 }
