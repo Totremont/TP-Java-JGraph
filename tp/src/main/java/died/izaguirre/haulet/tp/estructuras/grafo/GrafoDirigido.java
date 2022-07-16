@@ -1,6 +1,7 @@
 package died.izaguirre.haulet.tp.estructuras.grafo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,11 +32,20 @@ public class GrafoDirigido {
 		ArrayList<ArrayList<Parada>> resultado = new ArrayList<>();
 		nodos.forEach(it -> 
 		{
-			List<Parada> aux = aristas.stream().filter(i -> i.getOrigen().equals(it)).map(j -> j.getDestino())
-					.collect(Collectors.toList());
-			resultado.add(new ArrayList<>(aux));
+			resultado.add(adyacentesDe(it));
 		});
 		caminos = resultado;
+	}
+	
+	public ArrayList<Parada> adyacentesDe(Parada origen)
+	{
+		ArrayList<Parada> resultado = new ArrayList<>();
+		aristas.forEach(it -> 
+		{
+			if(it.getOrigen().equals(origen)) resultado.add(it.getDestino());
+		});
+		
+		return resultado;
 	}
 	
 	public Matriz potencia(int n)
@@ -65,6 +75,33 @@ public class GrafoDirigido {
 	public Matriz getMatrizAdyacencia() 
 	{
 		return adyacencia;
+	}
+	
+	//No funciona si el grafo tiene ciclos
+	public ArrayList<ArrayList<Parada>> todosLosCaminos(Parada origen, Parada destino)
+	{
+		//Caso base
+		ArrayList<ArrayList<Parada>> caminos = new ArrayList<>();
+		if(origen.equals(destino)) 
+		{
+			ArrayList<Parada> tramo = new ArrayList<>();
+			tramo.add(origen);
+			caminos.add(tramo);
+		}
+		else 	//Caso recursivo
+		{
+			ArrayList<Parada> adyacentes = adyacentesDe(origen);
+			adyacentes.forEach(it -> 
+			{
+				ArrayList<ArrayList<Parada>> susCaminos = todosLosCaminos(it, destino);
+				susCaminos.forEach(j -> 
+				{
+					j.add(origen);
+					caminos.add(j);
+				});
+			});
+		}
+		return caminos;
 	}
 	
 }
