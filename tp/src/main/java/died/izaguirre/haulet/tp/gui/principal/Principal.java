@@ -10,6 +10,9 @@ import javax.swing.border.EmptyBorder;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+
+import died.izaguirre.haulet.tp.gui.principal.menulineas.MenuLineas;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -44,10 +47,14 @@ public class Principal extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UIManager.setLookAndFeel( new FlatDarkLaf() );
 					Principal frame = new Principal();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -363,9 +370,13 @@ public class Principal extends JFrame {
 		panel_grafo.setLayout(new BorderLayout(0, 0));
 		
 		JLabel labelSinGrafo = new JLabel("");
-		labelSinGrafo.setIcon(new ImageIcon("C:\\Users\\ezequ\\Desktop\\thumbnail.jpg"));
+		labelSinGrafo.setIcon(new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\map.png"));
 		labelSinGrafo.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_grafo.add(labelSinGrafo, BorderLayout.CENTER);
+		
+		JPanel menuLin = new MenuLineas();
+		contentPane.add(menuLin, BorderLayout.WEST);
+		
 	}
 
 }
