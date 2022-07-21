@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
-import died.izaguirre.haulet.tp.gui.principal.menulineas.MenuLineas;
+import died.izaguirre.haulet.tp.gui.principal.menulineas.MenuVerLineas;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -37,6 +37,8 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JCheckBox;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Principal extends JFrame {
 
@@ -374,8 +376,9 @@ public class Principal extends JFrame {
 		labelSinGrafo.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_grafo.add(labelSinGrafo, BorderLayout.CENTER);
 		
-		JPanel menuLin = new MenuLineas();
-		contentPane.add(menuLin, BorderLayout.WEST);
+		
+		JPanel menuVerLineas = new MenuVerLineas();
+		contentPane.add(menuVerLineas,BorderLayout.WEST);
 		
 	}
 
