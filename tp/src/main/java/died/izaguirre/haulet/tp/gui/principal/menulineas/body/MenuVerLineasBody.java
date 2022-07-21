@@ -28,8 +28,8 @@ public class MenuVerLineasBody extends JPanel {
 	public MenuVerLineasBody() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		crearLinea = new CrearLineaBody(this);
-		crearLinea.setBorder(new LineBorder(new Color(0, 0, 0)));
-		lineas = new LineasBody();
+		crearLinea.setBorder(null);
+		lineas = new LineasBody(this);
 		add(crearLinea);
 		add(lineas);
 	}

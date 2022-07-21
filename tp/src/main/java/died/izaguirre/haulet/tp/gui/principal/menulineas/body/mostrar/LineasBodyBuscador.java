@@ -3,6 +3,9 @@ package died.izaguirre.haulet.tp.gui.principal.menulineas.body.mostrar;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JTextField;
+
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
+
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import java.awt.Insets;
@@ -58,7 +61,7 @@ public class LineasBodyBuscador extends JPanel {
 		buscarButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				menuPadre.agregarLinea();
+				menuPadre.agregarLinea(new Linea("Economica",5,"Linea 9","Rojo",3,false,false));
 			}
 		});
 		buscarButton.setIcon(

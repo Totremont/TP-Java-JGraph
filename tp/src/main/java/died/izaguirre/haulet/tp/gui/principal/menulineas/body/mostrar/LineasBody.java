@@ -5,12 +5,15 @@ import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 public class LineasBody extends JPanel {
 	
 	private JPanel menuPadre;
 	private JPanel buscador;
-	private LineasBodyLista listaLineas;
-	private JScrollPane scrollPane;
+	private JPanel panel;
 	
 	/**
 	 * Create the panel.
@@ -30,18 +33,12 @@ public class LineasBody extends JPanel {
 		this.buscador = new LineasBodyBuscador(this);
 		add(buscador,BorderLayout.NORTH);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setViewportBorder(null);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		add(scrollPane, BorderLayout.CENTER);
-		
-		listaLineas = new LineasBodyLista(this);
-		listaLineas.setBorder(null);
-		scrollPane.setViewportView(listaLineas);
+		panel = new LineasBodyTable();
+		add(panel, BorderLayout.CENTER);
 	}
 	
-	public void agregarLinea() {
-		listaLineas.agregarLinea();
+	public void agregarLinea(Linea l) {
+		((LineasBodyTable) panel).agregarLinea(l);
 	}
 	
 }
