@@ -1,4 +1,4 @@
-package died.izaguirre.haulet.tp.gui.principal.menulineas.head;
+package died.izaguirre.haulet.tp.gui.menulineas.head;
 
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;

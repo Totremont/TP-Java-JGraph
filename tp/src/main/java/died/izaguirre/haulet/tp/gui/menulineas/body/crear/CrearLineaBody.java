@@ -1,4 +1,4 @@
-package died.izaguirre.haulet.tp.gui.principal.menulineas.body.crear;
+package died.izaguirre.haulet.tp.gui.menulineas.body.crear;
 
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
@@ -8,7 +8,7 @@ import java.awt.Insets;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-import died.izaguirre.haulet.tp.gui.principal.menulineas.ColorLinea;
+import died.izaguirre.haulet.tp.gui.menulineas.ColorLinea;
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;

@@ -1,11 +1,11 @@
-package died.izaguirre.haulet.tp.gui.principal.menulineas.body;
+package died.izaguirre.haulet.tp.gui.menulineas.body;
 
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.border.LineBorder;
 
-import died.izaguirre.haulet.tp.gui.principal.menulineas.body.crear.CrearLineaBody;
-import died.izaguirre.haulet.tp.gui.principal.menulineas.body.mostrar.LineasBody;
+import died.izaguirre.haulet.tp.gui.menulineas.body.crear.CrearLineaBody;
+import died.izaguirre.haulet.tp.gui.menulineas.body.mostrar.LineasBody;
 
 import java.awt.Color;
 

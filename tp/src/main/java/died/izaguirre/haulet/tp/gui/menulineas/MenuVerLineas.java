@@ -1,12 +1,12 @@
-package died.izaguirre.haulet.tp.gui.principal.menulineas;
+package died.izaguirre.haulet.tp.gui.menulineas;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.border.LineBorder;
 
-import died.izaguirre.haulet.tp.gui.principal.menulineas.body.MenuVerLineasBody;
-import died.izaguirre.haulet.tp.gui.principal.menulineas.head.MenuVerLineasHead;
+import died.izaguirre.haulet.tp.gui.menulineas.body.MenuVerLineasBody;
+import died.izaguirre.haulet.tp.gui.menulineas.head.MenuVerLineasHead;
 
 import java.awt.Color;
 import javax.swing.JSeparator;

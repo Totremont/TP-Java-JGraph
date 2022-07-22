@@ -44,13 +44,14 @@ public class IncidenciasPanel extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
-		panel.setBorder(null);
 		add(panel, BorderLayout.NORTH);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
+		JScrollPane scrollPane2 = new JScrollPane();
+		panel.setBorder(null);
 		panel.setLayout(gridBagLayout);
 		
 		JLabel lblNewLabel = new JLabel("Incidencias");
