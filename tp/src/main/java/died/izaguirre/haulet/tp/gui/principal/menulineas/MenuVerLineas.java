@@ -9,6 +9,7 @@ import died.izaguirre.haulet.tp.gui.principal.menulineas.body.MenuVerLineasBody;
 import died.izaguirre.haulet.tp.gui.principal.menulineas.head.MenuVerLineasHead;
 
 import java.awt.Color;
+import javax.swing.JSeparator;
 
 public class MenuVerLineas extends JPanel {
 	

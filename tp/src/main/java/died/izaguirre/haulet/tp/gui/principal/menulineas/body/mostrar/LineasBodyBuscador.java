@@ -32,7 +32,7 @@ public class LineasBodyBuscador extends JPanel {
 
 	public LineasBodyBuscador() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 137, 0, 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
@@ -49,7 +49,6 @@ public class LineasBodyBuscador extends JPanel {
 
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.weightx = 0.25;
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.insets = new Insets(0, 0, 0, 5);
 		gbc_textField.gridx = 4;
@@ -58,18 +57,11 @@ public class LineasBodyBuscador extends JPanel {
 		textField.setColumns(10);
 
 		buscarButton = new JLabel("");
-		buscarButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				menuPadre.agregarLinea(new Linea("Economica",5,"Linea 9","Rojo",3,false,false));
-			}
-		});
 		buscarButton.setIcon(
 				new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\magnify.png"));
 		GridBagConstraints gbc_buscarButton = new GridBagConstraints();
 		gbc_buscarButton.insets = new Insets(0, 0, 0, 5);
 		gbc_buscarButton.anchor = GridBagConstraints.WEST;
-		gbc_buscarButton.weightx = 0.25;
 		gbc_buscarButton.gridx = 5;
 		gbc_buscarButton.gridy = 0;
 		add(buscarButton, gbc_buscarButton);
