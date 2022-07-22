@@ -6,12 +6,14 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import died.izaguirre.haulet.tp.gui.principal.menulineas.MenuVerLineas;
+import died.izaguirre.haulet.tp.gui.incidencias.IncidenciasPanel;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -73,13 +75,33 @@ public class Principal extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 860, 526);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		setContentPane(contentPane);
+		GridBagLayout gbl_contentPane = new GridBagLayout();
+		gbl_contentPane.columnWidths = new int[]{0, 0};
+		gbl_contentPane.rowHeights = new int[]{0};
+		gbl_contentPane.columnWeights = new double[]{0.4, 0.6d};
+		gbl_contentPane.rowWeights = new double[]{1.0};
+		contentPane.setLayout(gbl_contentPane);
 		
 		JPanel panel_izquierdo = new JPanel();
-		panel_izquierdo.setBorder(new LineBorder(Color.GRAY, 1, true));
-		contentPane.add(panel_izquierdo, BorderLayout.WEST);
+		//JPanel panel_izquierdo = new IncidenciasPanel();
+		panel_izquierdo.setBorder(new LineBorder(Color.GRAY));
+		GridBagConstraints gbc_panel_izquierdo = new GridBagConstraints();
+		gbc_panel_izquierdo.fill = GridBagConstraints.BOTH;
+		gbc_panel_izquierdo.gridx = 0;
+		gbc_panel_izquierdo.gridy = 0;
+		contentPane.add(panel_izquierdo, gbc_panel_izquierdo);
+		
+		JPanel panel_grafo = new JPanel();
+		GridBagConstraints gbc_panel_grafo = new GridBagConstraints();
+		gbc_panel_grafo.weightx = 10.0;
+		gbc_panel_grafo.fill = GridBagConstraints.BOTH;
+		gbc_panel_grafo.gridx = 1;
+		gbc_panel_grafo.gridy = 0;
+		contentPane.add(panel_grafo, gbc_panel_grafo);
+		panel_grafo.setLayout(new BorderLayout(0, 0));
+
 		GridBagLayout gbl_panel_izquierdo = new GridBagLayout();
 		gbl_panel_izquierdo.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_panel_izquierdo.rowHeights = new int[]{20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -367,19 +389,11 @@ public class Principal extends JFrame {
 		gbc_separator4.gridy = 18;
 		panel_izquierdo.add(separator4, gbc_separator4);
 		
-		JPanel panel_grafo = new JPanel();
-		contentPane.add(panel_grafo, BorderLayout.CENTER);
-		panel_grafo.setLayout(new BorderLayout(0, 0));
 		
 		JLabel labelSinGrafo = new JLabel("");
-		labelSinGrafo.setIcon(new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\map.png"));
+		labelSinGrafo.setIcon(new ImageIcon(getClass().getResource("/thumbnail.jpg")));
 		labelSinGrafo.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_grafo.add(labelSinGrafo, BorderLayout.CENTER);
-		
-		
-		JPanel menuVerLineas = new MenuVerLineas();
-		contentPane.add(menuVerLineas,BorderLayout.WEST);
-		
 	}
 
 }
