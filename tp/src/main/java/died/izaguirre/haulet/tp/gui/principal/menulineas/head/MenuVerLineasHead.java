@@ -11,7 +11,6 @@ import java.awt.Font;
 import javax.swing.JSeparator;
 
 public class MenuVerLineasHead extends JPanel {
-	private JLabel volverButton;
 	private JLabel tituloDelMenu;
 	
 	private JPanel menuPadre;
@@ -33,14 +32,6 @@ public class MenuVerLineasHead extends JPanel {
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
-		
-		volverButton = new JLabel("");
-		volverButton.setIcon(new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\chevron-left.png"));
-		GridBagConstraints gbc_volverButton = new GridBagConstraints();
-		gbc_volverButton.insets = new Insets(0, 0, 5, 5);
-		gbc_volverButton.gridx = 0;
-		gbc_volverButton.gridy = 3;
-		add(volverButton, gbc_volverButton);
 		
 		tituloDelMenu = new JLabel("GESTOR DE LÍNEAS");
 		tituloDelMenu.setFont(new Font("Tahoma", Font.PLAIN, 12));

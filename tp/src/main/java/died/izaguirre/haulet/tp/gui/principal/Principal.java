@@ -394,6 +394,8 @@ public class Principal extends JFrame {
 		labelSinGrafo.setIcon(new ImageIcon(getClass().getResource("/thumbnail.jpg")));
 		labelSinGrafo.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_grafo.add(labelSinGrafo, BorderLayout.CENTER);
+
+		
 	}
 
 }
