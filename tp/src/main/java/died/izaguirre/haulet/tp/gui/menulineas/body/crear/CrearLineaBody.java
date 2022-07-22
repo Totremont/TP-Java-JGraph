@@ -18,9 +18,9 @@ import java.awt.Color;
 
 public class CrearLineaBody extends JPanel {
 	private JLabel tipoLineaLabel;
-	private JComboBox comboBox;
+	private JComboBox tipoLineaComboBx;
 	private JLabel colorLabel;
-	private JComboBox comboBox_1;
+	private JComboBox colorLineaComboBx;
 	private JLabel nombreLabel;
 	private JTextField textField;
 	private JLabel capParadoLabel;
@@ -32,6 +32,12 @@ public class CrearLineaBody extends JPanel {
 	private JButton crearButton;
 	
 	private JPanel menuPadre;
+	private JLabel paradaOrigenLabel;
+	private JLabel paradaDestinoLabel;
+	private JComboBox origenComboBx;
+	private JComboBox destinoComboBx;
+	private JLabel trayectoLabel;
+	private JComboBox trayectoComboBx;
 
 	/**
 	 * Create the panel.
@@ -46,9 +52,9 @@ public class CrearLineaBody extends JPanel {
 		setBorder(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 146, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
 		tipoLineaLabel = new JLabel("Tipo de línea");
@@ -59,14 +65,14 @@ public class CrearLineaBody extends JPanel {
 		gbc_tipoLineaLabel.gridy = 1;
 		add(tipoLineaLabel, gbc_tipoLineaLabel);
 		
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(LineaTipoEnum.values()));
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox.gridx = 2;
-		gbc_comboBox.gridy = 1;
-		add(comboBox, gbc_comboBox);
+		tipoLineaComboBx = new JComboBox();
+		tipoLineaComboBx.setModel(new DefaultComboBoxModel(LineaTipoEnum.values()));
+		GridBagConstraints gbc_tipoLineaComboBx = new GridBagConstraints();
+		gbc_tipoLineaComboBx.insets = new Insets(0, 0, 5, 5);
+		gbc_tipoLineaComboBx.fill = GridBagConstraints.HORIZONTAL;
+		gbc_tipoLineaComboBx.gridx = 2;
+		gbc_tipoLineaComboBx.gridy = 1;
+		add(tipoLineaComboBx, gbc_tipoLineaComboBx);
 		
 		colorLabel = new JLabel("Color");
 		GridBagConstraints gbc_colorLabel = new GridBagConstraints();
@@ -76,14 +82,14 @@ public class CrearLineaBody extends JPanel {
 		gbc_colorLabel.gridy = 2;
 		add(colorLabel, gbc_colorLabel);
 		
-		comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(ColorLinea.values()));
-		GridBagConstraints gbc_comboBox_1 = new GridBagConstraints();
-		gbc_comboBox_1.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBox_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox_1.gridx = 2;
-		gbc_comboBox_1.gridy = 2;
-		add(comboBox_1, gbc_comboBox_1);
+		colorLineaComboBx = new JComboBox();
+		colorLineaComboBx.setModel(new DefaultComboBoxModel(ColorLinea.values()));
+		GridBagConstraints gbc_colorLineaComboBx = new GridBagConstraints();
+		gbc_colorLineaComboBx.insets = new Insets(0, 0, 5, 5);
+		gbc_colorLineaComboBx.fill = GridBagConstraints.HORIZONTAL;
+		gbc_colorLineaComboBx.gridx = 2;
+		gbc_colorLineaComboBx.gridy = 2;
+		add(colorLineaComboBx, gbc_colorLineaComboBx);
 		
 		nombreLabel = new JLabel("Nombre de la línea");
 		GridBagConstraints gbc_nombreLabel = new GridBagConstraints();
@@ -152,12 +158,59 @@ public class CrearLineaBody extends JPanel {
 		gbc_aireCk.gridy = 7;
 		add(aireCk, gbc_aireCk);
 		
+		paradaOrigenLabel = new JLabel("Parada origen");
+		GridBagConstraints gbc_paradaOrigenLabel = new GridBagConstraints();
+		gbc_paradaOrigenLabel.anchor = GridBagConstraints.EAST;
+		gbc_paradaOrigenLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_paradaOrigenLabel.gridx = 1;
+		gbc_paradaOrigenLabel.gridy = 8;
+		add(paradaOrigenLabel, gbc_paradaOrigenLabel);
+		
+		origenComboBx = new JComboBox();
+		GridBagConstraints gbc_origenComboBx = new GridBagConstraints();
+		gbc_origenComboBx.insets = new Insets(0, 0, 5, 5);
+		gbc_origenComboBx.fill = GridBagConstraints.HORIZONTAL;
+		gbc_origenComboBx.gridx = 2;
+		gbc_origenComboBx.gridy = 8;
+		add(origenComboBx, gbc_origenComboBx);
+		
+		paradaDestinoLabel = new JLabel("Parada destino");
+		GridBagConstraints gbc_paradaDestinoLabel = new GridBagConstraints();
+		gbc_paradaDestinoLabel.anchor = GridBagConstraints.EAST;
+		gbc_paradaDestinoLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_paradaDestinoLabel.gridx = 1;
+		gbc_paradaDestinoLabel.gridy = 9;
+		add(paradaDestinoLabel, gbc_paradaDestinoLabel);
+		
+		destinoComboBx = new JComboBox();
+		GridBagConstraints gbc_destinoComboBx = new GridBagConstraints();
+		gbc_destinoComboBx.insets = new Insets(0, 0, 5, 5);
+		gbc_destinoComboBx.fill = GridBagConstraints.HORIZONTAL;
+		gbc_destinoComboBx.gridx = 2;
+		gbc_destinoComboBx.gridy = 9;
+		add(destinoComboBx, gbc_destinoComboBx);
+		
+		trayectoLabel = new JLabel("Trayecto");
+		GridBagConstraints gbc_trayectoLabel = new GridBagConstraints();
+		gbc_trayectoLabel.anchor = GridBagConstraints.EAST;
+		gbc_trayectoLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_trayectoLabel.gridx = 1;
+		gbc_trayectoLabel.gridy = 10;
+		add(trayectoLabel, gbc_trayectoLabel);
+		
+		trayectoComboBx = new JComboBox();
+		GridBagConstraints gbc_trayectoComboBx = new GridBagConstraints();
+		gbc_trayectoComboBx.insets = new Insets(0, 0, 5, 5);
+		gbc_trayectoComboBx.fill = GridBagConstraints.HORIZONTAL;
+		gbc_trayectoComboBx.gridx = 2;
+		gbc_trayectoComboBx.gridy = 10;
+		add(trayectoComboBx, gbc_trayectoComboBx);
+		
 		crearButton = new JButton("Crear");
 		GridBagConstraints gbc_crearButton = new GridBagConstraints();
-		gbc_crearButton.gridwidth = 2;
-		gbc_crearButton.insets = new Insets(0, 0, 0, 5);
+		gbc_crearButton.gridwidth = 4;
 		gbc_crearButton.gridx = 1;
-		gbc_crearButton.gridy = 8;
+		gbc_crearButton.gridy = 11;
 		add(crearButton, gbc_crearButton);
 
 	}
