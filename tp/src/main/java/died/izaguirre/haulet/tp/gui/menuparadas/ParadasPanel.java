@@ -1,4 +1,4 @@
-package died.izaguirre.haulet.tp.gui.incidencias;
+package died.izaguirre.haulet.tp.gui.menuparadas;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,21 +27,23 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 
 import javax.swing.JScrollBar;
 import java.awt.Font;
 import java.awt.SystemColor;
 import javax.swing.UIManager;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
-public class IncidenciasPanel extends JPanel {
+public class ParadasPanel extends JPanel {
 	private JTable table;
 	private JTextField textField;
 
 	/**
 	 * Create the panel.
 	 */
-	public IncidenciasPanel() {
+	public ParadasPanel() {
 		setBorder(null);
 		setLayout(new BorderLayout(0, 0));
 		
@@ -49,14 +51,14 @@ public class IncidenciasPanel extends JPanel {
 		add(panel, BorderLayout.NORTH);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0};
 		JScrollPane scrollPane2 = new JScrollPane();
 		panel.setBorder(null);
 		panel.setLayout(gridBagLayout);
 		
-		JLabel lblNewLabel = new JLabel("Incidencias");
+		JLabel lblNewLabel = new JLabel("Paradas");
 		lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBackground(UIManager.getColor("TextField.selectionBackground"));
@@ -97,30 +99,30 @@ public class IncidenciasPanel extends JPanel {
 		separator.setForeground(SystemColor.activeCaption);
 		separator.setOrientation(SwingConstants.VERTICAL);
 		GridBagConstraints gbc_separator = new GridBagConstraints();
-		gbc_separator.gridheight = 5;
+		gbc_separator.gridheight = 2;
 		gbc_separator.fill = GridBagConstraints.VERTICAL;
-		gbc_separator.insets = new Insets(0, 0, 5, 5);
+		gbc_separator.insets = new Insets(5, 0, 5, 5);
 		gbc_separator.gridx = 0;
 		gbc_separator.gridy = 2;
 		panel.add(separator, gbc_separator);
 		
-		JLabel lblNewLabel_2 = new JLabel("Parada afectada");
+		JLabel lblNewLabel_2 = new JLabel("Calle");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
 		gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_2.insets = new Insets(5, 0, 5, 5);
 		gbc_lblNewLabel_2.gridx = 1;
 		gbc_lblNewLabel_2.gridy = 2;
 		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
 		
 		JLabel lblNewLabel_7 = new JLabel("Alberdi");
 		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
-		gbc_lblNewLabel_7.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_7.insets = new Insets(5, 0, 5, 5);
 		gbc_lblNewLabel_7.gridx = 2;
 		gbc_lblNewLabel_7.gridy = 2;
 		panel.add(lblNewLabel_7, gbc_lblNewLabel_7);
 		
-		JLabel lblNewLabel_3 = new JLabel("Líneas afectadas");
+		JLabel lblNewLabel_3 = new JLabel("Paradas adyacentes");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
 		gbc_lblNewLabel_3.anchor = GridBagConstraints.WEST;
@@ -144,66 +146,12 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_9.gridy = 3;
 		panel.add(lblNewLabel_9, gbc_lblNewLabel_9);
 		
-		JLabel lblNewLabel_4 = new JLabel("Inicio");
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
-		gbc_lblNewLabel_4.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_4.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_4.gridx = 1;
-		gbc_lblNewLabel_4.gridy = 4;
-		panel.add(lblNewLabel_4, gbc_lblNewLabel_4);
-		
-		JLabel lblNewLabel_10 = new JLabel("09/05/2022");
-		GridBagConstraints gbc_lblNewLabel_10 = new GridBagConstraints();
-		gbc_lblNewLabel_10.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_10.gridx = 2;
-		gbc_lblNewLabel_10.gridy = 4;
-		panel.add(lblNewLabel_10, gbc_lblNewLabel_10);
-		
-		JLabel lblNewLabel_6 = new JLabel("Fin");
-		lblNewLabel_6.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lblNewLabel_6 = new GridBagConstraints();
-		gbc_lblNewLabel_6.anchor = GridBagConstraints.SOUTHWEST;
-		gbc_lblNewLabel_6.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_6.gridx = 1;
-		gbc_lblNewLabel_6.gridy = 5;
-		panel.add(lblNewLabel_6, gbc_lblNewLabel_6);
-		
-		JLabel lblNewLabel_11 = new JLabel("18/05/2022");
-		GridBagConstraints gbc_lblNewLabel_11 = new GridBagConstraints();
-		gbc_lblNewLabel_11.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_11.gridx = 2;
-		gbc_lblNewLabel_11.gridy = 5;
-		panel.add(lblNewLabel_11, gbc_lblNewLabel_11);
-		
-		JLabel lblNewLabel_14 = new JLabel("Faltan 4 días");
-		GridBagConstraints gbc_lblNewLabel_14 = new GridBagConstraints();
-		gbc_lblNewLabel_14.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_14.gridx = 3;
-		gbc_lblNewLabel_14.gridy = 5;
-		panel.add(lblNewLabel_14, gbc_lblNewLabel_14);
-		
-		JLabel lblNewLabel_12 = new JLabel("Motivo");
-		GridBagConstraints gbc_lblNewLabel_12 = new GridBagConstraints();
-		gbc_lblNewLabel_12.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_12.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_12.gridx = 1;
-		gbc_lblNewLabel_12.gridy = 6;
-		panel.add(lblNewLabel_12, gbc_lblNewLabel_12);
-		
-		JLabel lblNewLabel_13 = new JLabel("MANTENIMIENTO");
-		GridBagConstraints gbc_lblNewLabel_13 = new GridBagConstraints();
-		gbc_lblNewLabel_13.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_13.gridx = 2;
-		gbc_lblNewLabel_13.gridy = 6;
-		panel.add(lblNewLabel_13, gbc_lblNewLabel_13);
-		
 		JLabel lblNewLabel_15 = new JLabel("Lista");
 		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblNewLabel_15 = new GridBagConstraints();
 		gbc_lblNewLabel_15.insets = new Insets(10, 0, 15, 5);
 		gbc_lblNewLabel_15.gridx = 0;
-		gbc_lblNewLabel_15.gridy = 7;
+		gbc_lblNewLabel_15.gridy = 4;
 		panel.add(lblNewLabel_15, gbc_lblNewLabel_15);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -212,15 +160,18 @@ public class IncidenciasPanel extends JPanel {
 		gbc_separator_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_separator_1.gridwidth = 2;
 		gbc_separator_1.gridx = 1;
-		gbc_separator_1.gridy = 7;
+		gbc_separator_1.gridy = 4;
 		panel.add(separator_1, gbc_separator_1);
 		
 		JButton btnNewButton = new JButton("Agregar");
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
 		gbc_btnNewButton.gridx = 3;
-		gbc_btnNewButton.gridy = 7;
+		gbc_btnNewButton.gridy = 4;
 		panel.add(btnNewButton, gbc_btnNewButton);
+		JLabel textPaneIcon = new JLabel();
+		textPaneIcon.setIcon(new ImageIcon(getClass().getResource("/magnify.png")));
+		JTextField fieldText = new JTextField();
 		
 		JPanel panel_1 = new JPanel();
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
@@ -228,13 +179,13 @@ public class IncidenciasPanel extends JPanel {
 		gbc_panel_1.insets = new Insets(0, 0, 10, 5);
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
 		gbc_panel_1.gridx = 1;
-		gbc_panel_1.gridy = 8;
+		gbc_panel_1.gridy = 5;
 		panel.add(panel_1, gbc_panel_1);
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel_16 = new JLabel();
-		panel_1.add(lblNewLabel_16, BorderLayout.WEST);
-		lblNewLabel_16.setIcon(new ImageIcon(getClass().getResource("/magnify.png")));
+		JLabel lblNewLabel_4 = new JLabel("");
+		panel_1.add(lblNewLabel_4, BorderLayout.WEST);
+		lblNewLabel_4.setIcon(new ImageIcon(getClass().getResource("/magnify.png")));
 		
 		textField = new JTextField();
 		panel_1.add(textField, BorderLayout.CENTER);
@@ -245,28 +196,17 @@ public class IncidenciasPanel extends JPanel {
 		table.setFillsViewportHeight(true);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Incidencia #1", "Avellaneda", "08/09/2022", delete},
-				{"Incidencia #2", "Vera", "07/08/2022", delete},
-				{"Incidencia #3", "Sunchales", "05/06/2022", delete},
+				{"45", "Avellaneda", delete},
+				{"67", "Vera", delete},
+				{"88", "Sunchales", delete},
 			},
 			new String[] {
-				"Incidencia", "Parada", "Fin", "Borrar"
+				"Parada", "Calle", "Eliminar"
 			}
-		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		));
 		TableUtility.setCellsAlignment(table, SwingConstants.CENTER);
-		table.getColumnModel().getColumn(3).setCellRenderer(table.getDefaultRenderer(ImageIcon.class));
 		table.setRowHeight(35);
+		table.getColumnModel().getColumn(2).setCellRenderer(table.getDefaultRenderer(ImageIcon.class));
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
