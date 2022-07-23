@@ -11,28 +11,28 @@ import java.awt.Font;
 import javax.swing.JSeparator;
 
 public class MenuVerLineasHead extends JPanel {
-	private JLabel tituloDelMenu;
 	
+	private JLabel tituloDelMenu;
 	private JPanel menuPadre;
 	private JSeparator separator;
 
 	/**
 	 * Create the panel.
 	 */
-	
+
 	public MenuVerLineasHead(JPanel menuPadre) {
 		this();
 		this.menuPadre = menuPadre;
 	}
-	
-	public MenuVerLineasHead() {
+
+	private MenuVerLineasHead() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 12, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 12, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
-		
+
 		tituloDelMenu = new JLabel("GESTOR DE LÍNEAS");
 		tituloDelMenu.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		GridBagConstraints gbc_tituloDelMenu = new GridBagConstraints();
@@ -42,7 +42,7 @@ public class MenuVerLineasHead extends JPanel {
 		gbc_tituloDelMenu.gridx = 0;
 		gbc_tituloDelMenu.gridy = 4;
 		add(tituloDelMenu, gbc_tituloDelMenu);
-		
+
 		separator = new JSeparator();
 		GridBagConstraints gbc_separator = new GridBagConstraints();
 		gbc_separator.insets = new Insets(0, 0, 0, 5);

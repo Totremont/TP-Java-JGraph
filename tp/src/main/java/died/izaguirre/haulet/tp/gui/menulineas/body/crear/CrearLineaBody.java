@@ -15,6 +15,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class CrearLineaBody extends JPanel {
 	private JLabel tipoLineaLabel;
@@ -22,11 +24,9 @@ public class CrearLineaBody extends JPanel {
 	private JLabel colorLabel;
 	private JComboBox colorLineaComboBx;
 	private JLabel nombreLabel;
-	private JTextField textField;
-	private JLabel capParadoLabel;
-	private JTextField textField_1;
+	private JTextField nombreLineaText;
 	private JLabel capSentadoLabel;
-	private JTextField textField_2;
+	private JTextField capSentadoText;
 	private JCheckBox wifiCk;
 	private JCheckBox aireCk;
 	private JButton crearButton;
@@ -48,7 +48,7 @@ public class CrearLineaBody extends JPanel {
 		this.menuPadre = menuPadre;
 	}
 	
-	public CrearLineaBody() {
+	private CrearLineaBody() {
 		setBorder(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 146, 0, 0};
@@ -66,6 +66,21 @@ public class CrearLineaBody extends JPanel {
 		add(tipoLineaLabel, gbc_tipoLineaLabel);
 		
 		tipoLineaComboBx = new JComboBox();
+		tipoLineaComboBx.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(tipoLineaComboBx.getSelectedItem() == LineaTipoEnum.ECONOMICA) {
+					wifiCk.setEnabled(false);
+					aireCk.setEnabled(false);
+					capParadoText.setEnabled(true);
+					validate();
+				}else {
+					wifiCk.setEnabled(true);
+					aireCk.setEnabled(true);
+					capParadoText.setEnabled(false);
+					validate();
+				}
+			}
+		});
 		tipoLineaComboBx.setModel(new DefaultComboBoxModel(LineaTipoEnum.values()));
 		GridBagConstraints gbc_tipoLineaComboBx = new GridBagConstraints();
 		gbc_tipoLineaComboBx.insets = new Insets(0, 0, 5, 5);
@@ -99,55 +114,39 @@ public class CrearLineaBody extends JPanel {
 		gbc_nombreLabel.gridy = 3;
 		add(nombreLabel, gbc_nombreLabel);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 2;
-		gbc_textField.gridy = 3;
-		add(textField, gbc_textField);
-		textField.setColumns(10);
-		
-		capParadoLabel = new JLabel("Cap. Parado");
-		GridBagConstraints gbc_capParadoLabel = new GridBagConstraints();
-		gbc_capParadoLabel.anchor = GridBagConstraints.EAST;
-		gbc_capParadoLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_capParadoLabel.gridx = 1;
-		gbc_capParadoLabel.gridy = 4;
-		add(capParadoLabel, gbc_capParadoLabel);
-		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 2;
-		gbc_textField_1.gridy = 4;
-		add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		nombreLineaText = new JTextField();
+		GridBagConstraints gbc_nombreLineaText = new GridBagConstraints();
+		gbc_nombreLineaText.insets = new Insets(0, 0, 5, 5);
+		gbc_nombreLineaText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_nombreLineaText.gridx = 2;
+		gbc_nombreLineaText.gridy = 3;
+		add(nombreLineaText, gbc_nombreLineaText);
+		nombreLineaText.setColumns(10);
 		
 		capSentadoLabel = new JLabel("Cap. Sentado");
 		GridBagConstraints gbc_capSentadoLabel = new GridBagConstraints();
 		gbc_capSentadoLabel.anchor = GridBagConstraints.EAST;
 		gbc_capSentadoLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_capSentadoLabel.gridx = 1;
-		gbc_capSentadoLabel.gridy = 5;
+		gbc_capSentadoLabel.gridy = 4;
 		add(capSentadoLabel, gbc_capSentadoLabel);
 		
-		textField_2 = new JTextField();
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.gridx = 2;
-		gbc_textField_2.gridy = 5;
-		add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
+		capSentadoText = new JTextField();
+		GridBagConstraints gbc_capSentadoText = new GridBagConstraints();
+		gbc_capSentadoText.insets = new Insets(0, 0, 5, 5);
+		gbc_capSentadoText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_capSentadoText.gridx = 2;
+		gbc_capSentadoText.gridy = 4;
+		add(capSentadoText, gbc_capSentadoText);
+		capSentadoText.setColumns(10);
 		
 		wifiCk = new JCheckBox("Wifi");
 		GridBagConstraints gbc_wifiCk = new GridBagConstraints();
 		gbc_wifiCk.anchor = GridBagConstraints.WEST;
 		gbc_wifiCk.insets = new Insets(0, 0, 5, 5);
 		gbc_wifiCk.gridx = 2;
-		gbc_wifiCk.gridy = 6;
+		gbc_wifiCk.gridy = 5;
+		wifiCk.setEnabled(false);
 		add(wifiCk, gbc_wifiCk);
 		
 		aireCk = new JCheckBox("Aire");
@@ -155,7 +154,8 @@ public class CrearLineaBody extends JPanel {
 		gbc_aireCk.anchor = GridBagConstraints.WEST;
 		gbc_aireCk.insets = new Insets(0, 0, 5, 5);
 		gbc_aireCk.gridx = 2;
-		gbc_aireCk.gridy = 7;
+		gbc_aireCk.gridy = 6;
+		aireCk.setEnabled(false);
 		add(aireCk, gbc_aireCk);
 		
 		paradaOrigenLabel = new JLabel("Parada origen");
@@ -163,7 +163,7 @@ public class CrearLineaBody extends JPanel {
 		gbc_paradaOrigenLabel.anchor = GridBagConstraints.EAST;
 		gbc_paradaOrigenLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_paradaOrigenLabel.gridx = 1;
-		gbc_paradaOrigenLabel.gridy = 8;
+		gbc_paradaOrigenLabel.gridy = 7;
 		add(paradaOrigenLabel, gbc_paradaOrigenLabel);
 		
 		origenComboBx = new JComboBox();
@@ -171,7 +171,7 @@ public class CrearLineaBody extends JPanel {
 		gbc_origenComboBx.insets = new Insets(0, 0, 5, 5);
 		gbc_origenComboBx.fill = GridBagConstraints.HORIZONTAL;
 		gbc_origenComboBx.gridx = 2;
-		gbc_origenComboBx.gridy = 8;
+		gbc_origenComboBx.gridy = 7;
 		add(origenComboBx, gbc_origenComboBx);
 		
 		paradaDestinoLabel = new JLabel("Parada destino");
@@ -179,7 +179,7 @@ public class CrearLineaBody extends JPanel {
 		gbc_paradaDestinoLabel.anchor = GridBagConstraints.EAST;
 		gbc_paradaDestinoLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_paradaDestinoLabel.gridx = 1;
-		gbc_paradaDestinoLabel.gridy = 9;
+		gbc_paradaDestinoLabel.gridy = 8;
 		add(paradaDestinoLabel, gbc_paradaDestinoLabel);
 		
 		destinoComboBx = new JComboBox();
@@ -187,7 +187,7 @@ public class CrearLineaBody extends JPanel {
 		gbc_destinoComboBx.insets = new Insets(0, 0, 5, 5);
 		gbc_destinoComboBx.fill = GridBagConstraints.HORIZONTAL;
 		gbc_destinoComboBx.gridx = 2;
-		gbc_destinoComboBx.gridy = 9;
+		gbc_destinoComboBx.gridy = 8;
 		add(destinoComboBx, gbc_destinoComboBx);
 		
 		trayectoLabel = new JLabel("Trayecto");
@@ -195,7 +195,7 @@ public class CrearLineaBody extends JPanel {
 		gbc_trayectoLabel.anchor = GridBagConstraints.EAST;
 		gbc_trayectoLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_trayectoLabel.gridx = 1;
-		gbc_trayectoLabel.gridy = 10;
+		gbc_trayectoLabel.gridy = 9;
 		add(trayectoLabel, gbc_trayectoLabel);
 		
 		trayectoComboBx = new JComboBox();
@@ -203,16 +203,39 @@ public class CrearLineaBody extends JPanel {
 		gbc_trayectoComboBx.insets = new Insets(0, 0, 5, 5);
 		gbc_trayectoComboBx.fill = GridBagConstraints.HORIZONTAL;
 		gbc_trayectoComboBx.gridx = 2;
-		gbc_trayectoComboBx.gridy = 10;
+		gbc_trayectoComboBx.gridy = 9;
 		add(trayectoComboBx, gbc_trayectoComboBx);
 		
 		crearButton = new JButton("Crear");
+		crearButton.addActionListener( e -> crearLinea(e));
 		GridBagConstraints gbc_crearButton = new GridBagConstraints();
+		gbc_crearButton.insets = new Insets(0, 0, 5, 0);
 		gbc_crearButton.gridwidth = 4;
-		gbc_crearButton.gridx = 1;
-		gbc_crearButton.gridy = 11;
+		gbc_crearButton.gridx = 2;
+		gbc_crearButton.gridy = 10;
 		add(crearButton, gbc_crearButton);
 
+	}
+
+	private void crearLinea(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(tipoLineaComboBx.getSelectedItem() == LineaTipoEnum.ECONOMICA) {
+			crearLineaEconomica();
+		}else if(tipoLineaComboBx.getSelectedItem() == LineaTipoEnum.SUPERIOR){
+			crearLineaSuperior();
+		}
+		
+	}
+
+	private void crearLineaSuperior() {
+		// TODO Auto-generated method stub
+		String 
+		
+	}
+
+	private void crearLineaEconomica() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

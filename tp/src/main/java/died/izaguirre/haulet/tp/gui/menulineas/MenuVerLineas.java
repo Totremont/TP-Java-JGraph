@@ -26,7 +26,7 @@ public class MenuVerLineas extends JPanel {
 		this.ventanaPadre = ventanaPadre;
 	}
 	
-	public MenuVerLineas() {
+	private MenuVerLineas() {
 		setLayout(new BorderLayout(0, 0));
 		agregarHead();
 		agregarBody();

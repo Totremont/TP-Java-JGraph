@@ -24,7 +24,7 @@ public class LineasBody extends JPanel {
 		this.menuPadre = menuPadre;
 	}
 	
-	public LineasBody() {
+	private LineasBody() {
 		setLayout(new BorderLayout(0, 0));
 		agregarBuscador();
 	}
@@ -33,7 +33,7 @@ public class LineasBody extends JPanel {
 		this.buscador = new LineasBodyBuscador(this);
 		add(buscador,BorderLayout.NORTH);
 		
-		panel = new LineasBodyTable();
+		panel = new LineasBodyTable(this);
 		add(panel, BorderLayout.CENTER);
 	}
 	

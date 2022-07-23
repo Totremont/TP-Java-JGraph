@@ -17,7 +17,7 @@ public class LineasBodyBuscador extends JPanel {
 	private JTextField textField;
 	private JLabel buscarButton;
 
-	private LineasBody menuPadre;
+	private JPanel menuPadre;
 	private JLabel emptyLabel;
 	private JLabel emptyLabel2;
 
@@ -25,7 +25,7 @@ public class LineasBodyBuscador extends JPanel {
 	 * Create the panel.
 	 */
 
-	public LineasBodyBuscador(LineasBody menuPadre) {
+	public LineasBodyBuscador(JPanel menuPadre) {
 		this();
 		this.menuPadre = menuPadre;
 	}

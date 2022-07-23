@@ -13,7 +13,26 @@ public class Linea {
 
 	public Linea() {
 	}
-
+	
+	//Linea economica
+	public Linea(String tipo, String nombre, String color, Integer capParado, Integer capSentado) {
+		this.tipo = tipo;
+		this.nombre = nombre;
+		this.color = color;
+		this.capParado = capParado;
+		this.capSentado = capSentado;
+	}
+	
+	//Linea superior
+	public Linea(String tipo, String nombre, String color, Integer capSentado, Boolean tieneAire, Boolean tieneWifi) {
+		this.tipo = tipo;
+		this.nombre = nombre;
+		this.color = color;
+		this.capSentado = capSentado;
+		this.tieneAire = tieneAire;
+		this.tieneWifi = tieneWifi;
+	}
+	
 	public Linea(String tipo, Integer capSentado, String nombre, String color, Integer capParado, Boolean tieneAire,
 			Boolean tieneWifi) {
 		this();

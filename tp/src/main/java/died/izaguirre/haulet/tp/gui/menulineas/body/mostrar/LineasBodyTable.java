@@ -14,7 +14,7 @@ import javax.swing.ScrollPaneConstants;
 
 public class LineasBodyTable extends JPanel {
 	
-	private LineasBody menuPadre;
+	private JPanel menuPadre;
 	private JScrollPane scrollPane;
 	private JTable table;
 	private DefaultTableModel model;
@@ -24,12 +24,12 @@ public class LineasBodyTable extends JPanel {
 	 * Create the panel.
 	 */
 	
-	public LineasBodyTable(LineasBody menuPadre) {
+	public LineasBodyTable(JPanel menuPadre) {
 		this();
 		this.menuPadre = menuPadre;
 	}
 	
-	public LineasBodyTable() {
+	private LineasBodyTable() {
 		setLayout(new BorderLayout(0, 0));
 		
 		scrollPane = new JScrollPane();
@@ -52,12 +52,9 @@ public class LineasBodyTable extends JPanel {
 	
 	public void agregarLinea(Linea l) {
 		
-		JLabel info = new JLabel("");
-		info.setIcon(new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\help-circle.png"));
-		JLabel camino = new JLabel("");
-		camino.setIcon(new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\eye-outline.png"));
-		JLabel eliminar = new JLabel("");
-		eliminar.setIcon(new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\delete.png"));
+		ImageIcon info = new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\help-circle.png");
+		ImageIcon camino = new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\eye-outline.png");
+		ImageIcon eliminar = new ImageIcon("C:\\Users\\tomsh\\eclipse-workspace\\tpdied\\tp\\src\\main\\resources\\delete.png");
 		
 		Object[] nuevaLinea = new Object[6];
 		nuevaLinea[0] = l.getNombre();

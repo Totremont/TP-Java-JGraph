@@ -25,7 +25,7 @@ public class MenuVerLineasBody extends JPanel {
 		this.menuPadre = menuPadre;
 	}
 	
-	public MenuVerLineasBody() {
+	private MenuVerLineasBody() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		crearLinea = new CrearLineaBody(this);
 		crearLinea.setBorder(null);
