@@ -23,7 +23,7 @@ public class LineaDaoImpl implements LineaDao {
 	@Override
 	public void add(Linea t) {
 		// TODO Auto-generated method stub
-		if (t.getTipo() == LineaTipoEnum.ECONOMICA.name())
+		if (t.getTipo() == LineaTipoEnum.Economica.toString())
 			this.addEconomica(t);
 		else
 			this.addSuperior(t);
@@ -90,7 +90,7 @@ public class LineaDaoImpl implements LineaDao {
 				aux.setCapSentado(rs.getInt(3)); // ECO Y SUP
 				aux.setNombre(rs.getString(5)); // ECO Y SUP
 				aux.setColor(rs.getString(6)); // ECO Y SUP
-				if(aux.getTipo() == LineaTipoEnum.SUPERIOR.name()) 
+				if(aux.getTipo() == LineaTipoEnum.Superior.toString()) 
 				{
 					aux.setTieneAire(rs.getBoolean(7)); // SUP
 					aux.setTieneWifi(rs.getBoolean(8)); // SUP

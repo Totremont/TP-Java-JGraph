@@ -15,11 +15,11 @@ public class Linea {
 	}
 	
 	//Linea economica
-	public Linea(String tipo, String nombre, String color, Integer capParado, Integer capSentado) {
+	public Linea(String tipo, String nombre, String color, Integer capSentado) {
 		this.tipo = tipo;
 		this.nombre = nombre;
 		this.color = color;
-		this.capParado = capParado;
+		this.capParado = (int) (capSentado * 0.40);
 		this.capSentado = capSentado;
 	}
 	
@@ -29,6 +29,7 @@ public class Linea {
 		this.nombre = nombre;
 		this.color = color;
 		this.capSentado = capSentado;
+		this.capParado = 0;
 		this.tieneAire = tieneAire;
 		this.tieneWifi = tieneWifi;
 	}
