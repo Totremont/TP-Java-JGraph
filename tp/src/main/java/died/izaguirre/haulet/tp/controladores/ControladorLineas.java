@@ -1,31 +1,234 @@
 package died.izaguirre.haulet.tp.controladores;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
+import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
 import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
+import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
+import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
+import died.izaguirre.haulet.tp.tablas.Parada;
 import died.izaguirre.haulet.tp.tablas.linea.Linea;
+import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 
 public class ControladorLineas {
 
-	private static ControladorLineas gestor;
 	private LineaDao lineaDao;
+	private ParadaDao paradaDao;
 	private List<Linea> lineas;
+	private List<Parada> paradas;
+	private MenuVerLineas vista;
+	private Thread thrd;
 
 	private ControladorLineas() {
+		lineaDao = new LineaDaoImpl();
+		paradaDao = new ParadaDaoImpl();
 		lineas = new ArrayList<Linea>();
-		lineaDao = new LineaDaoImpl();		
+		Runnable r = () -> {
+			lineas = lineaDao.getAll();
+			paradas = paradaDao.getAll();
+		};
+
+		thrd = new Thread(r);
+		thrd.start();
+
 	}
 
-	public synchronized static ControladorLineas get() {
-		if (gestor == null)
-			gestor = new ControladorLineas();
+	public ControladorLineas(MenuVerLineas vista) {
+		this();
+		this.vista = vista;
+		inicializarList();
+	}
 
-		return gestor;
+	private void inicializarList() {
+		tipoLineaListener(); // Para habilitar/deshabilitar los botones wifi y aire
+		crearLineaListener(); // Para generar la linea y mostrarla cuando se crea
+		crearTablaListener(); // Para detectar si elijo Info. - Ver camino - Eliminar en la tabla
+		cargarTabla(); // Para cargar las lineas de la bdd en la tabla
+		cargarParadas();
+	}
+
+	private void tipoLineaListener() {
+		vista.getLineaTipoCBx().addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
+					vista.getAireCk().setEnabled(false);
+					vista.getWifiCk().setEnabled(false);
+				} else if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Superior)) {
+					vista.getAireCk().setEnabled(true);
+					vista.getWifiCk().setEnabled(true);
+				}
+				vista.validate();
+			}
+		});
+	}
+
+	private void crearLineaListener() {
+		vista.getCrearLineaButton().addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Linea l;
+				if (camposRellenados()) {
+					if (vista.getLineaTipoCBx().getSelectedItem() == LineaTipoEnum.Economica)
+						l = crearLineaEconomica();
+					else
+						l = crearLineaSuperior();
+
+					agregarLineaTabla(l);
+				}
+
+			}
+		});
+	}
+
+	private Boolean camposRellenados() {
+		// Los unicos campos que el usuario puede no ingresar nada son en Nombre y
+		// capacidad sentado
+		if (vista.getNombreLineaText().getText().isEmpty() || vista.getCapSentadoText().getText().isEmpty())
+			return false;
+		else
+			return true;
+	}
+
+	private Linea crearLineaEconomica() {
+
+		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
+				vista.getColorCBx().getSelectedItem().toString(),
+				Integer.parseInt(vista.getCapSentadoText().getText()));
+
+		lineaDao.add(l);
+
+		return l;
 
 	}
-	
-	
+
+	private Linea crearLineaSuperior() {
+
+		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
+				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
+				vista.getAireCk().isSelected(), vista.getWifiCk().isSelected());
+
+		lineaDao.add(l);
+
+		return l;
+	}
+
+	private void agregarLineaTabla(Linea l) {
+
+		Object[] nuevaLinea = new Object[6];
+		// Falta agregar listener
+		ImageIcon imgInfo = new ImageIcon(getClass().getResource("/help-circle.png"));
+		ImageIcon imgVerCamino = new ImageIcon(getClass().getResource("/eye-outline.png"));
+		ImageIcon imgDelete = new ImageIcon(getClass().getResource("/delete.png"));
+
+//		JLabel info = new JLabel("");
+//		info.setIcon(imgInfo);
+//		JLabel verCamino = new JLabel("");
+//		info.setIcon(imgVerCamino);
+//		JLabel borrarLinea = new JLabel("");
+//		borrarLinea.setIcon(imgDelete);
+
+		nuevaLinea[0] = l.getId();
+		nuevaLinea[1] = l.getNombre();
+		nuevaLinea[2] = l.getColor();
+		nuevaLinea[3] = imgInfo;
+		nuevaLinea[4] = imgVerCamino;
+		nuevaLinea[5] = imgDelete;
+
+		vista.getModel().addRow(nuevaLinea);
+		vista.validate();
+
+	}
+
+	private void eliminarFilaTabla(int fila) {
+		((DefaultTableModel) vista.getModel()).removeRow(fila);
+	}
+
+	private void cargarTabla() {
+		try {
+			thrd.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Exception en cargarTabla() -> join()");
+		}
+
+		for (Linea l : lineas)
+			agregarLineaTabla(l);
+
+	}
+
+	private void cargarParadas() {
+
+		for (Parada p : paradas) {
+			vista.getOrigenCBx().addItem(p.toString());
+			vista.getDestinoCBx().addItem(p.toString());
+		}
+
+	}
+
+	private void crearTablaListener() {
+		vista.getTable().addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				int fila = vista.getTable().rowAtPoint(e.getPoint());
+				int columna = vista.getTable().columnAtPoint(e.getPoint());
+				
+				if(columna == 3) {
+					// Codigo para ver info
+				}else if(columna == 4) {
+					//Codigo para ver camino
+				}else if(columna == 5) {
+					Integer id = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
+					eliminarFilaTabla(fila);
+					vista.validate();
+					lineaDao.remove(id);
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
 
 }
