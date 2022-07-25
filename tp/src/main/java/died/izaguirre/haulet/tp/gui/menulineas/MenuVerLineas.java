@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class MenuVerLineas extends JPanel {
 	private JPanel head;
@@ -66,6 +67,7 @@ public class MenuVerLineas extends JPanel {
 	private JPanel panelCrearLineaFoot;
 	private JButton crearLineaButton;
 	private DefaultTableModel model;
+	private TableRowSorter tableSorter;
 
 	private ControladorLineas controlador;
 
@@ -396,19 +398,24 @@ public class MenuVerLineas extends JPanel {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
-			
+
 			@Override
-			public Class<?> getColumnClass(int column){
-				switch(column) {
-				case 3: return ImageIcon.class;
-				case 4: return ImageIcon.class;
-				case 5: return ImageIcon.class;
-				default: return Object.class;
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				case 3:
+					return ImageIcon.class;
+				case 4:
+					return ImageIcon.class;
+				case 5:
+					return ImageIcon.class;
+				default:
+					return Object.class;
 				}
 			}
 		};
 
 		table.setModel(model);
+		tableSorter = new TableRowSorter(table.getModel());
 		scrollPane.setViewportView(table);
 
 		controlador = new ControladorLineas(this);
@@ -748,6 +755,22 @@ public class MenuVerLineas extends JPanel {
 
 	public void setModel(DefaultTableModel model) {
 		this.model = model;
+	}
+
+	public TableRowSorter getTableSorter() {
+		return tableSorter;
+	}
+
+	public void setTableSorter(TableRowSorter sort) {
+		this.tableSorter = sort;
+	}
+
+	public ControladorLineas getControlador() {
+		return controlador;
+	}
+
+	public void setControlador(ControladorLineas controlador) {
+		this.controlador = controlador;
 	}
 
 }

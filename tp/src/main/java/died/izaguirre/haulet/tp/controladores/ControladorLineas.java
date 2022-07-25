@@ -2,6 +2,9 @@ package died.izaguirre.haulet.tp.controladores;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -12,7 +15,12 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
@@ -56,8 +64,10 @@ public class ControladorLineas {
 		tipoLineaListener(); // Para habilitar/deshabilitar los botones wifi y aire
 		crearLineaListener(); // Para generar la linea y mostrarla cuando se crea
 		crearTablaListener(); // Para detectar si elijo Info. - Ver camino - Eliminar en la tabla
+		capParadosListener(); // Para que solo se puedan ingresar numeros en ese campo
+		buscadorListener(); // Para poder filtrar tuplas en la tabla
 		cargarTabla(); // Para cargar las lineas de la bdd en la tabla
-		cargarParadas();
+		cargarParadas(); // Agrega Las paradas a los ComboBox Origen y Destino
 	}
 
 	private void tipoLineaListener() {
@@ -198,10 +208,14 @@ public class ControladorLineas {
 				}else if(columna == 4) {
 					//Codigo para ver camino
 				}else if(columna == 5) {
-					Integer id = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
-					eliminarFilaTabla(fila);
-					vista.validate();
-					lineaDao.remove(id);
+					try {
+						Integer id = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
+						lineaDao.remove(id);
+						eliminarFilaTabla(fila);
+						vista.validate();
+					}catch(Exception exc) {
+						System.out.println("Error al eliminar linea");
+					}
 				}
 			}
 
@@ -230,5 +244,42 @@ public class ControladorLineas {
 			}
 		});
 	}
+	
+	private void buscadorListener() {
+		JTextField buscarButton = vista.getBuscarText();
+		
+		buscarButton.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				filtrarTabla();
+			}
+		});
+		
+			
+	}
+	
+	private void filtrarTabla() {
+		
+		TableRowSorter sorter = vista.getTableSorter();
+		sorter.setRowFilter(RowFilter.regexFilter(vista.getBuscarText().getText(), 1));
+		vista.getTable().setRowSorter(sorter);
+	}
+	
+	private void capParadosListener() {
+		vista.getCapSentadoText().addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e)
+			   {
+			      char caracter = e.getKeyChar();
 
+			      // Verificar si la tecla pulsada no es un digito
+			      if(((caracter < '0') ||
+			         (caracter > '9')) &&
+			         (caracter != '\b' /*corresponde a BACK_SPACE*/))
+			      {
+			         e.consume();  // ignorar el evento de teclado
+			      }
+			   }
+		});
+	}
 }
