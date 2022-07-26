@@ -1,0 +1,95 @@
+package died.izaguirre.haulet.tp.controladores;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.RowFilter;
+
+import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
+import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
+import died.izaguirre.haulet.tp.gui.menuparadas.ParadasPanel;
+import died.izaguirre.haulet.tp.tablas.Parada;
+
+public class ControladorParadas {
+
+	private ParadaDao paradasDao;
+	private ParadasPanel vista;
+	private List<Parada> paradas;
+
+	private ControladorParadas() {
+		paradasDao = new ParadaDaoImpl();
+		paradas = new ArrayList<Parada>();
+	}
+
+	public ControladorParadas(ParadasPanel vista) {
+		this();
+		this.vista = vista;
+		inicializar();
+	}
+
+	private void inicializar() {
+		filtrarTablaListener(); // Para que el buscado de la tabla funciona (filtra en la columna calle)
+		agregarButtonListener(); // Para que el boton Agregar cree paradas (por ahora es solo demostrativo)
+		agregarTablaListener(); // Para que al dar click en el boton elimianr de la tabla se elimine la parada
+	}
+
+	private void agregarParadaTabla(Parada p) {
+
+		Object[] nuevaParada = new Object[3];
+		ImageIcon imgDelete = new ImageIcon(getClass().getResource("/delete.png"));
+
+		nuevaParada[0] = p.getNroParada();
+		nuevaParada[1] = p.getCalle();
+		nuevaParada[2] = imgDelete;
+
+		vista.getTableModel().addRow(nuevaParada);
+	}
+
+	private void filtrarTablaListener() {
+
+		vista.getBuscadorTxt().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				vista.getTableSorter().setRowFilter(RowFilter.regexFilter(vista.getBuscadorTxt().getText(), 1));
+			}
+		});
+	}
+
+	private void agregarButtonListener() {
+
+		vista.getAgregarButton().addActionListener(e -> {
+			Parada aux = new Parada(123, "a");
+			Parada aux2 = new Parada(23, "b");
+			agregarParadaTabla(aux);
+			agregarParadaTabla(aux2);
+		});
+	}
+
+	private void agregarTablaListener() {
+
+		vista.getTable().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int fila = vista.getTable().rowAtPoint(e.getPoint());
+				int columna = vista.getTable().columnAtPoint(e.getPoint());
+
+				if (columna == 2) // Columna que contiene el boton eliminar
+					eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
+											// la parada de la BDD tambien
+			}
+		});
+	}
+
+	private void eliminarParada(int fila) {
+		
+		if(fila < 0)
+			return;
+//		int nroParada = vista.getTableModel().getValueAt(fila, 0); // Esto obtiene el nroParada, para buscar la parada en la BBD
+		vista.getTableModel().removeRow(fila);
+	}
+}

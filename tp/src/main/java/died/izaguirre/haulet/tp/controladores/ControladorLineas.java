@@ -4,22 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
@@ -75,7 +68,6 @@ public class ControladorLineas {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 					vista.getAireCk().setEnabled(false);
 					vista.getWifiCk().setEnabled(false);
@@ -93,7 +85,6 @@ public class ControladorLineas {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				Linea l;
 				if (camposRellenados()) {
 					if (vista.getLineaTipoCBx().getSelectedItem() == LineaTipoEnum.Economica)
@@ -168,6 +159,8 @@ public class ControladorLineas {
 	}
 
 	private void eliminarFilaTabla(int fila) {
+		if(fila < 0 )
+			return;
 		((DefaultTableModel) vista.getModel()).removeRow(fila);
 	}
 
@@ -175,7 +168,6 @@ public class ControladorLineas {
 		try {
 			thrd.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("Exception en cargarTabla() -> join()");
 		}
@@ -185,6 +177,7 @@ public class ControladorLineas {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void cargarParadas() {
 
 		for (Parada p : paradas) {
@@ -199,7 +192,6 @@ public class ControladorLineas {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 				int fila = vista.getTable().rowAtPoint(e.getPoint());
 				int columna = vista.getTable().columnAtPoint(e.getPoint());
 				
@@ -221,25 +213,21 @@ public class ControladorLineas {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -251,7 +239,6 @@ public class ControladorLineas {
 		buscarButton.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
 				filtrarTabla();
 			}
 		});
@@ -259,8 +246,11 @@ public class ControladorLineas {
 			
 	}
 	
+
+	@SuppressWarnings("unchecked")
 	private void filtrarTabla() {
 		
+		@SuppressWarnings("rawtypes")
 		TableRowSorter sorter = vista.getTableSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(vista.getBuscarText().getText(), 1));
 		vista.getTable().setRowSorter(sorter);

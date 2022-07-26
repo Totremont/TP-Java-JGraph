@@ -17,6 +17,7 @@ import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 import died.izaguirre.haulet.tp.controladores.ControladorLineas;
 import died.izaguirre.haulet.tp.tablas.linea.LineaColores;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -415,7 +416,13 @@ public class MenuVerLineas extends JPanel {
 		};
 
 		table.setModel(model);
+		DefaultTableCellRenderer alinear = new DefaultTableCellRenderer();
+		alinear.setHorizontalAlignment(SwingConstants.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(alinear);
+		table.getColumnModel().getColumn(1).setCellRenderer(alinear);
+		table.getColumnModel().getColumn(2).setCellRenderer(alinear);
 		tableSorter = new TableRowSorter(table.getModel());
+		table.setRowSorter(tableSorter);
 		scrollPane.setViewportView(table);
 
 		controlador = new ControladorLineas(this);

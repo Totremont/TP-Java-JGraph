@@ -15,7 +15,6 @@ import com.formdev.flatlaf.FlatLightLaf;
 import died.izaguirre.haulet.tp.gui.incidencias.IncidenciasPanel;
 import died.izaguirre.haulet.tp.gui.layoutespecial.RelativeLayout;
 import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
-import died.izaguirre.haulet.tp.gui.menuparadas.MenuVerParadas;
 import died.izaguirre.haulet.tp.gui.menuparadas.ParadasPanel;
 
 import javax.swing.JButton;
@@ -86,7 +85,7 @@ public class Principal extends JFrame {
 		rl.setFill(true);
 		contentPane.setLayout(rl);
 
-		JPanel panel_izquierdo =  new MenuVerLineas();	//Cambiar para ver otra interfaz
+		JPanel panel_izquierdo =  new ParadasPanel();	//Cambiar para ver otra interfaz
 		panel_izquierdo.setBorder(UIManager.getBorder("ComboBox.border"));
 		contentPane.add(panel_izquierdo, 1f);
 

@@ -6,4 +6,6 @@ public interface ParadaDao extends CRUD<Parada> {
 	
 	public Parada findByNroParada(Integer nro_parada);
 	
+	public void removeByNroParada(Integer nro_parada);
+	
 }
