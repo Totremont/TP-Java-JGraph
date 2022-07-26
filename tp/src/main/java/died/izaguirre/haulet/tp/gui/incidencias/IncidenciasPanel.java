@@ -7,6 +7,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
+import died.izaguirre.haulet.tp.gestores.incidencias.GestorIncidencias;
 import died.izaguirre.haulet.tp.gui.utilities.TableUtility;
 
 import java.awt.GridBagLayout;
@@ -31,17 +32,55 @@ import java.awt.ComponentOrientation;
 import javax.swing.JScrollBar;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.UIManager;
 import javax.swing.JTextField;
+
+import died.izaguirre.haulet.tp.tablas.Incidencia;
 
 public class IncidenciasPanel extends JPanel {
 	private JTable table;
 	private JTextField textField;
 
-	/**
-	 * Create the panel.
-	 */
+	private List<Incidencia> incidencias = new ArrayList<>();
+	private GestorIncidencias gestor = new GestorIncidencias();
+	private ImageIcon delete = new ImageIcon(getClass().getResource("/delete.png"));
+	
 	public IncidenciasPanel() {
+		
+		crearInterfaz();
+		
+		
+		
+	}
+	
+	private void buscarIncidencias() 
+	{
+		incidencias = gestor.buscarIncidencias();
+	}
+	
+	private void actualizarTabla() 
+	{
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+
+		incidencias.forEach(it -> 
+		{
+			String fin = it.getFechaFin() == null ? "No establecido" : it.getFechaFin().toString();
+			Object[] fila = { it.getId(), it.getParada().getCalle(), fin, delete};
+			model.addRow(fila);
+		});
+	}
+	
+	private void actualizarResumen() 
+	{
+		
+	}
+	
+	private void crearInterfaz() 
+	{
 		setBorder(null);
 		setLayout(new BorderLayout(0, 0));
 		
@@ -49,9 +88,9 @@ public class IncidenciasPanel extends JPanel {
 		add(panel, BorderLayout.NORTH);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0};
 		JScrollPane scrollPane2 = new JScrollPane();
 		panel.setBorder(null);
 		panel.setLayout(gridBagLayout);
@@ -97,7 +136,7 @@ public class IncidenciasPanel extends JPanel {
 		separator.setForeground(SystemColor.activeCaption);
 		separator.setOrientation(SwingConstants.VERTICAL);
 		GridBagConstraints gbc_separator = new GridBagConstraints();
-		gbc_separator.gridheight = 5;
+		gbc_separator.gridheight = 6;
 		gbc_separator.fill = GridBagConstraints.VERTICAL;
 		gbc_separator.insets = new Insets(0, 0, 5, 5);
 		gbc_separator.gridx = 0;
@@ -198,12 +237,35 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_13.gridy = 6;
 		panel.add(lblNewLabel_13, gbc_lblNewLabel_13);
 		
+		JLabel lblNewLabel_17 = new JLabel("Descripción");
+		GridBagConstraints gbc_lblNewLabel_17 = new GridBagConstraints();
+		gbc_lblNewLabel_17.anchor = GridBagConstraints.WEST;
+		gbc_lblNewLabel_17.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_17.gridx = 1;
+		gbc_lblNewLabel_17.gridy = 7;
+		panel.add(lblNewLabel_17, gbc_lblNewLabel_17);
+		
+		JLabel lblNewLabel_18 = new JLabel("VER");
+		GridBagConstraints gbc_lblNewLabel_18 = new GridBagConstraints();
+		gbc_lblNewLabel_18.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_18.gridx = 2;
+		gbc_lblNewLabel_18.gridy = 7;
+		panel.add(lblNewLabel_18, gbc_lblNewLabel_18);
+		
+		JLabel lblNewLabel_20 = new JLabel("");
+		GridBagConstraints gbc_lblNewLabel_20 = new GridBagConstraints();
+		gbc_lblNewLabel_20.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_20.gridx = 3;
+		gbc_lblNewLabel_20.gridy = 7;
+		lblNewLabel_20.setIcon(new ImageIcon(getClass().getResource("/help-circle.png")));
+		panel.add(lblNewLabel_20, gbc_lblNewLabel_20);
+		
 		JLabel lblNewLabel_15 = new JLabel("Lista");
 		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblNewLabel_15 = new GridBagConstraints();
 		gbc_lblNewLabel_15.insets = new Insets(10, 0, 15, 5);
 		gbc_lblNewLabel_15.gridx = 0;
-		gbc_lblNewLabel_15.gridy = 7;
+		gbc_lblNewLabel_15.gridy = 8;
 		panel.add(lblNewLabel_15, gbc_lblNewLabel_15);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -212,15 +274,23 @@ public class IncidenciasPanel extends JPanel {
 		gbc_separator_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_separator_1.gridwidth = 2;
 		gbc_separator_1.gridx = 1;
-		gbc_separator_1.gridy = 7;
+		gbc_separator_1.gridy = 8;
 		panel.add(separator_1, gbc_separator_1);
 		
-		JButton btnNewButton = new JButton("Agregar");
+		JButton btnNewButton = new JButton("Modificar");
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
 		gbc_btnNewButton.gridx = 3;
-		gbc_btnNewButton.gridy = 7;
+		gbc_btnNewButton.gridy = 8;
 		panel.add(btnNewButton, gbc_btnNewButton);
+		
+		JLabel lblNewLabel_19 = new JLabel("Agregar");
+		GridBagConstraints gbc_lblNewLabel_19 = new GridBagConstraints();
+		gbc_lblNewLabel_19.insets = new Insets(0, 0, 10, 5);
+		gbc_lblNewLabel_19.gridx = 0;
+		gbc_lblNewLabel_19.gridy = 9;
+		lblNewLabel_19.setIcon(new ImageIcon(getClass().getResource("/plus-circle.png")));
+		panel.add(lblNewLabel_19, gbc_lblNewLabel_19);
 		
 		JPanel panel_1 = new JPanel();
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
@@ -228,7 +298,7 @@ public class IncidenciasPanel extends JPanel {
 		gbc_panel_1.insets = new Insets(0, 0, 10, 5);
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
 		gbc_panel_1.gridx = 1;
-		gbc_panel_1.gridy = 8;
+		gbc_panel_1.gridy = 9;
 		panel.add(panel_1, gbc_panel_1);
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
@@ -241,13 +311,13 @@ public class IncidenciasPanel extends JPanel {
 		textField.setColumns(10);
 		
 		table = new JTable();
-		ImageIcon delete = new ImageIcon(getClass().getResource("/delete.png"));
+		
 		table.setFillsViewportHeight(true);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"Incidencia #1", "Avellaneda", "08/09/2022", delete},
-				{"Incidencia #2", "Vera", "07/08/2022", delete},
-				{"Incidencia #3", "Sunchales", "05/06/2022", delete},
+				{"Incidencia #2", "Vera", "08/09/2022", delete},
+				{"Incidencia #3", "Sunchales", "08/09/2022", delete},
 			},
 			new String[] {
 				"Incidencia", "Parada", "Fin", "Borrar"
@@ -271,7 +341,6 @@ public class IncidenciasPanel extends JPanel {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		add(scrollPane, BorderLayout.CENTER);
-
 	}
 	
 	

@@ -72,4 +72,9 @@ public class Monticulo<T extends Comparable<T>> {
 			return raiz;
 		}
 	}
+	
+	public int getTamanio() 
+	{
+		return elementos.size();
+	}
 }

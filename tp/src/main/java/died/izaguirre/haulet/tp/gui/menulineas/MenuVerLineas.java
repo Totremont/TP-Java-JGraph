@@ -13,7 +13,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
-import died.izaguirre.haulet.tp.tablas.linea.LineaColores;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
@@ -180,7 +179,6 @@ public class MenuVerLineas extends JPanel {
 		panelCrearLineaBody.add(colorLineaLabel, gbc_colorLineaLabel);
 		
 		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(LineaColores.values()));
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -319,7 +317,7 @@ public class MenuVerLineas extends JPanel {
 		
 		verLineasTitulo = new JLabel("Ver líneas");
 		GridBagConstraints gbc_verLineasTitulo = new GridBagConstraints();
-		gbc_verLineasTitulo.insets = new Insets(0, 0, 5, 0);
+		gbc_verLineasTitulo.insets = new Insets(10, 0, 10, 0);
 		gbc_verLineasTitulo.weightx = 1.0;
 		gbc_verLineasTitulo.gridx = 0;
 		gbc_verLineasTitulo.gridy = 0;
@@ -355,7 +353,7 @@ public class MenuVerLineas extends JPanel {
 		
 		buscarText = new JTextField();
 		GridBagConstraints gbc_buscarText = new GridBagConstraints();
-		gbc_buscarText.insets = new Insets(0, 0, 5, 5);
+		gbc_buscarText.insets = new Insets(5, 0, 5, 5);
 		gbc_buscarText.fill = GridBagConstraints.HORIZONTAL;
 		gbc_buscarText.gridx = 1;
 		gbc_buscarText.gridy = 0;
@@ -364,7 +362,7 @@ public class MenuVerLineas extends JPanel {
 		
 		buscarButton = new JLabel("");
 		GridBagConstraints gbc_buscarButton = new GridBagConstraints();
-		gbc_buscarButton.insets = new Insets(0, 0, 5, 0);
+		gbc_buscarButton.insets = new Insets(5, 0, 5, 0);
 		gbc_buscarButton.gridx = 2;
 		gbc_buscarButton.gridy = 0;
 		ImageIcon imgBuscador = new ImageIcon(getClass().getResource("/magnify.png"));

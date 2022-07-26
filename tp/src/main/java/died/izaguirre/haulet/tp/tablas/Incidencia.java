@@ -1,5 +1,6 @@
 package died.izaguirre.haulet.tp.tablas;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -17,7 +18,14 @@ public class Incidencia implements Comparable<Incidencia> {
 
 	@Override
 	public int compareTo(Incidencia o) {
-		return 0;
+		
+		if(fechaFin == null) fechaFin = LocalDate.now();
+		if(o.fechaFin == null) o.fechaFin = LocalDate.now();
+		Duration duracionEsta = Duration.between(fechaInicio, fechaFin);
+		Duration duracionOtra = Duration.between(o.getFechaInicio(),o.getFechaFin());
+		if(estaResuelto && !o.getEstaResuelto()) return 1;
+		else if(!estaResuelto && o.getEstaResuelto()) return -1;
+		else return duracionOtra.compareTo(duracionEsta);
 	}
 
 	public int getId() {
