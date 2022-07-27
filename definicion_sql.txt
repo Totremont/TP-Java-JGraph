@@ -6,6 +6,8 @@ CREATE TABLE tp.incidencia(
     fecha_inicio date,
     fecha_fin date,
     esta_resuelto bool,
+    descripcion varchar(100),
+    motivo varchar(100),
     CONSTRAINT pk_incidencia PRIMARY KEY (id_incidencia)
 );
 
@@ -27,6 +29,7 @@ CREATE TABLE tp.camino(
 CREATE TABLE tp.posee(
     id_parada integer,
     id_linea integer,
+    orden_parada integer,
     CONSTRAINT pk_posee PRIMARY KEY (id_parada,id_linea)
 );
 

@@ -1,5 +1,6 @@
 package died.izaguirre.haulet.tp.tablas;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -10,6 +11,8 @@ public class Incidencia implements Comparable<Incidencia> {
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;
 	private Boolean estaResuelto;
+	private String descripción;
+	private String motivo;
 
 	// Tienen mas prioridad las activas de mayor duracion
 	// ????? comprobar -> Si 2 incidencias no tienen fecha de fin, se considerará
@@ -17,7 +20,14 @@ public class Incidencia implements Comparable<Incidencia> {
 
 	@Override
 	public int compareTo(Incidencia o) {
-		return 0;
+		
+		if(fechaFin == null) fechaFin = LocalDate.now();
+		if(o.fechaFin == null) o.fechaFin = LocalDate.now();
+		Duration duracionEsta = Duration.between(fechaInicio, fechaFin);
+		Duration duracionOtra = Duration.between(o.getFechaInicio(),o.getFechaFin());
+		if(estaResuelto && !o.getEstaResuelto()) return 1;
+		else if(!estaResuelto && o.getEstaResuelto()) return -1;
+		else return duracionOtra.compareTo(duracionEsta);
 	}
 
 	public int getId() {
@@ -34,10 +44,6 @@ public class Incidencia implements Comparable<Incidencia> {
 
 	public LocalDate getFechaFin() {
 		return fechaFin;
-	}
-
-	public boolean isEstaResuelto() {
-		return estaResuelto;
 	}
 
 	public Boolean getEstaResuelto() {
@@ -64,6 +70,24 @@ public class Incidencia implements Comparable<Incidencia> {
 		this.fechaFin = fechaFin;
 	}
 	
+	
+	
+	public String getDescripción() {
+		return descripción;
+	}
+
+	public void setDescripción(String descripción) {
+		this.descripción = descripción;
+	}
+
+	public String getMotivo() {
+		return motivo;
+	}
+
+	public void setMotivo(String motivo) {
+		this.motivo = motivo;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		Incidencia otro = (Incidencia) obj;

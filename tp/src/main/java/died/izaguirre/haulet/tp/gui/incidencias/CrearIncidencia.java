@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.GridBagLayout;
@@ -26,33 +27,31 @@ import java.awt.Font;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dialog;
 import java.awt.SystemColor;
+import javax.swing.JTextField;
 
 public class CrearIncidencia extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel( new FlatDarkLaf() );
-			CrearIncidencia dialog = new CrearIncidencia();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.pack();
-			dialog.revalidate();
-			dialog.repaint();
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private JTextField textField;
+	private JFrame padre;
+	
+	public CrearIncidencia(JFrame padre) 
+	{
+		super(padre,"Crear incidencia",Dialog.ModalityType.DOCUMENT_MODAL);
+		this.padre = padre;
+		CrearInterfaz();
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		pack();
+		//revalidate();
+		//repaint();
+		setLocationRelativeTo(padre);
+		setVisible(true);
 	}
 
-	/**
-	 * Create the dialog.
-	 */
-	public CrearIncidencia() {
+	
+	private void CrearInterfaz() {
 		setAlwaysOnTop(true);
 		setTitle("Sistema de Transporte");
 		setResizable(false);
@@ -62,9 +61,9 @@ public class CrearIncidencia extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_contentPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_contentPanel.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblNewLabel = new JLabel("Crear Incidencia");
@@ -84,7 +83,7 @@ public class CrearIncidencia extends JDialog {
 			JSeparator separator = new JSeparator();
 			separator.setOrientation(SwingConstants.VERTICAL);
 			GridBagConstraints gbc_separator = new GridBagConstraints();
-			gbc_separator.gridheight = 4;
+			gbc_separator.gridheight = 5;
 			gbc_separator.fill = GridBagConstraints.VERTICAL;
 			gbc_separator.insets = new Insets(0, 10, 5, 5);
 			gbc_separator.gridx = 0;
@@ -173,6 +172,26 @@ public class CrearIncidencia extends JDialog {
 			contentPanel.add(comboBox, gbc_comboBox);
 		}
 		{
+			JLabel lblNewLabel_6 = new JLabel("Descripción");
+			GridBagConstraints gbc_lblNewLabel_6 = new GridBagConstraints();
+			gbc_lblNewLabel_6.anchor = GridBagConstraints.WEST;
+			gbc_lblNewLabel_6.insets = new Insets(0, 5, 5, 5);
+			gbc_lblNewLabel_6.gridx = 1;
+			gbc_lblNewLabel_6.gridy = 5;
+			lblNewLabel_6.setIcon(new ImageIcon(getClass().getResource("/file-outline.png")));
+			contentPanel.add(lblNewLabel_6, gbc_lblNewLabel_6);
+		}
+		{
+			textField = new JTextField();
+			GridBagConstraints gbc_textField = new GridBagConstraints();
+			gbc_textField.insets = new Insets(0, 0, 5, 5);
+			gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+			gbc_textField.gridx = 2;
+			gbc_textField.gridy = 5;
+			contentPanel.add(textField, gbc_textField);
+			textField.setColumns(10);
+		}
+		{
 			JLabel lblNewLabel_5 = new JLabel("Los elementos marcados (*) son obligatorios");
 			lblNewLabel_5.setFont(new Font("Tahoma", Font.ITALIC, 11));
 			lblNewLabel_5.setHorizontalAlignment(SwingConstants.LEFT);
@@ -180,7 +199,7 @@ public class CrearIncidencia extends JDialog {
 			gbc_lblNewLabel_5.insets = new Insets(20, 0, 5, 0);
 			gbc_lblNewLabel_5.ipadx = 5;
 			gbc_lblNewLabel_5.gridx = 3;
-			gbc_lblNewLabel_5.gridy = 5;
+			gbc_lblNewLabel_5.gridy = 6;
 			contentPanel.add(lblNewLabel_5, gbc_lblNewLabel_5);
 		}
 		{
@@ -190,7 +209,7 @@ public class CrearIncidencia extends JDialog {
 			gbc_separator.gridwidth = 4;
 			gbc_separator.insets = new Insets(15, 0, 5, 0);
 			gbc_separator.gridx = 0;
-			gbc_separator.gridy = 6;
+			gbc_separator.gridy = 7;
 			contentPanel.add(separator, gbc_separator);
 		}
 		{
