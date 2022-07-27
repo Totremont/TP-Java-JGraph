@@ -25,7 +25,7 @@ public class CaminoDaoImpl implements CaminoDao {
 	public void add(Camino t) {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.camino (origen,destino,capacidad,distancia) VALUES (?,?,?,?)",
+				"INSERT INTO tp.camino (origen,destino,capacidad,distancia,origen,destino) VALUES (?,?,?,?,?,?)",
 				PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setInt(1, t.getOrigen().getId());
 			pstm.setInt(2, t.getDestino().getId());

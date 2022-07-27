@@ -41,7 +41,7 @@ public class Parada {
 
 	@Override
 	public String toString() {
-		return calle+", "+nroParada;
+		return nroParada.toString();
 	}
 	
 //	@Override

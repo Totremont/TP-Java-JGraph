@@ -109,13 +109,15 @@ public class LineaDaoImpl implements LineaDao {
 	private void addEconomica(Linea t) {
 
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,cap_parado) VALUES (?,?,?,?,?)",
+				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,cap_parado,origen,destino) VALUES (?,?,?,?,?,?,?)",
 				PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setString(1, t.getTipo());
 			pstm.setString(2, t.getNombre());
 			pstm.setString(3, t.getColor());
 			pstm.setInt(4, t.getCapSentado());
 			pstm.setInt(5, t.getCapParado());
+			pstm.setInt(6, t.getOrigen().getNroParada());
+			pstm.setInt(7, t.getDestino().getNroParada());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
 			if(rs.next()) t.setId(rs.getInt(1));
@@ -128,13 +130,16 @@ public class LineaDaoImpl implements LineaDao {
 	private void addSuperior(Linea t) {
 
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,tiene_aire,tiene_wifi) VALUES (?,?,?,?,?,?)",
+				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,tiene_aire,tiene_wifi,origen,destino) VALUES (?,?,?,?,?,?,?,?)",
 				PreparedStatement.RETURN_GENERATED_KEYS)) {
+			pstm.setString(1, t.getTipo());
 			pstm.setString(2, t.getNombre());
 			pstm.setString(3, t.getColor());
 			pstm.setInt(4, t.getCapSentado());
 			pstm.setBoolean(5, t.getTieneAire());
 			pstm.setBoolean(6, t.getTieneWifi());
+			pstm.setInt(7, t.getOrigen().getNroParada());
+			pstm.setInt(8, t.getDestino().getNroParada());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
 			if(rs.next()) t.setId(rs.getInt(1));

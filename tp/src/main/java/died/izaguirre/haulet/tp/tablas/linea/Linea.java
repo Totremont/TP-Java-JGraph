@@ -1,5 +1,7 @@
 package died.izaguirre.haulet.tp.tablas.linea;
 
+import died.izaguirre.haulet.tp.tablas.Parada;
+
 public class Linea {
 
 	private Integer id;
@@ -10,21 +12,32 @@ public class Linea {
 	private Integer capParado;
 	private Boolean tieneAire;
 	private Boolean tieneWifi;
+	private Parada origen;
+	private Parada destino;
 
 	public Linea() {
 	}
-	
-	//Linea economica
-	public Linea(String tipo, String nombre, String color, Integer capSentado) {
+
+	// Paradas
+	private Linea(Parada origen, Parada destino) {
+		this.origen = origen;
+		this.destino = destino;
+	}
+
+	// Linea economica
+	public Linea(String tipo, String nombre, String color, Integer capSentado, Parada origen, Parada destino) {
+		this(origen, destino);
 		this.tipo = tipo;
 		this.nombre = nombre;
 		this.color = color;
 		this.capParado = (int) (capSentado * 0.40);
 		this.capSentado = capSentado;
 	}
-	
-	//Linea superior
-	public Linea(String tipo, String nombre, String color, Integer capSentado, Boolean tieneAire, Boolean tieneWifi) {
+
+	// Linea superior
+	public Linea(String tipo, String nombre, String color, Integer capSentado, Boolean tieneAire, Boolean tieneWifi,
+			Parada origen, Parada destino) {
+		this(origen, destino);
 		this.tipo = tipo;
 		this.nombre = nombre;
 		this.color = color;
@@ -33,7 +46,7 @@ public class Linea {
 		this.tieneAire = tieneAire;
 		this.tieneWifi = tieneWifi;
 	}
-	
+
 	public Linea(String tipo, Integer capSentado, String nombre, String color, Integer capParado, Boolean tieneAire,
 			Boolean tieneWifi) {
 		this();
@@ -109,7 +122,23 @@ public class Linea {
 	public void setTieneWifi(Boolean tieneWifi) {
 		this.tieneWifi = tieneWifi;
 	}
-	
+
+	public Parada getOrigen() {
+		return origen;
+	}
+
+	public void setOrigen(Parada origen) {
+		this.origen = origen;
+	}
+
+	public Parada getDestino() {
+		return destino;
+	}
+
+	public void setDestino(Parada destino) {
+		this.destino = destino;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		Linea otro = (Linea) obj;
