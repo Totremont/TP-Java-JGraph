@@ -40,6 +40,7 @@ public class ParadaDaoImpl implements ParadaDao {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement("DELETE FROM tp.parada WHERE id_parada=?")) {
 			pstm.setInt(1, id);
+			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -115,6 +116,17 @@ public class ParadaDaoImpl implements ParadaDao {
 		}
 
 		return aux;
+	}
+
+	@Override
+	public void removeByNroParada(Integer nro_parada) {
+		// TODO Auto-generated method stub
+		try (PreparedStatement pstm = con.prepareStatement("DELETE FROM tp.parada WHERE nro_parada=?")) {
+			pstm.setInt(1, nro_parada);
+			pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
