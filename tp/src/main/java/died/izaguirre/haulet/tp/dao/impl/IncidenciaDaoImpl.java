@@ -24,7 +24,7 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 	}
 
 	@Override
-	public void add(Incidencia t) {
+	public void add(Incidencia t) throws SQLException {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement(
 				"INSERT INTO tp.incidencia (id_parada,fecha_inicio,fecha_fin,esta_resuelto VALUES (?,?,?,?))",PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -37,7 +37,7 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 			if(rs.next()) t.setId(rs.getInt(1));
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

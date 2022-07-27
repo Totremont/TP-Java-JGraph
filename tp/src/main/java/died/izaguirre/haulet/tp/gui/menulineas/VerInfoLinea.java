@@ -1,6 +1,7 @@
 package died.izaguirre.haulet.tp.gui.menulineas;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -14,6 +15,8 @@ import javax.swing.JTextField;
 import java.awt.Insets;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+
+import died.izaguirre.haulet.tp.controladores.ControladorInfoLineas;
 import died.izaguirre.haulet.tp.tablas.linea.LineaColores;
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 import javax.swing.JCheckBox;
@@ -26,6 +29,14 @@ public class VerInfoLinea extends JDialog {
 	private JTextField capSentadoTxt;
 	private MenuVerLineas menu;
 	private Integer idLinea;
+	private ControladorInfoLineas controlador;
+	private JComboBox tipoCBx;
+	private JComboBox origenCBx;
+	private JComboBox destinoCBx;
+	private JComboBox colorCBx;
+	private JComboBox trayectoCBx;
+	private JCheckBox wifiCk;
+	private JCheckBox aireCk;
 
 	/**
 	 * Launch the application.
@@ -48,26 +59,28 @@ public class VerInfoLinea extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-//	private VerInfoLinea() {
-//		cargarVista();
-//	}
-	
+	private VerInfoLinea() {
+		cargarVista();
+	}
+
 	public VerInfoLinea(MenuVerLineas menu, Integer idLinea) {
+		setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
 		this.menu = menu;
 		this.idLinea = idLinea;
 		cargarVista();
+		controlador = new ControladorInfoLineas(this, idLinea);
 	}
-	
+
 	private void cargarVista() {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0, 0, 82, 0, 0};
-		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_contentPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPanel.columnWidths = new int[] { 0, 0, 0, 0, 0, 82, 0, 0 };
+		gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+		gbl_contentPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblNewLabel = new JLabel("");
@@ -118,14 +131,15 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(origenLabel, gbc_origenLabel);
 		}
 		{
-			JComboBox comboBox = new JComboBox();
-			GridBagConstraints gbc_comboBox = new GridBagConstraints();
-			gbc_comboBox.weightx = 0.1;
-			gbc_comboBox.insets = new Insets(0, 0, 5, 5);
-			gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBox.gridx = 5;
-			gbc_comboBox.gridy = 0;
-			contentPanel.add(comboBox, gbc_comboBox);
+			origenCBx = new JComboBox();
+			origenCBx.setEnabled(false);
+			GridBagConstraints gbc_origenCBx = new GridBagConstraints();
+			gbc_origenCBx.weightx = 0.1;
+			gbc_origenCBx.insets = new Insets(0, 0, 5, 5);
+			gbc_origenCBx.fill = GridBagConstraints.HORIZONTAL;
+			gbc_origenCBx.gridx = 5;
+			gbc_origenCBx.gridy = 0;
+			contentPanel.add(origenCBx, gbc_origenCBx);
 		}
 		{
 			JLabel lblNewLabel_1 = new JLabel("");
@@ -146,7 +160,7 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(tipoLineaLabel, gbc_tipoLineaLabel);
 		}
 		{
-			JComboBox tipoCBx = new JComboBox();
+			tipoCBx = new JComboBox();
 			tipoCBx.setEnabled(false);
 			tipoCBx.setModel(new DefaultComboBoxModel(LineaTipoEnum.values()));
 			GridBagConstraints gbc_tipoCBx = new GridBagConstraints();
@@ -166,13 +180,14 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(destinoLabel, gbc_destinoLabel);
 		}
 		{
-			JComboBox comboBox = new JComboBox();
-			GridBagConstraints gbc_comboBox = new GridBagConstraints();
-			gbc_comboBox.insets = new Insets(0, 0, 5, 5);
-			gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBox.gridx = 5;
-			gbc_comboBox.gridy = 1;
-			contentPanel.add(comboBox, gbc_comboBox);
+			destinoCBx = new JComboBox();
+			destinoCBx.setEnabled(false);
+			GridBagConstraints gbc_destinoCBx = new GridBagConstraints();
+			gbc_destinoCBx.insets = new Insets(0, 0, 5, 5);
+			gbc_destinoCBx.fill = GridBagConstraints.HORIZONTAL;
+			gbc_destinoCBx.gridx = 5;
+			gbc_destinoCBx.gridy = 1;
+			contentPanel.add(destinoCBx, gbc_destinoCBx);
 		}
 		{
 			JLabel colorLabel = new JLabel("Color");
@@ -184,7 +199,7 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(colorLabel, gbc_colorLabel);
 		}
 		{
-			JComboBox colorCBx = new JComboBox();
+			colorCBx = new JComboBox();
 			colorCBx.setEnabled(false);
 			colorCBx.setModel(new DefaultComboBoxModel(LineaColores.values()));
 			GridBagConstraints gbc_colorCBx = new GridBagConstraints();
@@ -204,13 +219,14 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(trayectoLabel, gbc_trayectoLabel);
 		}
 		{
-			JComboBox comboBox = new JComboBox();
-			GridBagConstraints gbc_comboBox = new GridBagConstraints();
-			gbc_comboBox.insets = new Insets(0, 0, 5, 5);
-			gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBox.gridx = 5;
-			gbc_comboBox.gridy = 2;
-			contentPanel.add(comboBox, gbc_comboBox);
+			trayectoCBx = new JComboBox();
+			trayectoCBx.setEnabled(false);
+			GridBagConstraints gbc_trayectoCBx = new GridBagConstraints();
+			gbc_trayectoCBx.insets = new Insets(0, 0, 5, 5);
+			gbc_trayectoCBx.fill = GridBagConstraints.HORIZONTAL;
+			gbc_trayectoCBx.gridx = 5;
+			gbc_trayectoCBx.gridy = 2;
+			contentPanel.add(trayectoCBx, gbc_trayectoCBx);
 		}
 		{
 			JLabel capSentadoLabel = new JLabel("Cap. Sentado");
@@ -233,7 +249,7 @@ public class VerInfoLinea extends JDialog {
 			capSentadoTxt.setColumns(10);
 		}
 		{
-			JCheckBox wifiCk = new JCheckBox("Wifi");
+			wifiCk = new JCheckBox("Wifi");
 			wifiCk.setEnabled(false);
 			GridBagConstraints gbc_wifiCk = new GridBagConstraints();
 			gbc_wifiCk.insets = new Insets(0, 0, 5, 5);
@@ -243,7 +259,7 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(wifiCk, gbc_wifiCk);
 		}
 		{
-			JCheckBox aireCk = new JCheckBox("Aire");
+			aireCk = new JCheckBox("Aire");
 			aireCk.setEnabled(false);
 			GridBagConstraints gbc_aireCk = new GridBagConstraints();
 			gbc_aireCk.insets = new Insets(0, 0, 0, 5);
@@ -273,4 +289,105 @@ public class VerInfoLinea extends JDialog {
 			}
 		}
 	}
+
+	public JTextField getNombreLinea() {
+		return nombreLinea;
+	}
+
+	public void setNombreLinea(JTextField nombreLinea) {
+		this.nombreLinea = nombreLinea;
+	}
+
+	public JTextField getCapSentadoTxt() {
+		return capSentadoTxt;
+	}
+
+	public void setCapSentadoTxt(JTextField capSentadoTxt) {
+		this.capSentadoTxt = capSentadoTxt;
+	}
+
+	public MenuVerLineas getMenu() {
+		return menu;
+	}
+
+	public void setMenu(MenuVerLineas menu) {
+		this.menu = menu;
+	}
+
+	public Integer getIdLinea() {
+		return idLinea;
+	}
+
+	public void setIdLinea(Integer idLinea) {
+		this.idLinea = idLinea;
+	}
+
+	public ControladorInfoLineas getControlador() {
+		return controlador;
+	}
+
+	public void setControlador(ControladorInfoLineas controlador) {
+		this.controlador = controlador;
+	}
+
+	public JPanel getContentPanel() {
+		return contentPanel;
+	}
+
+	public JComboBox getTipoCBx() {
+		return tipoCBx;
+	}
+
+	public void setTipoCBx(JComboBox tipoCBx) {
+		this.tipoCBx = tipoCBx;
+	}
+
+	public JComboBox getOrigenCBx() {
+		return origenCBx;
+	}
+
+	public void setOrigenCBx(JComboBox origenCBx) {
+		this.origenCBx = origenCBx;
+	}
+
+	public JComboBox getDestinoCBx() {
+		return destinoCBx;
+	}
+
+	public void setDestinoCBx(JComboBox destinoCBx) {
+		this.destinoCBx = destinoCBx;
+	}
+
+	public JComboBox getColorCBx() {
+		return colorCBx;
+	}
+
+	public void setColorCBx(JComboBox colorCBx) {
+		this.colorCBx = colorCBx;
+	}
+
+	public JComboBox getTrayectoCBx() {
+		return trayectoCBx;
+	}
+
+	public void setTrayectoCBx(JComboBox trayectoCBx) {
+		this.trayectoCBx = trayectoCBx;
+	}
+
+	public JCheckBox getWifiCk() {
+		return wifiCk;
+	}
+
+	public void setWifiCk(JCheckBox wifiCk) {
+		this.wifiCk = wifiCk;
+	}
+
+	public JCheckBox getAireCk() {
+		return aireCk;
+	}
+
+	public void setAireCk(JCheckBox aireCk) {
+		this.aireCk = aireCk;
+	}
+
 }

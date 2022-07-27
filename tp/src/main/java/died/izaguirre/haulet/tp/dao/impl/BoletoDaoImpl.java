@@ -22,7 +22,7 @@ public class BoletoDaoImpl implements BoletoDao {
 	}
 
 	@Override
-	public void add(Boleto t) {
+	public void add(Boleto t) throws SQLException {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.boleto (id_linea,monto) VALUES (?,?)",
 				PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -32,7 +32,7 @@ public class BoletoDaoImpl implements BoletoDao {
 			ResultSet rs = pstm.getGeneratedKeys();
 			if(rs.next()) t.setId(rs.getInt(1));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 
 	}

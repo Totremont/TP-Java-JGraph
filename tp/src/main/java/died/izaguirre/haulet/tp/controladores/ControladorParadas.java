@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
 
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
 import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
@@ -38,9 +39,10 @@ public class ControladorParadas {
 		filtrarTablaListener(); // Para que el buscado de la tabla funciona (filtra en la columna calle)
 		agregarButtonListener(); // Para que el boton Agregar cree paradas (por ahora es solo demostrativo)
 		agregarTablaListener(); // Para que al dar click en el boton elimianr de la tabla se elimine la parada
+		cargarTabla();
 	}
 
-	private void agregarParadaTabla(Parada p) {
+	public void agregarParadaTabla(Parada p) {
 
 		Object[] nuevaParada = new Object[3];
 		ImageIcon imgDelete = new ImageIcon(getClass().getResource("/delete.png"));
@@ -65,10 +67,8 @@ public class ControladorParadas {
 	private void agregarButtonListener() {
 
 		vista.getAgregarButton().addActionListener(e -> {
-			Parada aux = new Parada(123, "a");
-			Parada aux2 = new Parada(23, "b");
-			agregarParadaTabla(aux);
-			agregarParadaTabla(aux2);
+			CrearParada menuCrear = new CrearParada(vista);
+			menuCrear.setVisible(true);
 		});
 	}
 
@@ -80,9 +80,13 @@ public class ControladorParadas {
 				int fila = vista.getTable().rowAtPoint(e.getPoint());
 				int columna = vista.getTable().columnAtPoint(e.getPoint());
 
-				if (columna == 2) // Columna que contiene el boton eliminar
+				if (columna == 2) { // Columna que contiene el boton eliminar
+					Integer nroParada = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
+					ParadaDao aux = new ParadaDaoImpl();
+					aux.removeByNroParada(nroParada);
 					eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
 											// la parada de la BDD tambien
+				}
 			}
 		});
 	}
@@ -93,5 +97,13 @@ public class ControladorParadas {
 			return;
 //		int nroParada = vista.getTableModel().getValueAt(fila, 0); // Esto obtiene el nroParada, para buscar la parada en la BBD
 		vista.getTableModel().removeRow(fila);
+	}
+	
+	private void cargarTabla() {
+		ParadaDao aux = new ParadaDaoImpl();
+		paradas = aux.getAll();
+		
+		for(Parada p : paradas)
+			agregarParadaTabla(p);
 	}
 }

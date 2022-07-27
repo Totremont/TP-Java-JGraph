@@ -21,12 +21,20 @@ public class LineaDaoImpl implements LineaDao {
 	}
 
 	@Override
-	public void add(Linea t) {
+	public void add(Linea t) throws SQLException {
 		// TODO Auto-generated method stub
 		if (t.getTipo() == LineaTipoEnum.Economica.toString())
-			this.addEconomica(t);
+			try{
+				this.addEconomica(t);
+			}catch(SQLException e) {
+				throw e;
+			}
 		else
-			this.addSuperior(t);
+			try {
+				this.addSuperior(t);
+			}catch(SQLException e) {
+				throw e;
+			}
 	}
 
 	@Override
@@ -106,7 +114,7 @@ public class LineaDaoImpl implements LineaDao {
 
 	}
 
-	private void addEconomica(Linea t) {
+	private void addEconomica(Linea t) throws SQLException {
 
 		try (PreparedStatement pstm = con.prepareStatement(
 				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,cap_parado,origen,destino) VALUES (?,?,?,?,?,?,?)",
@@ -122,12 +130,12 @@ public class LineaDaoImpl implements LineaDao {
 			ResultSet rs = pstm.getGeneratedKeys();
 			if(rs.next()) t.setId(rs.getInt(1));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 
 	}
 
-	private void addSuperior(Linea t) {
+	private void addSuperior(Linea t) throws SQLException {
 
 		try (PreparedStatement pstm = con.prepareStatement(
 				"INSERT INTO tp.linea (tipo,nombre,color,cap_sentado,tiene_aire,tiene_wifi,origen,destino) VALUES (?,?,?,?,?,?,?,?)",
@@ -144,7 +152,7 @@ public class LineaDaoImpl implements LineaDao {
 			ResultSet rs = pstm.getGeneratedKeys();
 			if(rs.next()) t.setId(rs.getInt(1));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 
 	}

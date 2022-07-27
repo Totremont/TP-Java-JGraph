@@ -22,14 +22,14 @@ public class PoseeDaoImpl implements PoseeDao {
 	}
 
 	@Override
-	public void add(Posee t) {
+	public void add(Posee t) throws SQLException {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.posee (id_parada,id_linea)")) {
 			pstm.setInt(1, t.getParada().getId());
 			pstm.setInt(2, t.getLinea().getId());
 			pstm.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

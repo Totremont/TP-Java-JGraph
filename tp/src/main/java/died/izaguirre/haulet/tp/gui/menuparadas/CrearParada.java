@@ -19,6 +19,9 @@ import javax.swing.ImageIcon;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
+
+import died.izaguirre.haulet.tp.controladores.ControladorCrearParada;
+
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JSeparator;
@@ -29,32 +32,46 @@ import java.awt.Cursor;
 import java.awt.SystemColor;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.JTextField;
 
 public class CrearParada extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private ControladorCrearParada controlador;
+	private JTextField nroParadaTxt;
+	private JComboBox calleCBx;
+	private JButton okButton;
+	private ParadasPanel panelPadre;
+	private JButton cancelButton;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel( new FlatDarkLaf() );
-			CrearParada dialog = new CrearParada();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.pack();
-			dialog.revalidate();
-			dialog.repaint();
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			UIManager.setLookAndFeel( new FlatDarkLaf() );
+//			CrearParada dialog = new CrearParada();
+//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//			dialog.pack();
+//			dialog.revalidate();
+//			dialog.repaint();
+//			dialog.setVisible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * Create the dialog.
 	 */
-	public CrearParada() {
+
+	public CrearParada(ParadasPanel panelPadre) {
+		cargarVista();
+		this.panelPadre = panelPadre;
+		controlador = new ControladorCrearParada(this);
+	}
+
+	private void cargarVista() {
 		setAlwaysOnTop(true);
 		setTitle("Sistema de Transporte");
 		setResizable(false);
@@ -63,10 +80,10 @@ public class CrearParada extends JDialog {
 		contentPanel.setBorder(null);
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_contentPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPanel.columnWidths = new int[] { 0, 0, 0, 0, 0 };
+		gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_contentPanel.columnWeights = new double[] { 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE };
+		gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblNewLabel = new JLabel("Crear Parada");
@@ -96,7 +113,7 @@ public class CrearParada extends JDialog {
 		{
 			JLabel lblNewLabel_2 = new JLabel("Número*");
 			GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-			gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
+			gbc_lblNewLabel_2.anchor = GridBagConstraints.EAST;
 			gbc_lblNewLabel_2.insets = new Insets(0, 5, 5, 5);
 			gbc_lblNewLabel_2.gridx = 1;
 			gbc_lblNewLabel_2.gridy = 1;
@@ -104,16 +121,14 @@ public class CrearParada extends JDialog {
 			contentPanel.add(lblNewLabel_2, gbc_lblNewLabel_2);
 		}
 		{
-			JSpinner spinner = new JSpinner();
-			spinner.setEnabled(false);
-			spinner.setModel(new SpinnerNumberModel(7, null, null, 1));
-			GridBagConstraints gbc_spinner = new GridBagConstraints();
-			gbc_spinner.fill = GridBagConstraints.BOTH;
-			gbc_spinner.insets = new Insets(0, 0, 5, 5);
-			gbc_spinner.gridx = 2;
-			gbc_spinner.gridy = 1;
-			spinner.setPreferredSize(new Dimension(100,spinner.getHeight()));
-			contentPanel.add(spinner, gbc_spinner);
+			nroParadaTxt = new JTextField();
+			GridBagConstraints gbc_nroParadaTxt = new GridBagConstraints();
+			gbc_nroParadaTxt.insets = new Insets(0, 0, 5, 5);
+			gbc_nroParadaTxt.fill = GridBagConstraints.HORIZONTAL;
+			gbc_nroParadaTxt.gridx = 2;
+			gbc_nroParadaTxt.gridy = 1;
+			contentPanel.add(nroParadaTxt, gbc_nroParadaTxt);
+			nroParadaTxt.setColumns(10);
 		}
 		{
 			JLabel lblNewLabel_1 = new JLabel("Calle*");
@@ -127,14 +142,14 @@ public class CrearParada extends JDialog {
 			contentPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		}
 		{
-			JComboBox comboBox = new JComboBox();
-			comboBox.setModel(new DefaultComboBoxModel(new String[] {"SUNCHALES", "LAVAISSE", "OTRO"}));
-			GridBagConstraints gbc_comboBox = new GridBagConstraints();
-			gbc_comboBox.insets = new Insets(0, 0, 5, 5);
-			gbc_comboBox.fill = GridBagConstraints.BOTH;
-			gbc_comboBox.gridx = 2;
-			gbc_comboBox.gridy = 2;
-			contentPanel.add(comboBox, gbc_comboBox);
+			calleCBx = new JComboBox();
+			calleCBx.setModel(new DefaultComboBoxModel(new String[] { "SUNCHALES", "LAVAISSE", "OTRO" }));
+			GridBagConstraints gbc_calleCBx = new GridBagConstraints();
+			gbc_calleCBx.insets = new Insets(0, 0, 5, 5);
+			gbc_calleCBx.fill = GridBagConstraints.BOTH;
+			gbc_calleCBx.gridx = 2;
+			gbc_calleCBx.gridy = 2;
+			contentPanel.add(calleCBx, gbc_calleCBx);
 		}
 		{
 			JLabel lblNewLabel_5 = new JLabel("Los elementos marcados (*) son obligatorios");
@@ -163,17 +178,69 @@ public class CrearParada extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("CREAR");
+				okButton = new JButton("CREAR");
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("CANCELAR");
+				cancelButton = new JButton("CANCELAR");
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+
+	public ControladorCrearParada getControlador() {
+		return controlador;
+	}
+
+	public void setControlador(ControladorCrearParada controlador) {
+		this.controlador = controlador;
+	}
+
+	public JTextField getNroParadaTxt() {
+		return nroParadaTxt;
+	}
+
+	public void setNroParadaTxt(JTextField nroParadaTxt) {
+		this.nroParadaTxt = nroParadaTxt;
+	}
+
+	public JComboBox getCalleCBx() {
+		return calleCBx;
+	}
+
+	public void setCalleCBx(JComboBox calleCBx) {
+		this.calleCBx = calleCBx;
+	}
+
+	public JPanel getContentPanel() {
+		return contentPanel;
+	}
+
+	public JButton getOkButton() {
+		return okButton;
+	}
+
+	public void setOkButton(JButton okButton) {
+		this.okButton = okButton;
+	}
+
+	public ParadasPanel getPanelPadre() {
+		return panelPadre;
+	}
+
+	public void setPanelPadre(ParadasPanel panelPadre) {
+		this.panelPadre = panelPadre;
+	}
+
+	public JButton getCancelButton() {
+		return cancelButton;
+	}
+
+	public void setCancelButton(JButton cancelButton) {
+		this.cancelButton = cancelButton;
 	}
 
 }

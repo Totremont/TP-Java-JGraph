@@ -6,6 +6,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.postgresql.util.PSQLException;
 
 import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
@@ -38,8 +41,6 @@ public class ControladorLineas {
 		lineaDao = new LineaDaoImpl();
 		paradaDao = new ParadaDaoImpl();
 		lineas = new ArrayList<Linea>();
-		lineas = lineaDao.getAll();
-		paradas = paradaDao.getAll();
 
 	}
 
@@ -88,6 +89,12 @@ public class ControladorLineas {
 					else
 						l = crearLineaSuperior();
 
+					try {
+						lineaDao.add(l);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						return;
+					}
 					agregarLineaTabla(l);
 				}
 
@@ -113,9 +120,7 @@ public class ControladorLineas {
 		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
 				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
 				o, d);
-
-		lineaDao.add(l);
-
+		
 		return l;
 
 	}
@@ -128,8 +133,6 @@ public class ControladorLineas {
 		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
 				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
 				vista.getAireCk().isSelected(), vista.getWifiCk().isSelected(), o, d);
-
-		lineaDao.add(l);
 
 		return l;
 	}
@@ -168,7 +171,7 @@ public class ControladorLineas {
 	}
 
 	private void cargarTabla() {
-
+		lineas = lineaDao.getAll();
 		for (Linea l : lineas)
 			agregarLineaTabla(l);
 
@@ -176,7 +179,8 @@ public class ControladorLineas {
 
 	@SuppressWarnings("unchecked")
 	private void cargarParadas() {
-
+		
+		paradas = paradaDao.getAll();
 		for (Parada p : paradas) {
 			vista.getOrigenCBx().addItem(p.toString());
 			vista.getDestinoCBx().addItem(p.toString());
@@ -266,5 +270,10 @@ public class ControladorLineas {
 				}
 			}
 		});
+	}
+	
+	private void actualizarTabla() {
+		vista.getTable().removeAll();
+		this.cargarTabla();
 	}
 }

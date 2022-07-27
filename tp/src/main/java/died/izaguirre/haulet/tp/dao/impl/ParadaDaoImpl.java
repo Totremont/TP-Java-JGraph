@@ -20,9 +20,9 @@ public class ParadaDaoImpl implements ParadaDao {
 	}
 
 	@Override
-	public void add(Parada t) {
+	public void add(Parada t) throws SQLException {
 		// TODO Auto-generated method stub
-		try (PreparedStatement pstm = con.prepareStatement("INSET INTO tp.parada (nro_parada,calle) VALUES (?,?)",
+		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.parada (nro_parada,calle) VALUES (?,?)",
 				PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setInt(1, t.getNroParada());
 			pstm.setString(2, t.getCalle());
@@ -31,7 +31,7 @@ public class ParadaDaoImpl implements ParadaDao {
 			rs.next();
 			t.setId(rs.getInt(1));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

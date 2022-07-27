@@ -22,7 +22,7 @@ public class CaminoDaoImpl implements CaminoDao {
 	}
 
 	@Override
-	public void add(Camino t) {
+	public void add(Camino t) throws SQLException {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement(
 				"INSERT INTO tp.camino (origen,destino,capacidad,distancia,origen,destino) VALUES (?,?,?,?,?,?)",
@@ -33,7 +33,7 @@ public class CaminoDaoImpl implements CaminoDao {
 			pstm.setInt(4, t.getDistancia());
 			pstm.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

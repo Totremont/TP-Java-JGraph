@@ -85,7 +85,7 @@ public class Principal extends JFrame {
 		rl.setFill(true);
 		contentPane.setLayout(rl);
 
-		JPanel panel_izquierdo =  new MenuVerLineas();	//Cambiar para ver otra interfaz
+		JPanel panel_izquierdo =  new ParadasPanel();	//Cambiar para ver otra interfaz
 		panel_izquierdo.setBorder(UIManager.getBorder("ComboBox.border"));
 		contentPane.add(panel_izquierdo, 1f);
 
