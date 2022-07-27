@@ -27,11 +27,13 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 	public void add(Incidencia t) {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.incidencia (id_parada,fecha_inicio,fecha_fin,esta_resuelto VALUES (?,?,?,?))",PreparedStatement.RETURN_GENERATED_KEYS)) {
+				"INSERT INTO tp.incidencia (id_parada,fecha_inicio,fecha_fin,esta_resuelto,descripcion,motivo VALUES (?,?,?,?,?,?))",PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setInt(1, t.getParada().getId());
 			pstm.setDate(2, Date.valueOf(t.getFechaInicio()));
 			pstm.setDate(3, Date.valueOf(t.getFechaFin()));
 			pstm.setBoolean(4, t.getEstaResuelto());
+			pstm.setString(5,t.getDescripción());
+			pstm.setString(6,t.getMotivo());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
 			if(rs.next()) t.setId(rs.getInt(1));
@@ -64,7 +66,7 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 		Incidencia auxIncidencia = null;
 
 		try (PreparedStatement pstm = con.prepareStatement(
-				"SELECT id_incidencia,id_parada,fecha_inicio,fecha_fin,esta_resuelto FROM tp.incidencia WHERE id_incidencia=?")) {
+				"SELECT id_incidencia,id_parada,fecha_inicio,fecha_fin,esta_resuelto,descripcion,motivo FROM tp.incidencia WHERE id_incidencia=?")) {
 			pstm.setInt(1, id);
 			ResultSet rs = pstm.executeQuery();
 			if(rs.next()) 
@@ -76,6 +78,8 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 				auxIncidencia.setFechaInicio(LocalDate.ofInstant(rs.getDate(3).toInstant(), ZoneId.systemDefault()));
 				auxIncidencia.setFechaFin(LocalDate.ofInstant(rs.getDate(4).toInstant(), ZoneId.systemDefault()));
 				auxIncidencia.setEstaResuelto(rs.getBoolean(5));
+				auxIncidencia.setDescripción(rs.getString(6));
+				auxIncidencia.setMotivo(rs.getString(7));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -90,7 +94,7 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 		List<Incidencia> incidencias = new ArrayList<Incidencia>();
 
 		try (PreparedStatement pstm = con
-				.prepareStatement("SELECT id_incidencia,id_parada,fecha_inicio,fecha_fin,esta_resuelto FROM tp.incidencia")) {
+				.prepareStatement("SELECT id_incidencia,id_parada,fecha_inicio,fecha_fin,esta_resuelto,descripcion,motivo FROM tp.incidencia")) {
 			ResultSet rs = pstm.executeQuery();
 			ParadaDao aux = new ParadaDaoImpl();
 			while(rs.next()) {
@@ -100,6 +104,8 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 				auxIncidencia.setFechaInicio(LocalDate.ofInstant(rs.getDate(3).toInstant(), ZoneId.systemDefault()));
 				auxIncidencia.setFechaFin(LocalDate.ofInstant(rs.getDate(4).toInstant(), ZoneId.systemDefault()));
 				auxIncidencia.setEstaResuelto(rs.getBoolean(5));
+				auxIncidencia.setDescripción(rs.getString(6));
+				auxIncidencia.setMotivo(rs.getString(7));
 				incidencias.add(auxIncidencia);
 			}
 		}catch(SQLException e) {

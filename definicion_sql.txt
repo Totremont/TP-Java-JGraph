@@ -7,6 +7,7 @@ CREATE TABLE tp.incidencia(
     fecha_fin date,
     esta_resuelto bool,
     descripcion varchar(100),
+    motivo varchar(100),
     CONSTRAINT pk_incidencia PRIMARY KEY (id_incidencia)
 );
 
@@ -28,6 +29,7 @@ CREATE TABLE tp.camino(
 CREATE TABLE tp.posee(
     id_parada integer,
     id_linea integer,
+    orden_parada integer,
     CONSTRAINT pk_posee PRIMARY KEY (id_parada,id_linea)
 );
 
@@ -40,6 +42,8 @@ CREATE TABLE tp.linea(
     color varchar(100),
     tiene_aire bool,
     tiene_wifi bool,
+	origen integer,
+	destino integer,
     CONSTRAINT pk_linea PRIMARY KEY (id_linea)
 );
 
@@ -52,6 +56,10 @@ CREATE TABLE tp.boleto(
 
 ALTER TABLE tp.parada
 	ADD CONSTRAINT uq_parada UNIQUE(nro_parada);
+
+ALTER TABLE tp.linea
+	ADD CONSTRAINT fk_linea_origen FOREIGN KEY (origen) REFERENCES tp.parada(nro_parada),
+	ADD CONSTRAINT fk_linea_destino FOREIGN KEY (destino) REFERENCES tp.parada(nro_parada);
 
 ALTER TABLE tp.incidencia
     ADD CONSTRAINT fk_incidencia FOREIGN KEY (id_parada) REFERENCES tp.parada(id_parada);

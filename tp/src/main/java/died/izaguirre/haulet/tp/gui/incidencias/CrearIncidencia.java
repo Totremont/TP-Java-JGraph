@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.GridBagLayout;
@@ -26,6 +27,7 @@ import java.awt.Font;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dialog;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
 
@@ -33,28 +35,23 @@ public class CrearIncidencia extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel( new FlatDarkLaf() );
-			CrearIncidencia dialog = new CrearIncidencia();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.pack();
-			dialog.revalidate();
-			dialog.repaint();
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private JFrame padre;
+	
+	public CrearIncidencia(JFrame padre) 
+	{
+		super(padre,"Crear incidencia",Dialog.ModalityType.DOCUMENT_MODAL);
+		this.padre = padre;
+		CrearInterfaz();
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		pack();
+		//revalidate();
+		//repaint();
+		setLocationRelativeTo(padre);
+		setVisible(true);
 	}
 
-	/**
-	 * Create the dialog.
-	 */
-	public CrearIncidencia() {
+	
+	private void CrearInterfaz() {
 		setAlwaysOnTop(true);
 		setTitle("Sistema de Transporte");
 		setResizable(false);

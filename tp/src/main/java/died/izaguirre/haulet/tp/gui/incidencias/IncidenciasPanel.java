@@ -18,6 +18,8 @@ import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -26,12 +28,17 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 
 import javax.swing.JScrollBar;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,26 +46,46 @@ import javax.swing.UIManager;
 import javax.swing.JTextField;
 
 import died.izaguirre.haulet.tp.tablas.Incidencia;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.ListSelectionModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class IncidenciasPanel extends JPanel {
+	
 	private JTable table;
 	private JTextField textField;
+	private JFrame padre;
 
 	private List<Incidencia> incidencias = new ArrayList<>();
 	private GestorIncidencias gestor = new GestorIncidencias();
-	private ImageIcon delete = new ImageIcon(getClass().getResource("/delete.png"));
+	private List<Incidencia> aux = new ArrayList<>(); //Lista auxiliar que se utiliza para filtrado
 	
-	public IncidenciasPanel() {
+	private ImageIcon delete = new ImageIcon(getClass().getResource("/delete.png"));
+	private JLabel lblNewLabel_7 = new JLabel("Alberdi");
+	private JLabel lblNewLabel_8 = new JLabel("4");
+	private JLabel lblNewLabel_10 = new JLabel("09/05/2022");
+	private JLabel lblNewLabel_11 = new JLabel("18/05/2022");
+	private JLabel lblNewLabel_14 = new JLabel("Faltan 4 días");
+	private JLabel lblNewLabel_13 = new JLabel("MANTENIMIENTO");
+	private JLabel lblNewLabel_18 = new JLabel("Ver con cursor");
+	
+	public IncidenciasPanel(JFrame padre) {
+		this.padre = padre;
+		crearInterfaz();			
 		
-		crearInterfaz();
-		
-		
-		
+	}
+	
+	private void crearIncidencia() 
+	{
+		JDialog dialog = new CrearIncidencia(padre);
 	}
 	
 	private void buscarIncidencias() 
 	{
 		incidencias = gestor.buscarIncidencias();
+		aux = incidencias;
 	}
 	
 	private void actualizarTabla() 
@@ -66,7 +93,7 @@ public class IncidenciasPanel extends JPanel {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
 
-		incidencias.forEach(it -> 
+		aux.forEach(it -> 
 		{
 			String fin = it.getFechaFin() == null ? "No establecido" : it.getFechaFin().toString();
 			Object[] fila = { it.getId(), it.getParada().getCalle(), fin, delete};
@@ -74,9 +101,48 @@ public class IncidenciasPanel extends JPanel {
 		});
 	}
 	
-	private void actualizarResumen() 
+	private void actualizarResumen(int fila) 
 	{
+		Incidencia seleccionada = aux.get(fila);
+		if(seleccionada == null) return;
+		String fin = seleccionada.getFechaFin() == null ? "No establecido" : seleccionada.getFechaFin().toString();
+		lblNewLabel_7.setText(seleccionada.getParada().getCalle());
+		if(seleccionada.getEstaResuelto()) lblNewLabel_8.setText("RESUELTA");
+		 else lblNewLabel_8.setText("EN CURSO");
+		lblNewLabel_10.setText(seleccionada.getFechaInicio().toString());
+		lblNewLabel_11.setText(fin);
+		if(seleccionada.getFechaFin() != null) 
+		{
+			Duration falta = Duration.between(seleccionada.getFechaFin(), LocalDate.now());
+			if(falta.toDays() >= 0 && !seleccionada.getEstaResuelto()) 
+			{
+				lblNewLabel_14.setText("Faltan " + falta.toDays() + " días");
+			}
+		}
+		lblNewLabel_13.setText(seleccionada.getMotivo());
+		lblNewLabel_18.setToolTipText(seleccionada.getDescripción());				
 		
+	}
+	
+	private void filtrarBusqueda() 
+	{
+		String busqueda = textField.getText();
+		aux = incidencias;
+		if(!busqueda.isBlank()) 
+		{
+			int filas = aux.size();
+			for(int i = 0; i<filas;i++) 
+			{
+				String id = (String) table.getValueAt(i, 0);
+				String calle = (String) table.getValueAt(i, 1);
+				String fin = (String) table.getValueAt(i, 2);
+				if(!id.startsWith(busqueda) || !calle.startsWith(busqueda) || !fin.startsWith(busqueda)) 
+				{
+					aux.remove(filas);
+				}
+			}
+		}
+		actualizarTabla();
 	}
 	
 	private void crearInterfaz() 
@@ -89,7 +155,7 @@ public class IncidenciasPanel extends JPanel {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0};
 		JScrollPane scrollPane2 = new JScrollPane();
 		panel.setBorder(null);
@@ -143,23 +209,22 @@ public class IncidenciasPanel extends JPanel {
 		gbc_separator.gridy = 2;
 		panel.add(separator, gbc_separator);
 		
-		JLabel lblNewLabel_2 = new JLabel("Parada afectada");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_2.gridx = 1;
-		gbc_lblNewLabel_2.gridy = 2;
-		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		JLabel paradaTxt = new JLabel("Parada afectada");
+		paradaTxt.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_paradaTxt = new GridBagConstraints();
+		gbc_paradaTxt.anchor = GridBagConstraints.WEST;
+		gbc_paradaTxt.insets = new Insets(0, 0, 5, 5);
+		gbc_paradaTxt.gridx = 1;
+		gbc_paradaTxt.gridy = 2;
+		panel.add(paradaTxt, gbc_paradaTxt);
 		
-		JLabel lblNewLabel_7 = new JLabel("Alberdi");
 		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
 		gbc_lblNewLabel_7.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_7.gridx = 2;
 		gbc_lblNewLabel_7.gridy = 2;
 		panel.add(lblNewLabel_7, gbc_lblNewLabel_7);
 		
-		JLabel lblNewLabel_3 = new JLabel("Líneas afectadas");
+		JLabel lblNewLabel_3 = new JLabel("Situación");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
 		gbc_lblNewLabel_3.anchor = GridBagConstraints.WEST;
@@ -168,7 +233,6 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_3.gridy = 3;
 		panel.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
-		JLabel lblNewLabel_8 = new JLabel("4");
 		GridBagConstraints gbc_lblNewLabel_8 = new GridBagConstraints();
 		gbc_lblNewLabel_8.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_8.gridx = 2;
@@ -192,7 +256,6 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_4.gridy = 4;
 		panel.add(lblNewLabel_4, gbc_lblNewLabel_4);
 		
-		JLabel lblNewLabel_10 = new JLabel("09/05/2022");
 		GridBagConstraints gbc_lblNewLabel_10 = new GridBagConstraints();
 		gbc_lblNewLabel_10.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_10.gridx = 2;
@@ -208,14 +271,12 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_6.gridy = 5;
 		panel.add(lblNewLabel_6, gbc_lblNewLabel_6);
 		
-		JLabel lblNewLabel_11 = new JLabel("18/05/2022");
 		GridBagConstraints gbc_lblNewLabel_11 = new GridBagConstraints();
 		gbc_lblNewLabel_11.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_11.gridx = 2;
 		gbc_lblNewLabel_11.gridy = 5;
 		panel.add(lblNewLabel_11, gbc_lblNewLabel_11);
 		
-		JLabel lblNewLabel_14 = new JLabel("Faltan 4 días");
 		GridBagConstraints gbc_lblNewLabel_14 = new GridBagConstraints();
 		gbc_lblNewLabel_14.insets = new Insets(0, 0, 5, 0);
 		gbc_lblNewLabel_14.gridx = 3;
@@ -230,7 +291,6 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_12.gridy = 6;
 		panel.add(lblNewLabel_12, gbc_lblNewLabel_12);
 		
-		JLabel lblNewLabel_13 = new JLabel("MANTENIMIENTO");
 		GridBagConstraints gbc_lblNewLabel_13 = new GridBagConstraints();
 		gbc_lblNewLabel_13.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_13.gridx = 2;
@@ -245,11 +305,12 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_17.gridy = 7;
 		panel.add(lblNewLabel_17, gbc_lblNewLabel_17);
 		
-		JLabel lblNewLabel_18 = new JLabel("VER");
 		GridBagConstraints gbc_lblNewLabel_18 = new GridBagConstraints();
 		gbc_lblNewLabel_18.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_18.gridx = 2;
 		gbc_lblNewLabel_18.gridy = 7;
+		lblNewLabel_18.setForeground(Color.BLUE);
+		lblNewLabel_18.setToolTipText("asdasjkdhasdasdasdasd");
 		panel.add(lblNewLabel_18, gbc_lblNewLabel_18);
 		
 		JLabel lblNewLabel_20 = new JLabel("");
@@ -278,6 +339,10 @@ public class IncidenciasPanel extends JPanel {
 		panel.add(separator_1, gbc_separator_1);
 		
 		JButton btnNewButton = new JButton("Modificar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
 		gbc_btnNewButton.gridx = 3;
@@ -285,6 +350,12 @@ public class IncidenciasPanel extends JPanel {
 		panel.add(btnNewButton, gbc_btnNewButton);
 		
 		JLabel lblNewLabel_19 = new JLabel("Agregar");
+		lblNewLabel_19.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				crearIncidencia();
+			}
+		});
 		GridBagConstraints gbc_lblNewLabel_19 = new GridBagConstraints();
 		gbc_lblNewLabel_19.insets = new Insets(0, 0, 10, 5);
 		gbc_lblNewLabel_19.gridx = 0;
@@ -307,26 +378,29 @@ public class IncidenciasPanel extends JPanel {
 		lblNewLabel_16.setIcon(new ImageIcon(getClass().getResource("/magnify.png")));
 		
 		textField = new JTextField();
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(table.getSelectedRow() >= 0)
+				filtrarBusqueda();
+			}
+		});
 		panel_1.add(textField, BorderLayout.CENTER);
 		textField.setColumns(10);
 		
 		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		table.setFillsViewportHeight(true);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Incidencia #1", "Avellaneda", "08/09/2022", delete},
-				{"Incidencia #2", "Vera", "08/09/2022", delete},
-				{"Incidencia #3", "Sunchales", "08/09/2022", delete},
+				{"Incidencia #1", "Avellaneda", "08/09/2022", null},
+				{"Incidencia #2", "Vera", "08/09/2022", null},
+				{"Incidencia #3", "Sunchales", "08/09/2022", null},
 			},
 			new String[] {
 				"Incidencia", "Parada", "Fin", "Borrar"
 			}
 		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
 			boolean[] columnEditables = new boolean[] {
 				false, false, false, false
 			};
@@ -335,8 +409,13 @@ public class IncidenciasPanel extends JPanel {
 			}
 		});
 		TableUtility.setCellsAlignment(table, SwingConstants.CENTER);
-		table.getColumnModel().getColumn(3).setCellRenderer(table.getDefaultRenderer(ImageIcon.class));
 		table.setRowHeight(35);
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+	        public void valueChanged(ListSelectionEvent event) {
+	            actualizarResumen(table.getSelectedRow());
+	        }
+	    });
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);

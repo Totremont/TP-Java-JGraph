@@ -11,6 +11,8 @@ public class Incidencia implements Comparable<Incidencia> {
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;
 	private Boolean estaResuelto;
+	private String descripción;
+	private String motivo;
 
 	// Tienen mas prioridad las activas de mayor duracion
 	// ????? comprobar -> Si 2 incidencias no tienen fecha de fin, se considerará
@@ -44,10 +46,6 @@ public class Incidencia implements Comparable<Incidencia> {
 		return fechaFin;
 	}
 
-	public boolean isEstaResuelto() {
-		return estaResuelto;
-	}
-
 	public Boolean getEstaResuelto() {
 		return estaResuelto;
 	}
@@ -72,6 +70,24 @@ public class Incidencia implements Comparable<Incidencia> {
 		this.fechaFin = fechaFin;
 	}
 	
+	
+	
+	public String getDescripción() {
+		return descripción;
+	}
+
+	public void setDescripción(String descripción) {
+		this.descripción = descripción;
+	}
+
+	public String getMotivo() {
+		return motivo;
+	}
+
+	public void setMotivo(String motivo) {
+		this.motivo = motivo;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		Incidencia otro = (Incidencia) obj;

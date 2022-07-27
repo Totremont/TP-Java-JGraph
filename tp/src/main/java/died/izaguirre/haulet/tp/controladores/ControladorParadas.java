@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.RowFilter;
 
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
 import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
+import died.izaguirre.haulet.tp.gui.menuparadas.CrearParada;
 import died.izaguirre.haulet.tp.gui.menuparadas.ParadasPanel;
 import died.izaguirre.haulet.tp.tablas.Parada;
 
