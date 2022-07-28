@@ -9,6 +9,7 @@ import java.util.List;
 
 import died.izaguirre.haulet.tp.dao.DBConnection;
 import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
+import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
 import died.izaguirre.haulet.tp.tablas.linea.Linea;
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 
@@ -23,16 +24,16 @@ public class LineaDaoImpl implements LineaDao {
 	@Override
 	public void add(Linea t) throws SQLException {
 		// TODO Auto-generated method stub
-		if (t.getTipo() == LineaTipoEnum.Economica.toString())
-			try{
+		if (t.getTipo().equals(LineaTipoEnum.Economica.toString()))
+			try {
 				this.addEconomica(t);
-			}catch(SQLException e) {
+			} catch (SQLException e) {
 				throw e;
 			}
 		else
 			try {
 				this.addSuperior(t);
-			}catch(SQLException e) {
+			} catch (SQLException e) {
 				throw e;
 			}
 	}
@@ -59,11 +60,11 @@ public class LineaDaoImpl implements LineaDao {
 		// TODO Auto-generated method stub
 		Linea auxLinea = null;
 		try (PreparedStatement pstm = con.prepareStatement(
-				"SELECT id_linea,tipo,cap_sentado,cap_parado,nombre,color,tiene_aire,tiene_wifi FROM tp.linea WHERE id_linea=?")) {
+				"SELECT id_linea,tipo,cap_sentado,cap_parado,nombre,color,tiene_aire,tiene_wifi,origen,destino FROM tp.linea WHERE id_linea=?")) {
 			pstm.setInt(1, id);
 			ResultSet rs = pstm.executeQuery();
-			if(rs.next()) 
-			{
+			if (rs.next()) {
+				ParadaDao auxDaoP = new ParadaDaoImpl();
 				auxLinea = new Linea();
 				auxLinea.setId(rs.getInt(1));
 				auxLinea.setTipo(rs.getString(2));
@@ -73,6 +74,8 @@ public class LineaDaoImpl implements LineaDao {
 				auxLinea.setColor(rs.getString(6));
 				auxLinea.setTieneAire(rs.getBoolean(7));
 				auxLinea.setTieneWifi(rs.getBoolean(8));
+				auxLinea.setOrigen(auxDaoP.findByNroParada(rs.getInt(9)));
+				auxLinea.setDestino(auxDaoP.findByNroParada(rs.getInt(10)));
 			}
 
 		} catch (SQLException e) {
@@ -87,9 +90,10 @@ public class LineaDaoImpl implements LineaDao {
 	public List<Linea> getAll() {
 
 		List<Linea> auxLinea = new ArrayList<Linea>();
+		ParadaDao auxDaoParada = new ParadaDaoImpl();
 
 		try (PreparedStatement pstm = con.prepareStatement(
-				"SELECT id_linea,tipo,cap_sentado,cap_parado,nombre,color,tiene_aire,tiene_wifi FROM tp.linea")) {
+				"SELECT id_linea,tipo,cap_sentado,cap_parado,nombre,color,tiene_aire,tiene_wifi,origen,destino FROM tp.linea")) {
 			ResultSet rs = pstm.executeQuery();
 			while (rs.next()) {
 				Linea aux = new Linea();
@@ -98,12 +102,13 @@ public class LineaDaoImpl implements LineaDao {
 				aux.setCapSentado(rs.getInt(3)); // ECO Y SUP
 				aux.setNombre(rs.getString(5)); // ECO Y SUP
 				aux.setColor(rs.getString(6)); // ECO Y SUP
-				if(aux.getTipo() == LineaTipoEnum.Superior.toString()) 
-				{
+				if (aux.getTipo().equals(LineaTipoEnum.Superior.toString())) {
 					aux.setTieneAire(rs.getBoolean(7)); // SUP
 					aux.setTieneWifi(rs.getBoolean(8)); // SUP
-				} 
-				else aux.setCapParado(rs.getInt(4));
+				} else
+					aux.setCapParado(rs.getInt(4));
+				aux.setOrigen(auxDaoParada.findByNroParada(rs.getInt(9)));
+				aux.setDestino(auxDaoParada.findByNroParada(rs.getInt(10)));
 				auxLinea.add(aux);
 			}
 		} catch (SQLException e) {
@@ -128,7 +133,8 @@ public class LineaDaoImpl implements LineaDao {
 			pstm.setInt(7, t.getDestino().getNroParada());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
-			if(rs.next()) t.setId(rs.getInt(1));
+			if (rs.next())
+				t.setId(rs.getInt(1));
 		} catch (SQLException e) {
 			throw e;
 		}
@@ -150,7 +156,8 @@ public class LineaDaoImpl implements LineaDao {
 			pstm.setInt(8, t.getDestino().getNroParada());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
-			if(rs.next()) t.setId(rs.getInt(1));
+			if (rs.next())
+				t.setId(rs.getInt(1));
 		} catch (SQLException e) {
 			throw e;
 		}

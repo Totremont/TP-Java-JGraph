@@ -7,7 +7,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
-import died.izaguirre.haulet.tp.gestores.incidencias.GestorIncidencias;
+//import died.izaguirre.haulet.tp.gestores.incidencias.GestorIncidencias;
 import died.izaguirre.haulet.tp.gui.utilities.TableUtility;
 
 import java.awt.GridBagLayout;
@@ -59,7 +59,7 @@ public class IncidenciasPanel extends JPanel {
 	private JFrame padre;
 
 	private List<Incidencia> incidencias = new ArrayList<>();
-	private GestorIncidencias gestor = new GestorIncidencias();
+//	private GestorIncidencias gestor = new GestorIncidencias();
 	private List<Incidencia> aux = new ArrayList<>(); //Lista auxiliar que se utiliza para filtrado
 	
 	private ImageIcon delete = new ImageIcon(getClass().getResource("/delete.png"));
@@ -84,7 +84,7 @@ public class IncidenciasPanel extends JPanel {
 	
 	private void buscarIncidencias() 
 	{
-		incidencias = gestor.buscarIncidencias();
+//		incidencias = gestor.buscarIncidencias();
 		aux = incidencias;
 	}
 	

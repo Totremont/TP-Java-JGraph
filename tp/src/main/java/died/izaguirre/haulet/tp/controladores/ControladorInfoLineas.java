@@ -45,11 +45,25 @@ public class ControladorInfoLineas {
 	}
 
 	private void cargarDatos() {
+		cargarNombreLinea();
+		cargarTipoLinea();
+		cargarColorLinea();
+		cargarCapSentado();
+		cargarOrigenDestino(); // Falta implementar
+	}
+	
+	private void cargarNombreLinea() {
 		vista.getNombreLinea().setText(linea.getNombre());
-		if (linea.getTipo() == LineaTipoEnum.Economica.toString())
+	}
+	
+	private void cargarTipoLinea() {
+		if (linea.getTipo() .equals(LineaTipoEnum.Economica.toString()))
 			vista.getTipoCBx().setSelectedItem(LineaTipoEnum.Economica);
 		else
 			vista.getTipoCBx().setSelectedItem(LineaTipoEnum.Superior);
+	}
+	
+	private void cargarColorLinea() {
 		switch (linea.getColor()) {
 		case "Rojo":
 			vista.getColorCBx().setSelectedItem(LineaColores.Rojo);
@@ -64,12 +78,20 @@ public class ControladorInfoLineas {
 			vista.getColorCBx().setSelectedItem(LineaColores.Amarillo);
 			break;
 		}
-		vista.getCapSentadoTxt().setText(linea.getCapSentado().toString());
+	}
+	
+	private void cargarCapSentado() {
+		vista.getCapSentadoTxt().setText(linea.getCapSentado().toString());	
+	}
+	
+	private void cargarAireWifi() {
 		if (linea.getTipo() == "Superior") {
 			vista.getWifiCk().setEnabled(linea.getTieneWifi());
 			vista.getAireCk().setEnabled(linea.getTieneAire());
 		}
+	}
+	
+	private void cargarOrigenDestino() {
 		
-
 	}
 }

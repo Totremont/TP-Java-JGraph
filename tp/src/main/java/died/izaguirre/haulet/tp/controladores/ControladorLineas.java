@@ -84,8 +84,10 @@ public class ControladorLineas {
 			public void actionPerformed(ActionEvent e) {
 				Linea l;
 				if (camposRellenados()) {
-					if (vista.getLineaTipoCBx().getSelectedItem() == LineaTipoEnum.Economica)
+					if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica.toString())) {
 						l = crearLineaEconomica();
+						System.out.println(vista.getColorCBx().getSelectedItem().toString());
+					}
 					else
 						l = crearLineaSuperior();
 
