@@ -274,8 +274,13 @@ public class ControladorLineas {
 		});
 	}
 	
-	private void actualizarTabla() {
-		vista.getTable().removeAll();
-		this.cargarTabla();
+	public void actualizarLineaDeTabla(Linea l) {
+		for(int i = 0 ; i < vista.getModel().getRowCount() ; i ++) {
+			Integer idModelo = (Integer) vista.getModel().getValueAt(i, 0);
+			if(idModelo.equals(l.getId())) {
+				vista.getModel().setValueAt(l.getNombre(), i, 1);
+				vista.getModel().setValueAt(l.getColor(), i, 2);
+			}
+		}
 	}
 }
