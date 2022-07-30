@@ -46,7 +46,8 @@ public class ParadasPanel extends JPanel {
 	private DefaultTableModel tableModel;
 	private TableRowSorter<TableModel> tableSorter;
 	private ControladorParadas controlador;
-	private JButton agregarButton;
+	private JButton modificarButton;
+	private JLabel agregarButton = new JLabel("Agregar");
 
 	/**
 	 * Create the panel.
@@ -172,15 +173,23 @@ public class ParadasPanel extends JPanel {
 		gbc_separator_1.gridy = 4;
 		panel.add(separator_1, gbc_separator_1);
 
-		agregarButton = new JButton("Agregar");
-		GridBagConstraints gbc_agregarButton = new GridBagConstraints();
-		gbc_agregarButton.insets = new Insets(0, 0, 5, 0);
-		gbc_agregarButton.gridx = 3;
-		gbc_agregarButton.gridy = 4;
-		panel.add(agregarButton, gbc_agregarButton);
+		modificarButton = new JButton("Modificar");
+		modificarButton.setEnabled(false);
+		GridBagConstraints gbc_modificarButton = new GridBagConstraints();
+		gbc_modificarButton.insets = new Insets(0, 0, 5, 0);
+		gbc_modificarButton.gridx = 3;
+		gbc_modificarButton.gridy = 4;
+		panel.add(modificarButton, gbc_modificarButton);
 		JLabel textPaneIcon = new JLabel();
 		textPaneIcon.setIcon(new ImageIcon(getClass().getResource("/magnify.png")));
 		JTextField fieldText = new JTextField();
+		
+		GridBagConstraints gbc_agregarButton = new GridBagConstraints();
+		gbc_agregarButton.insets = new Insets(0, 0, 5, 5);
+		gbc_agregarButton.gridx = 0;
+		gbc_agregarButton.gridy = 5;
+		agregarButton.setIcon(new ImageIcon(getClass().getResource("/plus-circle.png")));
+		panel.add(agregarButton, gbc_agregarButton);
 
 		JPanel panel_1 = new JPanel();
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
@@ -270,11 +279,11 @@ public class ParadasPanel extends JPanel {
 		this.controlador = controlador;
 	}
 
-	public JButton getAgregarButton() {
+	public JLabel getAgregarButton() {
 		return agregarButton;
 	}
 
-	public void setAgregarButton(JButton agregarButton) {
+	public void setAgregarButton(JLabel agregarButton) {
 		this.agregarButton = agregarButton;
 	}
 	

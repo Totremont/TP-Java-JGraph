@@ -135,7 +135,7 @@ public class CrearIncidencia extends JDialog {
 		LocalDate inicio = dateChooser.getDate() != null ? dateChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
 		LocalDate fin = dateChooser2.getDate() != null ? dateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
 		String motivo = (String) comboBox2.getSelectedItem();
-		String descripcion = textField.getText();
+		String descripcion = textField.getText().length() >= 100 ? textField.getText().substring(0,99) : textField.getText();
 		
 		if(inicio == null) { 
 			JDialog dialog = new JDialog();
@@ -190,8 +190,10 @@ public class CrearIncidencia extends JDialog {
 				incidencias.add(incidencia);
 				dateChooser.setDate(null);
 				dateChooser.setMinSelectableDate(new JDateChooser().getMinSelectableDate());
+				dateChooser.setMaxSelectableDate(new JDateChooser().getMaxSelectableDate());
 				dateChooser2.setDate(null);
 				dateChooser2.setMinSelectableDate(new JDateChooser().getMinSelectableDate());
+				dateChooser2.setMaxSelectableDate(new JDateChooser().getMaxSelectableDate());
 				textField.setText("");
 			}
 			else 
