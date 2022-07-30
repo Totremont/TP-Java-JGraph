@@ -47,13 +47,10 @@ public class ParadasPanel extends JPanel {
 	private DefaultTableModel tableModel;
 	private TableRowSorter<TableModel> tableSorter;
 	private ControladorParadas controlador;
-<<<<<<< HEAD
-	private JButton agregarButton;
+
 	private JFrame ventanaPadre;
-=======
 	private JButton modificarButton;
 	private JLabel agregarButton = new JLabel("Agregar");
->>>>>>> 0bbc21abb251ef5393ab635ae4314e8085368c40
 
 	/**
 	 * Create the panel.
