@@ -41,14 +41,15 @@ public class Parada {
 
 	@Override
 	public String toString() {
-		return nroParada.toString();
+		return calle.toString();
 	}
 	
-//	@Override
-//	public boolean equals(Object obj) {
-//		Parada otro = (Parada) obj;
-//		return ((otro == this) || (this.getId() == otro.getId()));
-//	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Parada otro = (Parada) obj;
+		return ((otro == this) || (this.getId() == otro.getId()));
+	}
 	
 	
 

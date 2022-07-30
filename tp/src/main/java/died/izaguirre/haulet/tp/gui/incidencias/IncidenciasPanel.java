@@ -7,7 +7,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
-import died.izaguirre.haulet.tp.gestores.incidencias.GestorIncidencias;
+import died.izaguirre.haulet.tp.controladores.ControladorIncidencia;
 import died.izaguirre.haulet.tp.gui.utilities.TableUtility;
 
 import java.awt.GridBagLayout;
@@ -39,8 +39,10 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.UIManager;
 import javax.swing.JTextField;
@@ -58,91 +60,141 @@ public class IncidenciasPanel extends JPanel {
 	private JTextField textField;
 	private JFrame padre;
 
-	private List<Incidencia> incidencias = new ArrayList<>();
-	private GestorIncidencias gestor = new GestorIncidencias();
-	private List<Incidencia> aux = new ArrayList<>(); //Lista auxiliar que se utiliza para filtrado
+	private int ultimaFila = -1;
+	private ArrayList<Incidencia> incidencias = new ArrayList<>();
+	private ControladorIncidencia gestor = new ControladorIncidencia();
+	private ArrayList<Incidencia> aux = new ArrayList<>(); //Lista auxiliar que se utiliza para filtrado
 	
 	private ImageIcon delete = new ImageIcon(getClass().getResource("/delete.png"));
-	private JLabel lblNewLabel_7 = new JLabel("Alberdi");
-	private JLabel lblNewLabel_8 = new JLabel("4");
-	private JLabel lblNewLabel_10 = new JLabel("09/05/2022");
-	private JLabel lblNewLabel_11 = new JLabel("18/05/2022");
-	private JLabel lblNewLabel_14 = new JLabel("Faltan 4 días");
-	private JLabel lblNewLabel_13 = new JLabel("MANTENIMIENTO");
-	private JLabel lblNewLabel_18 = new JLabel("Ver con cursor");
+	private JLabel lblNewLabel_7 = new JLabel("");
+	private JLabel lblNewLabel_8 = new JLabel("");
+	private JLabel lblNewLabel_10 = new JLabel("");
+	private JLabel lblNewLabel_11 = new JLabel("");
+	private JLabel lblNewLabel_14 = new JLabel("");
+	private JLabel lblNewLabel_13 = new JLabel("");
+	private JLabel lblNewLabel_18 = new JLabel(" Ver con cursor ");
+	private JLabel lblNewLabel_5 = new JLabel("Sin selección");
+	private JButton btnNewButton = new JButton("Modificar");
 	
 	public IncidenciasPanel(JFrame padre) {
+		
 		this.padre = padre;
-		crearInterfaz();			
+		crearInterfaz();
+		buscarIncidencias();
+		actualizarTabla();
 		
 	}
 	
-	private void crearIncidencia() 
+	private void crearIncidencia(boolean actualizar) 
 	{
-		JDialog dialog = new CrearIncidencia(padre);
+		if(actualizar) 
+		{
+			JDialog dialog = new CrearIncidencia(padre,aux.get(table.getSelectedRow()));
+		} else 
+		{
+			JDialog dialog = new CrearIncidencia(padre,null);
+			
+		}
+		buscarIncidencias();
+		actualizarTabla();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void buscarIncidencias() 
 	{
-		incidencias = gestor.buscarIncidencias();
-		aux = incidencias;
+		gestor.buscarIncidencias();
+		incidencias = gestor.ordenarIncidencias();
+		aux = (ArrayList<Incidencia>) incidencias.clone();
 	}
 	
 	private void actualizarTabla() 
 	{
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
-
+		ultimaFila = -1;
+		
 		aux.forEach(it -> 
 		{
 			String fin = it.getFechaFin() == null ? "No establecido" : it.getFechaFin().toString();
 			Object[] fila = { it.getId(), it.getParada().getCalle(), fin, delete};
 			model.addRow(fila);
 		});
+		if(model.getRowCount() > 0) table.changeSelection(0, 0, false, false);
+		else limpiarResumen();
+		revalidate();
+		repaint();
+		
 	}
 	
 	private void actualizarResumen(int fila) 
 	{
 		Incidencia seleccionada = aux.get(fila);
 		if(seleccionada == null) return;
+		lblNewLabel_5.setText("Incidencia: " + seleccionada.getId());
 		String fin = seleccionada.getFechaFin() == null ? "No establecido" : seleccionada.getFechaFin().toString();
 		lblNewLabel_7.setText(seleccionada.getParada().getCalle());
 		if(seleccionada.getEstaResuelto()) lblNewLabel_8.setText("RESUELTA");
 		 else lblNewLabel_8.setText("EN CURSO");
 		lblNewLabel_10.setText(seleccionada.getFechaInicio().toString());
 		lblNewLabel_11.setText(fin);
+		lblNewLabel_14.setText("");
 		if(seleccionada.getFechaFin() != null) 
 		{
-			Duration falta = Duration.between(seleccionada.getFechaFin(), LocalDate.now());
-			if(falta.toDays() >= 0 && !seleccionada.getEstaResuelto()) 
+			long falta = ChronoUnit.DAYS.between(LocalDate.now(), seleccionada.getFechaFin());
+			if(falta >= 0 && !seleccionada.getEstaResuelto()) 
 			{
-				lblNewLabel_14.setText("Faltan " + falta.toDays() + " días");
-			}
+				lblNewLabel_14.setText("Faltan " + falta + " días");
+			} 
 		}
 		lblNewLabel_13.setText(seleccionada.getMotivo());
-		lblNewLabel_18.setToolTipText(seleccionada.getDescripción());				
+		lblNewLabel_18.setToolTipText(seleccionada.getDescripción());
+		btnNewButton.setEnabled(true);
 		
 	}
 	
+	private void limpiarResumen() 
+	{
+		lblNewLabel_5.setText("Sin selección");
+		lblNewLabel_7.setText("");
+		lblNewLabel_8.setText("");
+		lblNewLabel_10.setText("");
+		lblNewLabel_11.setText("");
+		lblNewLabel_14.setText("");
+		lblNewLabel_13.setText("");
+		lblNewLabel_18.setToolTipText("");
+		btnNewButton.setEnabled(false);
+	}
+	
+	@SuppressWarnings("unchecked")
 	private void filtrarBusqueda() 
 	{
-		String busqueda = textField.getText();
-		aux = incidencias;
-		if(!busqueda.isBlank()) 
+		String busqueda = textField.getText().toLowerCase();
+		ArrayList<Incidencia> aux = (ArrayList<Incidencia>) incidencias.clone();
+		this.aux = aux;
+		if(!busqueda.isBlank() && !aux.isEmpty()) 
 		{
 			int filas = aux.size();
-			for(int i = 0; i<filas;i++) 
+			this.aux = (ArrayList<Incidencia>) aux.stream().filter(it -> 
 			{
-				String id = (String) table.getValueAt(i, 0);
-				String calle = (String) table.getValueAt(i, 1);
-				String fin = (String) table.getValueAt(i, 2);
-				if(!id.startsWith(busqueda) || !calle.startsWith(busqueda) || !fin.startsWith(busqueda)) 
-				{
-					aux.remove(filas);
-				}
-			}
+				String id = Integer.toString(it.getId()).toLowerCase();
+				String calle = it.getParada().getCalle().toLowerCase();
+				String fin = it.getFechaFin() != null ? it.getFechaFin().toString().toLowerCase() : "no establecido";
+				return (id.startsWith(busqueda) || calle.startsWith(busqueda) || fin.startsWith(busqueda));
+			}).collect(Collectors.toList());
 		}
 		actualizarTabla();
+	}
+	
+	private void eliminarIncidencia(int pos) 
+	{
+		gestor.eliminarIncidencia(aux.get(pos));
+		incidencias.remove(aux.get(pos));
+		aux.remove(pos);
+		((DefaultTableModel)table.getModel()).removeRow(pos);
+		table.clearSelection();
+		table.getColumnModel().getSelectionModel().setAnchorSelectionIndex(-1);
+		table.getColumnModel().getSelectionModel().setLeadSelectionIndex(-1);
+		limpiarResumen();
 	}
 	
 	private void crearInterfaz() 
@@ -190,7 +242,6 @@ public class IncidenciasPanel extends JPanel {
 		gbc_separator_2.gridy = 1;
 		panel.add(separator_2, gbc_separator_2);
 		
-		JLabel lblNewLabel_5 = new JLabel("Número #4");
 		lblNewLabel_5.setIcon(null);
 		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
 		gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 0);
@@ -222,6 +273,8 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_7.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_7.gridx = 2;
 		gbc_lblNewLabel_7.gridy = 2;
+		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_7.setPreferredSize(lblNewLabel_18.getPreferredSize());
 		panel.add(lblNewLabel_7, gbc_lblNewLabel_7);
 		
 		JLabel lblNewLabel_3 = new JLabel("Situación");
@@ -238,14 +291,6 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_8.gridx = 2;
 		gbc_lblNewLabel_8.gridy = 3;
 		panel.add(lblNewLabel_8, gbc_lblNewLabel_8);
-		
-		JLabel lblNewLabel_9 = new JLabel("");
-		lblNewLabel_9.setIcon(new ImageIcon("C:\\Users\\ezequ\\Desktop\\Iconos\\help-circle.png"));
-		GridBagConstraints gbc_lblNewLabel_9 = new GridBagConstraints();
-		gbc_lblNewLabel_9.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_9.gridx = 3;
-		gbc_lblNewLabel_9.gridy = 3;
-		panel.add(lblNewLabel_9, gbc_lblNewLabel_9);
 		
 		JLabel lblNewLabel_4 = new JLabel("Inicio");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.LEFT);
@@ -281,6 +326,7 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_14.insets = new Insets(0, 0, 5, 0);
 		gbc_lblNewLabel_14.gridx = 3;
 		gbc_lblNewLabel_14.gridy = 5;
+		lblNewLabel_14.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel_14, gbc_lblNewLabel_14);
 		
 		JLabel lblNewLabel_12 = new JLabel("Motivo");
@@ -295,6 +341,8 @@ public class IncidenciasPanel extends JPanel {
 		gbc_lblNewLabel_13.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_13.gridx = 2;
 		gbc_lblNewLabel_13.gridy = 6;
+		lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_13.setPreferredSize(lblNewLabel_18.getPreferredSize());
 		panel.add(lblNewLabel_13, gbc_lblNewLabel_13);
 		
 		JLabel lblNewLabel_17 = new JLabel("Descripción");
@@ -313,14 +361,6 @@ public class IncidenciasPanel extends JPanel {
 		lblNewLabel_18.setToolTipText("asdasjkdhasdasdasdasd");
 		panel.add(lblNewLabel_18, gbc_lblNewLabel_18);
 		
-		JLabel lblNewLabel_20 = new JLabel("");
-		GridBagConstraints gbc_lblNewLabel_20 = new GridBagConstraints();
-		gbc_lblNewLabel_20.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_20.gridx = 3;
-		gbc_lblNewLabel_20.gridy = 7;
-		lblNewLabel_20.setIcon(new ImageIcon(getClass().getResource("/help-circle.png")));
-		panel.add(lblNewLabel_20, gbc_lblNewLabel_20);
-		
 		JLabel lblNewLabel_15 = new JLabel("Lista");
 		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblNewLabel_15 = new GridBagConstraints();
@@ -338,9 +378,10 @@ public class IncidenciasPanel extends JPanel {
 		gbc_separator_1.gridy = 8;
 		panel.add(separator_1, gbc_separator_1);
 		
-		JButton btnNewButton = new JButton("Modificar");
+		
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(table.getSelectedRow()>= 0) crearIncidencia(true);
 			}
 		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -353,7 +394,7 @@ public class IncidenciasPanel extends JPanel {
 		lblNewLabel_19.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				crearIncidencia();
+				crearIncidencia(false);
 			}
 		});
 		GridBagConstraints gbc_lblNewLabel_19 = new GridBagConstraints();
@@ -380,7 +421,6 @@ public class IncidenciasPanel extends JPanel {
 		textField = new JTextField();
 		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow() >= 0)
 				filtrarBusqueda();
 			}
 		});
@@ -393,14 +433,18 @@ public class IncidenciasPanel extends JPanel {
 		table.setFillsViewportHeight(true);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Incidencia #1", "Avellaneda", "08/09/2022", null},
-				{"Incidencia #2", "Vera", "08/09/2022", null},
-				{"Incidencia #3", "Sunchales", "08/09/2022", null},
+				{"Avellaneda", "08/09/2022", null, null},
+				{"Vera", "08/09/2022", null, null},
+				{"Sunchales", "08/09/2022", null, null},
 			},
 			new String[] {
 				"Incidencia", "Parada", "Fin", "Borrar"
 			}
 		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			boolean[] columnEditables = new boolean[] {
 				false, false, false, false
 			};
@@ -408,14 +452,30 @@ public class IncidenciasPanel extends JPanel {
 				return columnEditables[column];
 			}
 		});
+		table.getColumnModel().getColumn(0).setResizable(false);
+		table.getColumnModel().getColumn(1).setResizable(false);
+		table.getColumnModel().getColumn(2).setResizable(false);
+		table.getColumnModel().getColumn(3).setResizable(false);
 		TableUtility.setCellsAlignment(table, SwingConstants.CENTER);
+		table.getColumnModel().getColumn(3).setCellRenderer(table.getDefaultRenderer(ImageIcon.class));
 		table.setRowHeight(35);
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
 		{
 	        public void valueChanged(ListSelectionEvent event) {
-	            actualizarResumen(table.getSelectedRow());
+	            if(table.getSelectedRow()>= 0 && !event.getValueIsAdjusting())  actualizarResumen(table.getSelectedRow());
 	        }
 	    });
+		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if((table.getSelectedColumn() == 3) && !e.getValueIsAdjusting() ) 
+				{
+					eliminarIncidencia(table.getSelectedRow());
+				}
+				
+			}
+		});
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);

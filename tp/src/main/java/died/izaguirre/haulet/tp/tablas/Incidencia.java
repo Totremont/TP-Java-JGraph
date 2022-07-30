@@ -16,15 +16,16 @@ public class Incidencia implements Comparable<Incidencia> {
 
 	// Tienen mas prioridad las activas de mayor duracion
 	// ????? comprobar -> Si 2 incidencias no tienen fecha de fin, se considerará
-	// que aquella con la fechaInicial más cercana será la de mayor duracion
+	// que aquella con la fechaInicial más lejana será la de mayor duracion
 
 	@Override
 	public int compareTo(Incidencia o) {
 		
-		if(fechaFin == null) fechaFin = LocalDate.now();
-		if(o.fechaFin == null) o.fechaFin = LocalDate.now();
-		Duration duracionEsta = Duration.between(fechaInicio, fechaFin);
-		Duration duracionOtra = Duration.between(o.getFechaInicio(),o.getFechaFin());
+		LocalDate fin = fechaFin != null ? fechaFin : LocalDate.now();
+		LocalDate finOtro = o.getFechaFin() != null ? o.getFechaFin() : LocalDate.now();
+		
+		Duration duracionEsta = Duration.between(fechaInicio.atStartOfDay(), fin.atStartOfDay());
+		Duration duracionOtra = Duration.between(o.getFechaInicio().atStartOfDay(),finOtro.atStartOfDay());
 		if(estaResuelto && !o.getEstaResuelto()) return 1;
 		else if(!estaResuelto && o.getEstaResuelto()) return -1;
 		else return duracionOtra.compareTo(duracionEsta);

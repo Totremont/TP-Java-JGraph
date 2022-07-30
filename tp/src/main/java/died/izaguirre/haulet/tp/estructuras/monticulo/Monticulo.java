@@ -18,7 +18,7 @@ public class Monticulo<T extends Comparable<T>> {
 		elementos.add(elemento);
 		int pos = elementos.size() - 1;
 		int padre = (pos - 1)/2;
-		while(padre >= 0 && elementos.get(padre).compareTo(elemento) == -1) 
+		while(padre >= 0 && elementos.get(padre).compareTo(elemento) == 1) 
 		{
 			subirHijo(pos, padre);
 			pos = padre;
@@ -54,7 +54,7 @@ public class Monticulo<T extends Comparable<T>> {
 				if(ultimo.compareTo(elementos.get(hijoIzq)) > 0) 
 				{
 					subirHijo(hijoIzq, padre);			//Bajamos el padre subiendo el hijo
-					ultimo = elementos.get(hijoIzq);
+					//ultimo = elementos.get(hijoIzq);
 					padre = hijoIzq;
 					hijoIzq = padre*2 + 1;
 					hijoDer = hijoIzq + 1;
@@ -63,7 +63,7 @@ public class Monticulo<T extends Comparable<T>> {
 					if(elementos.size() > hijoDer && ultimo.compareTo(elementos.get(hijoDer)) > 0) 
 				{
 					subirHijo(hijoDer, padre);	
-					ultimo = elementos.get(hijoDer);
+					//ultimo = elementos.get(hijoDer);
 					padre = hijoDer;
 					hijoIzq = padre*2 + 1;
 					hijoDer = hijoIzq + 1;					

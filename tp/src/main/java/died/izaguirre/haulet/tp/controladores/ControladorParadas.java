@@ -20,17 +20,17 @@ import died.izaguirre.haulet.tp.tablas.Parada;
 
 public class ControladorParadas {
 
-	private ParadaDao paradasDao;
+	private static ParadaDao paradasDao = new ParadaDaoImpl();
 	private ParadasPanel vista;
-	private List<Parada> paradas;
+	private static List<Parada> paradas = new ArrayList<Parada>();
 
-	private ControladorParadas() {
-		paradasDao = new ParadaDaoImpl();
-		paradas = new ArrayList<Parada>();
-	}
+//	private ControladorParadas() {
+//		paradasDao = new ParadaDaoImpl();
+//		paradas = new ArrayList<Parada>();
+//	}
 
 	public ControladorParadas(ParadasPanel vista) {
-		this();
+		//this();
 		this.vista = vista;
 		inicializar();
 	}
@@ -105,5 +105,11 @@ public class ControladorParadas {
 		
 		for(Parada p : paradas)
 			agregarParadaTabla(p);
+	}
+	
+	public static ArrayList<Parada> buscarParadas() 
+	{
+		paradas = paradasDao.getAll();
+		return (ArrayList<Parada>) paradas;
 	}
 }

@@ -27,10 +27,10 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 	public void add(Incidencia t) throws SQLException {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.incidencia (id_parada,fecha_inicio,fecha_fin,esta_resuelto,descripcion,motivo VALUES (?,?,?,?,?,?))",PreparedStatement.RETURN_GENERATED_KEYS)) {
+				"INSERT INTO tp.incidencia (id_parada,fecha_inicio,fecha_fin,esta_resuelto,descripcion,motivo) VALUES (?,?,?,?,?,?)",PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setInt(1, t.getParada().getId());
 			pstm.setDate(2, Date.valueOf(t.getFechaInicio()));
-			pstm.setDate(3, Date.valueOf(t.getFechaFin()));
+			pstm.setDate(3, t.getFechaFin() != null ? Date.valueOf(t.getFechaFin()) : null);
 			pstm.setBoolean(4, t.getEstaResuelto());
 			pstm.setString(5,t.getDescripción());
 			pstm.setString(6,t.getMotivo());
@@ -76,7 +76,8 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 				ParadaDao aux = new ParadaDaoImpl();
 				auxIncidencia.setParada(aux.findByNroParada(rs.getInt(2)));
 				auxIncidencia.setFechaInicio(LocalDate.ofInstant(rs.getDate(3).toInstant(), ZoneId.systemDefault()));
-				auxIncidencia.setFechaFin(LocalDate.ofInstant(rs.getDate(4).toInstant(), ZoneId.systemDefault()));
+				LocalDate fin = rs.getDate(4) != null ? rs.getDate(4).toLocalDate() : null;
+				auxIncidencia.setFechaFin(fin);
 				auxIncidencia.setEstaResuelto(rs.getBoolean(5));
 				auxIncidencia.setDescripción(rs.getString(6));
 				auxIncidencia.setMotivo(rs.getString(7));
@@ -100,9 +101,9 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 			while(rs.next()) {
 				Incidencia auxIncidencia = new Incidencia();
 				auxIncidencia.setId(rs.getInt(1));
-				auxIncidencia.setParada(aux.findByNroParada(rs.getInt(2)));
-				auxIncidencia.setFechaInicio(LocalDate.ofInstant(rs.getDate(3).toInstant(), ZoneId.systemDefault()));
-				auxIncidencia.setFechaFin(LocalDate.ofInstant(rs.getDate(4).toInstant(), ZoneId.systemDefault()));
+				auxIncidencia.setParada(aux.find(rs.getInt(2)));
+				auxIncidencia.setFechaInicio(rs.getDate(3).toLocalDate());
+				auxIncidencia.setFechaFin(rs.getDate(4) == null ? null : rs.getDate(4).toLocalDate());
 				auxIncidencia.setEstaResuelto(rs.getBoolean(5));
 				auxIncidencia.setDescripción(rs.getString(6));
 				auxIncidencia.setMotivo(rs.getString(7));
@@ -111,8 +112,25 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}
-
 		return incidencias;
+	}
+	
+	public void update(Incidencia t) throws SQLException {
+		// TODO Auto-generated method stub
+		try (PreparedStatement pstm = con.prepareStatement(
+				"UPDATE tp.incidencia SET id_parada=?,fecha_inicio=?,fecha_fin=?,esta_resuelto=?,descripcion=?,motivo=? WHERE id_incidencia=?")) {
+			pstm.setInt(1, t.getParada().getId());
+			pstm.setDate(2, Date.valueOf(t.getFechaInicio()));
+			pstm.setDate(3, t.getFechaFin() != null ? Date.valueOf(t.getFechaFin()) : null);
+			pstm.setBoolean(4, t.getEstaResuelto());
+			pstm.setString(5,t.getDescripción());
+			pstm.setString(6,t.getMotivo());
+			pstm.setInt(7, t.getId());
+			pstm.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 }
