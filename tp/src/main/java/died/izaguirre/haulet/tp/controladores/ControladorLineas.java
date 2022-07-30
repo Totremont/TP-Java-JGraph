@@ -83,12 +83,11 @@ public class ControladorLineas {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Linea l;
-				if (camposRellenados()) {
+				if (camposRellenados() && !origenDestinoIguales()) {
 					if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica.toString())) {
 						l = crearLineaEconomica();
 						System.out.println(vista.getColorCBx().getSelectedItem().toString());
-					}
-					else
+					} else
 						l = crearLineaSuperior();
 
 					try {
@@ -98,10 +97,19 @@ public class ControladorLineas {
 						return;
 					}
 					agregarLineaTabla(l);
-				}
+				}else
+					System.out.println("No se puede crear la linea");
 
 			}
 		});
+	}
+
+	private Boolean origenDestinoIguales() {
+		if (vista.getOrigenCBx().getSelectedItem().toString()
+				.equals(vista.getDestinoCBx().getSelectedItem().toString()))
+			return true;
+		else
+			return false;
 	}
 
 	private Boolean camposRellenados() {
@@ -122,7 +130,7 @@ public class ControladorLineas {
 		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
 				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
 				o, d);
-		
+
 		return l;
 
 	}
@@ -181,11 +189,11 @@ public class ControladorLineas {
 
 	@SuppressWarnings("unchecked")
 	private void cargarParadas() {
-		
+
 		paradas = paradaDao.getAll();
 		for (Parada p : paradas) {
-			vista.getOrigenCBx().addItem(p.toString());
-			vista.getDestinoCBx().addItem(p.toString());
+			vista.getOrigenCBx().addItem(p.getNroParada());
+			vista.getDestinoCBx().addItem(p.getNroParada());
 		}
 
 	}
@@ -273,11 +281,11 @@ public class ControladorLineas {
 			}
 		});
 	}
-	
+
 	public void actualizarLineaDeTabla(Linea l) {
-		for(int i = 0 ; i < vista.getModel().getRowCount() ; i ++) {
+		for (int i = 0; i < vista.getModel().getRowCount(); i++) {
 			Integer idModelo = (Integer) vista.getModel().getValueAt(i, 0);
-			if(idModelo.equals(l.getId())) {
+			if (idModelo.equals(l.getId())) {
 				vista.getModel().setValueAt(l.getNombre(), i, 1);
 				vista.getModel().setValueAt(l.getColor(), i, 2);
 			}

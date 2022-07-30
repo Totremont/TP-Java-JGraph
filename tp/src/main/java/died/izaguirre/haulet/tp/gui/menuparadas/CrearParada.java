@@ -39,10 +39,10 @@ public class CrearParada extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private ControladorCrearParada controlador;
 	private JTextField nroParadaTxt;
-	private JComboBox calleCBx;
 	private JButton okButton;
 	private ParadasPanel panelPadre;
 	private JButton cancelButton;
+	private JTextField calleTxt;
 
 	/**
 	 * Launch the application.
@@ -134,7 +134,7 @@ public class CrearParada extends JDialog {
 			JLabel lblNewLabel_1 = new JLabel("Calle*");
 			lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 			GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-			gbc_lblNewLabel_1.anchor = GridBagConstraints.WEST;
+			gbc_lblNewLabel_1.anchor = GridBagConstraints.EAST;
 			gbc_lblNewLabel_1.insets = new Insets(0, 5, 5, 5);
 			gbc_lblNewLabel_1.gridx = 1;
 			gbc_lblNewLabel_1.gridy = 2;
@@ -142,14 +142,14 @@ public class CrearParada extends JDialog {
 			contentPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		}
 		{
-			calleCBx = new JComboBox();
-			calleCBx.setModel(new DefaultComboBoxModel(new String[] { "SUNCHALES", "LAVAISSE", "OTRO" }));
-			GridBagConstraints gbc_calleCBx = new GridBagConstraints();
-			gbc_calleCBx.insets = new Insets(0, 0, 5, 5);
-			gbc_calleCBx.fill = GridBagConstraints.BOTH;
-			gbc_calleCBx.gridx = 2;
-			gbc_calleCBx.gridy = 2;
-			contentPanel.add(calleCBx, gbc_calleCBx);
+			calleTxt = new JTextField();
+			GridBagConstraints gbc_calleTxt = new GridBagConstraints();
+			gbc_calleTxt.insets = new Insets(0, 0, 5, 5);
+			gbc_calleTxt.fill = GridBagConstraints.HORIZONTAL;
+			gbc_calleTxt.gridx = 2;
+			gbc_calleTxt.gridy = 2;
+			contentPanel.add(calleTxt, gbc_calleTxt);
+			calleTxt.setColumns(10);
 		}
 		{
 			JLabel lblNewLabel_5 = new JLabel("Los elementos marcados (*) son obligatorios");
@@ -207,14 +207,6 @@ public class CrearParada extends JDialog {
 		this.nroParadaTxt = nroParadaTxt;
 	}
 
-	public JComboBox getCalleCBx() {
-		return calleCBx;
-	}
-
-	public void setCalleCBx(JComboBox calleCBx) {
-		this.calleCBx = calleCBx;
-	}
-
 	public JPanel getContentPanel() {
 		return contentPanel;
 	}
@@ -241,6 +233,14 @@ public class CrearParada extends JDialog {
 
 	public void setCancelButton(JButton cancelButton) {
 		this.cancelButton = cancelButton;
+	}
+
+	public JTextField getCalleTxt() {
+		return calleTxt;
+	}
+
+	public void setCalleTxt(JTextField calleTxt) {
+		this.calleTxt = calleTxt;
 	}
 
 }

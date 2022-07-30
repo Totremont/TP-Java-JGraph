@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -47,12 +48,14 @@ public class ParadasPanel extends JPanel {
 	private TableRowSorter<TableModel> tableSorter;
 	private ControladorParadas controlador;
 	private JButton agregarButton;
+	private JFrame ventanaPadre;
 
 	/**
 	 * Create the panel.
 	 */
 	@SuppressWarnings("serial")
-	public ParadasPanel() {
+	public ParadasPanel(JFrame ventanaPadre) {
+		this.ventanaPadre = ventanaPadre;
 		setBorder(null);
 		setLayout(new BorderLayout(0, 0));
 

@@ -9,6 +9,7 @@ import javax.swing.JSeparator;
 import java.awt.Insets;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -71,13 +72,14 @@ public class MenuVerLineas extends JPanel {
 	private TableRowSorter tableSorter;
 
 	private ControladorLineas controlador;
+	private JFrame menuPadre;
 
 	/**
 	 * Create the panel.
 	 */
-	public MenuVerLineas() {
+	public MenuVerLineas(JFrame menuPadre) {
+		this.menuPadre = menuPadre;
 		setLayout(new BorderLayout(0, 0));
-
 		head = new JPanel();
 		add(head, BorderLayout.NORTH);
 		GridBagLayout gbl_head = new GridBagLayout();

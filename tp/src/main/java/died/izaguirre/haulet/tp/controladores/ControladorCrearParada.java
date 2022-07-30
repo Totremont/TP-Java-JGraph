@@ -49,7 +49,7 @@ public class ControladorCrearParada {
 		vista.getOkButton().addActionListener(e -> {
 			if (camposRellenos()) {
 				Parada p = new Parada(Integer.parseInt(vista.getNroParadaTxt().getText()),
-						vista.getCalleCBx().getSelectedItem().toString());
+						vista.getCalleTxt().getText());
 				ParadaDao aux = new ParadaDaoImpl();
 				try {
 					aux.add(p);
@@ -64,7 +64,7 @@ public class ControladorCrearParada {
 	}
 	
 	private Boolean camposRellenos() {
-		if(vista.getNroParadaTxt().getText().isEmpty())
+		if(vista.getNroParadaTxt().getText().isEmpty() || vista.getCalleTxt().getText().isEmpty())
 			return false;
 		else
 			return true;

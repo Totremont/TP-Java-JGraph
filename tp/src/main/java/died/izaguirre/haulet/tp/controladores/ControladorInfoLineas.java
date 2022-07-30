@@ -58,20 +58,20 @@ public class ControladorInfoLineas {
 		botoneraListener(); // Agrega funciones a modificar,guardar y salir
 		tipoLineaListener();
 	}
-	
+
 	private void cargarNombreLinea() {
 		vista.getNombreLinea().setText(linea.getNombre());
 	}
-	
+
 	private void cargarTipoLinea() {
-		if (linea.getTipo() .equals(LineaTipoEnum.Economica.toString()))
+		if (linea.getTipo().equals(LineaTipoEnum.Economica.toString()))
 			vista.getTipoCBx().setSelectedItem(LineaTipoEnum.Economica);
 		else {
 			vista.getTipoCBx().setSelectedItem(LineaTipoEnum.Superior);
 			cargarAireWifi();
 		}
 	}
-	
+
 	private void cargarColorLinea() {
 		switch (linea.getColor()) {
 		case "Rojo":
@@ -88,40 +88,40 @@ public class ControladorInfoLineas {
 			break;
 		}
 	}
-	
+
 	private void cargarCapSentado() {
-		vista.getCapSentadoTxt().setText(linea.getCapSentado().toString());	
+		vista.getCapSentadoTxt().setText(linea.getCapSentado().toString());
 	}
-	
+
 	private void cargarAireWifi() {
-			vista.getWifiCk().setSelected(linea.getTieneWifi());
-			vista.getAireCk().setSelected(linea.getTieneAire());
+		vista.getWifiCk().setSelected(linea.getTieneWifi());
+		vista.getAireCk().setSelected(linea.getTieneAire());
 	}
-	
+
 	private void cargarOrigenDestino() {
 		vista.getOrigenCBx().setSelectedItem(linea.getOrigen().getNroParada());
 		vista.getDestinoCBx().setSelectedItem(linea.getDestino().getNroParada());
 	}
-	
+
 	private void botoneraListener() {
-		vista.getSalirButton().addActionListener( e -> {
+		vista.getSalirButton().addActionListener(e -> {
 			vista.dispose();
 		});
-		
+
 		vista.getModificarButton().addActionListener(e -> modoModificacion());
 		vista.getGuardarButton().addActionListener(e -> guardarCambios());
 	}
-	
+
 	private void modoModificacion() {
 		onoffTodo(true);
-		if(vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
+		if (vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 			vista.getAireCk().setEnabled(false);
 			vista.getWifiCk().setEnabled(false);
 		}
 		vista.getModificarButton().setEnabled(false);
 		vista.getGuardarButton().setEnabled(true);
 	}
-	
+
 	private void onoffTodo(Boolean estado) {
 		vista.getNombreLinea().setEditable(estado);
 		vista.getTipoCBx().setEnabled(estado);
@@ -133,7 +133,7 @@ public class ControladorInfoLineas {
 		vista.getDestinoCBx().setEnabled(estado);
 		vista.getTrayectoCBx().setEnabled(estado);
 	}
-	
+
 	private void tipoLineaListener() {
 		vista.getTipoCBx().addActionListener(new ActionListener() {
 
@@ -152,14 +152,25 @@ public class ControladorInfoLineas {
 			}
 		});
 	}
-	
+
 	private void guardarCambios() {
-		Linea lineaActualizada = actualizarLinea(linea.getId());
-		actualizarBdd(lineaActualizada);
-		actualizarTabla(lineaActualizada);
-		vista.dispose();
+		if (!origenDestinoIguales()) {
+			Linea lineaActualizada = actualizarLinea(linea.getId());
+			actualizarBdd(lineaActualizada);
+			actualizarTabla(lineaActualizada);
+			vista.dispose();
+		} else
+			System.out.println("No se puede modificar la linea");
 	}
-	
+
+	private Boolean origenDestinoIguales() {
+		if (vista.getOrigenCBx().getSelectedItem().toString()
+				.equals(vista.getDestinoCBx().getSelectedItem().toString()))
+			return true;
+		else
+			return false;
+	}
+
 	private Linea actualizarLinea(Integer id) {
 		final String nombre = vista.getNombreLinea().getText();
 		final String tipoLinea = vista.getTipoCBx().getSelectedItem().toString();
@@ -169,9 +180,9 @@ public class ControladorInfoLineas {
 		final Boolean wifi = vista.getWifiCk().isSelected();
 		final Integer origen = Integer.parseInt(vista.getOrigenCBx().getSelectedItem().toString());
 		final Integer destino = Integer.parseInt(vista.getDestinoCBx().getSelectedItem().toString());
-		
+
 		ParadaDao daoParada = new ParadaDaoImpl();
-		
+
 		Linea l = new Linea();
 		l.setId(id);
 		l.setNombre(nombre);
@@ -182,39 +193,39 @@ public class ControladorInfoLineas {
 		l.setOrigen(daoParada.findByNroParada(origen));
 		l.setDestino(daoParada.findByNroParada(destino));
 		l.setCapSentado(capSentado);
-		if(tipoLinea.equals(LineaTipoEnum.Economica.toString())) {
+		if (tipoLinea.equals(LineaTipoEnum.Economica.toString())) {
 			int capParado = ((Double) (capSentado * 0.40)).intValue();
 			l.setCapParado(capParado);
-		}else {
+		} else {
 			l.setCapParado(0);
 		}
-		
+
 		return l;
 	}
-	
+
 	private void actualizarBdd(Linea l) {
-		
+
 		final Integer id = l.getId();
-		
+
 		LineaDao dao = new LineaDaoImpl();
 
-			//Economica
-			try {
-				dao.updateNombre(id, l.getNombre());
-				dao.updateTipo(id, l.getTipo());
-				dao.updateCapSentado(id, l.getCapSentado());
-				dao.updateCapParado(id, l.getCapParado());
-				dao.updateColor(id, l.getColor());
-				dao.updateAire(id, l.getTieneAire());
-				dao.updateWifi(id, l.getTieneWifi());
-				dao.updateOrigen(id, l.getOrigen().getNroParada());
-				dao.updateDestino(id, l.getDestino().getNroParada());
-			}catch(SQLException e) {
+		// Economica
+		try {
+			dao.updateNombre(id, l.getNombre());
+			dao.updateTipo(id, l.getTipo());
+			dao.updateCapSentado(id, l.getCapSentado());
+			dao.updateCapParado(id, l.getCapParado());
+			dao.updateColor(id, l.getColor());
+			dao.updateAire(id, l.getTieneAire());
+			dao.updateWifi(id, l.getTieneWifi());
+			dao.updateOrigen(id, l.getOrigen().getNroParada());
+			dao.updateDestino(id, l.getDestino().getNroParada());
+		} catch (SQLException e) {
 //				e.printStackTrace();
-				System.out.println("No se pudo actualizar la linea " + id);
-			}
+			System.out.println("No se pudo actualizar la linea " + id);
+		}
 	}
-	
+
 	private void actualizarTabla(Linea l) {
 		vista.getMenu().getControlador().actualizarLineaDeTabla(l);
 	}
