@@ -186,15 +186,6 @@ public class MenuVerLineas extends JPanel {
 		gbc_colorLineaLabel.gridx = 1;
 		gbc_colorLineaLabel.gridy = 1;
 		panelCrearLineaBody.add(colorLineaLabel, gbc_colorLineaLabel);
-
-		
-		JComboBox comboBox = new JComboBox();
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox.gridx = 2;
-		gbc_comboBox.gridy = 1;
-		panelCrearLineaBody.add(comboBox, gbc_comboBox);
 		
 
 		colorCBx = new JComboBox();

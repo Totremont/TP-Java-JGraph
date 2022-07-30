@@ -37,6 +37,9 @@ public class VerInfoLinea extends JDialog {
 	private JComboBox trayectoCBx;
 	private JCheckBox wifiCk;
 	private JCheckBox aireCk;
+	private JButton modificarButton;
+	private JButton guardarButton;
+	private JButton salirButton;
 
 	/**
 	 * Launch the application.
@@ -273,17 +276,18 @@ public class VerInfoLinea extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton modificarButton = new JButton("Modificar");
+				modificarButton = new JButton("Modificar");
 				modificarButton.setActionCommand("OK");
 				buttonPane.add(modificarButton);
 				getRootPane().setDefaultButton(modificarButton);
 			}
 			{
-				JButton guardarButton = new JButton("Guardar");
+				guardarButton = new JButton("Guardar");
+				guardarButton.setEnabled(false);
 				buttonPane.add(guardarButton);
 			}
 			{
-				JButton salirButton = new JButton("Salir");
+				salirButton = new JButton("Salir");
 				salirButton.setActionCommand("Cancel");
 				buttonPane.add(salirButton);
 			}
@@ -388,6 +392,30 @@ public class VerInfoLinea extends JDialog {
 
 	public void setAireCk(JCheckBox aireCk) {
 		this.aireCk = aireCk;
+	}
+
+	public JButton getModificarButton() {
+		return modificarButton;
+	}
+
+	public void setModificarButton(JButton modificarButton) {
+		this.modificarButton = modificarButton;
+	}
+
+	public JButton getGuardarButton() {
+		return guardarButton;
+	}
+
+	public void setGuardarButton(JButton guardarButton) {
+		this.guardarButton = guardarButton;
+	}
+
+	public JButton getSalirButton() {
+		return salirButton;
+	}
+
+	public void setSalirButton(JButton salirButton) {
+		this.salirButton = salirButton;
 	}
 
 }

@@ -30,8 +30,10 @@ public class Linea {
 		this.tipo = tipo;
 		this.nombre = nombre;
 		this.color = color;
-		this.capParado = (int) (capSentado * 0.40);
 		this.capSentado = capSentado;
+		this.capParado = ((Double) (capSentado * 0.40)).intValue();
+		this.tieneWifi = false;
+		this.tieneAire = false;
 	}
 
 	// Linea superior

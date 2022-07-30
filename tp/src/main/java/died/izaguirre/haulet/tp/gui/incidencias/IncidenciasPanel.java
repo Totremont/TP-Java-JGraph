@@ -7,7 +7,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
+
 import died.izaguirre.haulet.tp.controladores.ControladorIncidencia;
+
 import died.izaguirre.haulet.tp.gui.utilities.TableUtility;
 
 import java.awt.GridBagLayout;
@@ -60,6 +62,7 @@ public class IncidenciasPanel extends JPanel {
 	private JTextField textField;
 	private JFrame padre;
 
+
 	private int ultimaFila = -1;
 	private ArrayList<Incidencia> incidencias = new ArrayList<>();
 	private ControladorIncidencia gestor = new ControladorIncidencia();
@@ -105,6 +108,8 @@ public class IncidenciasPanel extends JPanel {
 		gestor.buscarIncidencias();
 		incidencias = gestor.ordenarIncidencias();
 		aux = (ArrayList<Incidencia>) incidencias.clone();
+//		incidencias = gestor.buscarIncidencias();
+		aux = incidencias;
 	}
 	
 	private void actualizarTabla() 
