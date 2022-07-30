@@ -189,6 +189,7 @@ public class CrearParada extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		pack();
 	}
 
 	public ControladorCrearParada getControlador() {

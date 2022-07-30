@@ -15,6 +15,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import died.izaguirre.haulet.tp.gui.incidencias.IncidenciasPanel;
 import died.izaguirre.haulet.tp.gui.layoutespecial.RelativeLayout;
 import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
+import died.izaguirre.haulet.tp.gui.menulineas.VerInfoLinea;
 import died.izaguirre.haulet.tp.gui.menuparadas.CrearParada;
 import died.izaguirre.haulet.tp.gui.menuparadas.ParadasPanel;
 

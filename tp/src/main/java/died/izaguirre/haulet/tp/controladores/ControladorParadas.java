@@ -65,10 +65,13 @@ public class ControladorParadas {
 	}
 
 	private void agregarButtonListener() {
-
-		vista.getAgregarButton().addActionListener(e -> {
-			CrearParada menuCrear = new CrearParada(vista);
-			menuCrear.setVisible(true);
+		
+		vista.getAgregarButton().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				CrearParada menuCrear = new CrearParada(vista);
+				menuCrear.setVisible(true);
+			}
 		});
 	}
 
