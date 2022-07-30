@@ -72,9 +72,11 @@ public class CrearIncidencia extends JDialog {
 		this.modificar = modificar;
 		CrearInterfaz();
 		cargarParadas();
-		cargarIncidencias();
-		if(modificar != null) completarCampos();
-		setVisible(true);
+		if(!paradas.isEmpty()) {
+			cargarIncidencias();
+			if(modificar != null) completarCampos();
+			setVisible(true);
+		}
 	}
 	
 	private void cargarParadas() 
