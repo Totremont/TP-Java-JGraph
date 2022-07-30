@@ -109,7 +109,7 @@ public class IncidenciasPanel extends JPanel {
 		incidencias = gestor.ordenarIncidencias();
 		aux = (ArrayList<Incidencia>) incidencias.clone();
 //		incidencias = gestor.buscarIncidencias();
-		aux = incidencias;
+		//aux = incidencias;
 	}
 	
 	private void actualizarTabla() 
@@ -192,9 +192,10 @@ public class IncidenciasPanel extends JPanel {
 	
 	private void eliminarIncidencia(int pos) 
 	{
-		gestor.eliminarIncidencia(aux.get(pos));
+		Incidencia eliminar = aux.get(pos);
 		incidencias.remove(aux.get(pos));
 		aux.remove(pos);
+		gestor.eliminarIncidencia(eliminar);
 		((DefaultTableModel)table.getModel()).removeRow(pos);
 		table.clearSelection();
 		table.getColumnModel().getSelectionModel().setAnchorSelectionIndex(-1);
