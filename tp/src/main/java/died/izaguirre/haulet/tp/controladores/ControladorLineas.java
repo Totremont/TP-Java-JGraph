@@ -85,18 +85,22 @@ public class ControladorLineas {
 				Linea l;
 				if (camposRellenados() && !origenDestinoIguales()) {
 					if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica.toString())) {
+						try {
 						l = crearLineaEconomica();
-						System.out.println(vista.getColorCBx().getSelectedItem().toString());
-					} else
-						l = crearLineaSuperior();
-
-					try {
 						lineaDao.add(l);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						return;
-					}
-					agregarLineaTabla(l);
+						agregarLineaTabla(l);
+						} catch(SQLException excp) {
+							System.out.println("No se pudo crear la linea");
+						}
+					} else
+						try {
+						l = crearLineaSuperior();
+						lineaDao.add(l);
+						agregarLineaTabla(l);
+						}catch(SQLException excp) {
+							System.out.println("No se pudo crear la linea");
+						}
+
 				}else
 					System.out.println("No se puede crear la linea");
 
@@ -122,21 +126,25 @@ public class ControladorLineas {
 			return true;
 	}
 
-	private Linea crearLineaEconomica() {
-
+	private Linea crearLineaEconomica() throws SQLException {
+		try {
 		Parada o = paradaDao.findByNroParada(Integer.parseInt(vista.getOrigenCBx().getSelectedItem().toString()));
 		Parada d = paradaDao.findByNroParada(Integer.parseInt(vista.getDestinoCBx().getSelectedItem().toString()));
 
 		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
 				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
 				o, d);
-
+		
 		return l;
-
+		}catch (SQLException excp) {
+			throw excp;
+		}
+		
 	}
 
-	private Linea crearLineaSuperior() {
-
+	private Linea crearLineaSuperior() throws SQLException {
+		
+		try {
 		Parada o = paradaDao.findByNroParada(Integer.parseInt(vista.getOrigenCBx().getSelectedItem().toString()));
 		Parada d = paradaDao.findByNroParada(Integer.parseInt(vista.getDestinoCBx().getSelectedItem().toString()));
 
@@ -145,6 +153,9 @@ public class ControladorLineas {
 				vista.getAireCk().isSelected(), vista.getWifiCk().isSelected(), o, d);
 
 		return l;
+		}catch(SQLException excp) {
+			throw excp;
+		}
 	}
 
 	private void agregarLineaTabla(Linea l) {

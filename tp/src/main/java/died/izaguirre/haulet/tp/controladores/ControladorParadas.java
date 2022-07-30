@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,9 +84,13 @@ public class ControladorParadas {
 				if (columna == 2) { // Columna que contiene el boton eliminar
 					Integer nroParada = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
 					ParadaDao aux = new ParadaDaoImpl();
+					try {
 					aux.removeByNroParada(nroParada);
 					eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
 											// la parada de la BDD tambien
+					} catch (SQLException excp) {
+						System.out.println("No se pudo eliminar la parada, probablemente porque una linea la esta usando");
+					}
 				}
 			}
 		});

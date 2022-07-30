@@ -96,7 +96,7 @@ public class ParadaDaoImpl implements ParadaDao {
 	}
 
 	@Override
-	public Parada findByNroParada(Integer nro_parada) {
+	public Parada findByNroParada(Integer nro_parada) throws SQLException {
 		
 		Parada aux = null;
 
@@ -112,20 +112,20 @@ public class ParadaDaoImpl implements ParadaDao {
 				aux.setCalle(rs.getString(3));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 
 		return aux;
 	}
 
 	@Override
-	public void removeByNroParada(Integer nro_parada) {
+	public void removeByNroParada(Integer nro_parada) throws SQLException {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement("DELETE FROM tp.parada WHERE nro_parada=?")) {
 			pstm.setInt(1, nro_parada);
 			pstm.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 

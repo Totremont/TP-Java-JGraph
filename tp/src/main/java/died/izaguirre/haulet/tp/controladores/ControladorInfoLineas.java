@@ -155,10 +155,14 @@ public class ControladorInfoLineas {
 
 	private void guardarCambios() {
 		if (!origenDestinoIguales()) {
+			try {
 			Linea lineaActualizada = actualizarLinea(linea.getId());
 			actualizarBdd(lineaActualizada);
 			actualizarTabla(lineaActualizada);
 			vista.dispose();
+			} catch(SQLException excp) {
+				System.out.println("No se pudo actualizar la linea");
+			}
 		} else
 			System.out.println("No se puede modificar la linea");
 	}
@@ -171,7 +175,7 @@ public class ControladorInfoLineas {
 			return false;
 	}
 
-	private Linea actualizarLinea(Integer id) {
+	private Linea actualizarLinea(Integer id) throws SQLException {
 		final String nombre = vista.getNombreLinea().getText();
 		final String tipoLinea = vista.getTipoCBx().getSelectedItem().toString();
 		final String color = vista.getColorCBx().getSelectedItem().toString();
@@ -190,8 +194,12 @@ public class ControladorInfoLineas {
 		l.setColor(color);
 		l.setTieneAire(aire);
 		l.setTieneWifi(wifi);
+		try {
 		l.setOrigen(daoParada.findByNroParada(origen));
 		l.setDestino(daoParada.findByNroParada(destino));
+		} catch(SQLException excp) {
+			throw excp;
+		}
 		l.setCapSentado(capSentado);
 		if (tipoLinea.equals(LineaTipoEnum.Economica.toString())) {
 			int capParado = ((Double) (capSentado * 0.40)).intValue();
