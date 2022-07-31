@@ -60,7 +60,7 @@ public class CaminoDaoImpl implements CaminoDao {
 		// TODO Auto-generated method stub
 		Camino auxCamino = null;
 		try (PreparedStatement pstm = con.prepareStatement(
-				"SELECT origen,destino,capacidad,distancia FROM tp.camino WHERE origen=? AND destino=?")) {
+				"SELECT id_camino,origen,destino,capacidad,distancia FROM tp.camino WHERE origen=? AND destino=?")) {
 			pstm.setInt(1, id_origen);
 			pstm.setInt(2, id_destino);
 			ResultSet rs = pstm.executeQuery();
@@ -68,10 +68,11 @@ public class CaminoDaoImpl implements CaminoDao {
 			{
 				auxCamino = new Camino();
 				ParadaDao aux = new ParadaDaoImpl();
-				auxCamino.setOrigen(aux.findByNroParada(rs.getInt(1)));
-				auxCamino.setDestino(aux.findByNroParada(rs.getInt(2)));
-				auxCamino.setCapacidad(rs.getInt(3));
-				auxCamino.setDistancia(rs.getInt(4));
+				auxCamino.setId(rs.getInt(1));
+				auxCamino.setOrigen(aux.findByNroParada(rs.getInt(2)));
+				auxCamino.setDestino(aux.findByNroParada(rs.getInt(3)));
+				auxCamino.setCapacidad(rs.getInt(4));
+				auxCamino.setDistancia(rs.getInt(5));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -91,15 +92,16 @@ public class CaminoDaoImpl implements CaminoDao {
 		List<Camino> caminos = new ArrayList<Camino>();
 
 		try (PreparedStatement pstm = con
-				.prepareStatement("SELECT origen,destino,capacidad,distancia FROM tp.camino")) {
+				.prepareStatement("SELECT id_camino,origen,destino,capacidad,distancia FROM tp.camino")) {
 			ResultSet rs = pstm.executeQuery();
 			ParadaDao aux = new ParadaDaoImpl();
 			while (rs.next()) {
 				Camino auxCamino = new Camino();
-				auxCamino.setOrigen(aux.findByNroParada(rs.getInt(1)));
-				auxCamino.setDestino(aux.findByNroParada(rs.getInt(2)));
-				auxCamino.setCapacidad(rs.getInt(3));
-				auxCamino.setDistancia(rs.getInt(4));
+				auxCamino.setId(rs.getInt(1));
+				auxCamino.setOrigen(aux.find(rs.getInt(2)));
+				auxCamino.setDestino(aux.find(rs.getInt(3)));
+				auxCamino.setCapacidad(rs.getInt(4));
+				auxCamino.setDistancia(rs.getInt(5));
 				caminos.add(auxCamino);
 			}
 		} catch (SQLException e) {

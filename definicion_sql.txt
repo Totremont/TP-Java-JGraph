@@ -19,11 +19,12 @@ CREATE TABLE tp.parada(
 );
 
 CREATE TABLE tp.camino(
+    id_camino serial,
     origen integer,
     destino integer,
     capacidad integer,
     distancia integer,
-    CONSTRAINT pk_camino PRIMARY KEY (origen,destino)
+    CONSTRAINT pk_camino PRIMARY KEY (id_camino)
 );
 
 CREATE TABLE tp.posee(
@@ -65,6 +66,7 @@ ALTER TABLE tp.incidencia
     ADD CONSTRAINT fk_incidencia FOREIGN KEY (id_parada) REFERENCES tp.parada(id_parada);
     
 ALTER TABLE tp.camino
+    ADD CONSTRAINT unique_camino UNIQUE(origen, destino),
     ADD CONSTRAINT fk_camino_origen FOREIGN KEY (origen) REFERENCES tp.parada(id_parada),
     ADD CONSTRAINT fk_camino_destino FOREIGN KEY (destino) REFERENCES tp.parada(id_parada);
     

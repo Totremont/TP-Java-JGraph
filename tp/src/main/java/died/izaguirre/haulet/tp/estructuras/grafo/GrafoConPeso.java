@@ -2,6 +2,8 @@ package died.izaguirre.haulet.tp.estructuras.grafo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import died.izaguirre.haulet.tp.estructuras.matriz.Matriz;
@@ -17,6 +19,16 @@ public class GrafoConPeso extends GrafoDirigido {
 	{		
 		super(nodos, aristas);
 		matrizPesos = new Matriz(nodos.size());
+	}
+	
+	public int getPesoArco(Parada origen, Parada destino) 
+	{
+		List<Integer> resultado = aristas.stream().filter(it -> it.getOrigen().equals(origen) && it.getDestino().equals(destino)).map(it -> it.getDistancia()).collect(Collectors.toList());
+		return resultado.isEmpty() ? INFINITO : resultado.get(0);
+	}
+	
+	public Matriz getMatrizPeso() 
+	{
 		matrizPesos.modificarMatriz((i,j) -> 
 		{
 			if(adyacencia.getValor(i,j) > 0) 
@@ -27,18 +39,6 @@ public class GrafoConPeso extends GrafoDirigido {
 				return posDistancia;
 			} else return INFINITO;
 		});
-	}
-	
-	public int getPesoArco(Parada origen, Parada destino) 
-	{
-		int posFila = nodos.indexOf(origen);
-		int posColumna = nodos.indexOf(destino);
-		return matrizPesos.getValor(posFila, posColumna);
-		
-	}
-	
-	public Matriz getMatrizPeso() 
-	{
 		return matrizPesos;
 	}
 		

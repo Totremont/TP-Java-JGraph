@@ -134,7 +134,7 @@ public class CrearParada extends JDialog {
 			JLabel lblNewLabel_1 = new JLabel("Calle*");
 			lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 			GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-			gbc_lblNewLabel_1.anchor = GridBagConstraints.EAST;
+			gbc_lblNewLabel_1.anchor = GridBagConstraints.WEST;
 			gbc_lblNewLabel_1.insets = new Insets(0, 5, 5, 5);
 			gbc_lblNewLabel_1.gridx = 1;
 			gbc_lblNewLabel_1.gridy = 2;

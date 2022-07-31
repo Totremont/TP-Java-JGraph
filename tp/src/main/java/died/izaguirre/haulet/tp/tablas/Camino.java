@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Camino {
 
 	// Paradas adyacentes
+	private Integer id;
 	private Parada origen;
 	private Parada destino;
 	private Integer distancia;
@@ -58,10 +59,21 @@ public class Camino {
 		this.capacidad = capacidad;
 	}
 	
+	
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		Camino otro = (Camino) obj;
-		return ((otro == this) || (this.getOrigen() == otro.getOrigen() && this.getDestino() == otro.getDestino()));
+		return ((otro == this) || (this.getOrigen() == otro.getOrigen() && this.getDestino() == otro.getDestino())
+				|| this.getId() == otro.getId());
 	}
 
 }

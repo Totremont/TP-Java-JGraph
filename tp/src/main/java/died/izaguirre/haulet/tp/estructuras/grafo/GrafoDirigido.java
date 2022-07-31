@@ -21,9 +21,6 @@ public class GrafoDirigido {
 		this.nodos = nodos;
 		this.aristas = aristas;
 		this.adyacencia = new Matriz(nodos.size());
-		listaCaminos();
-		this.adyacencia.modificarMatriz((i,j) -> {
-			if(caminos.get(i).contains(nodos.get(j))) return 1; else return 0; });
 	}
 	
 	//Este metodo guarda en un arreglo de arreglos la lista de paradas con las que es adyacente cada nodo
@@ -59,7 +56,8 @@ public class GrafoDirigido {
 	
 	public Matriz warshall()
 	{		
-		//boolean[][] resultante = mat;	Eze - Resultante tiene una referencia a mat; 
+		//boolean[][] resultante = mat;	Eze - Resultante tiene una referencia a mat;
+		getMatrizAdyacencia();
 		Matriz aux = adyacencia.clonar();
 		boolean valor = false;
 		for(int k = 0 ; k < adyacencia.getFilas() ; k++) 			// k para recorrer por la diagonal principal
@@ -74,6 +72,9 @@ public class GrafoDirigido {
 	
 	public Matriz getMatrizAdyacencia() 
 	{
+		listaCaminos();
+		this.adyacencia.modificarMatriz((i,j) -> {
+			if(caminos.get(i).contains(nodos.get(j))) return 1; else return 0; });
 		return adyacencia;
 	}
 	
