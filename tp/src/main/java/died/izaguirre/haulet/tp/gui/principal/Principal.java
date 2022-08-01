@@ -86,8 +86,9 @@ public class Principal extends JFrame {
 	public Principal() {
 		
 		SwingViewer grafo = Grafo.crearGrafo();
+		grafo.enableAutoLayout();
 		View view = grafo.addDefaultView(false);
-		crearInterfaz(new IncidenciasPanel(this), view);
+		crearInterfaz(new PrincipalPanel(), view);
 		
 	}
 	

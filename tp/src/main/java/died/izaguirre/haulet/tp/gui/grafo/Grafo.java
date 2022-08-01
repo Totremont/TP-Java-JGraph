@@ -60,13 +60,20 @@ public class Grafo {
 		
 		paradas.forEach(it -> 
 		{
-			nodos.add(graph.addNode(it.getCalle()));
+			Node nodo = graph.addNode(it.getCalle());
+			nodo.setAttribute("ui.label", it.getCalle());
+			nodos.add(nodo);
 		});
 		caminos.forEach(it -> 
 		{
-			aristas.add(graph.addEdge(it.getId().toString(), it.getOrigen().getCalle(), it.getDestino().getCalle()));
+			Edge edge = graph.addEdge(it.getId().toString(), it.getOrigen().getCalle(), it.getDestino().getCalle());
+			edge.setAttribute("ui.label", it.getDistancia());
+			aristas.add(edge);
 		});
 		
+		graph.setAttribute("ui.quality");
+		graph.setAttribute("ui.antialias");
+
 		return viewer;
 		//graph.display();
 		
