@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
+import died.izaguirre.haulet.tp.gui.grafo.Grafo;
 import died.izaguirre.haulet.tp.gui.incidencias.IncidenciasPanel;
 import died.izaguirre.haulet.tp.gui.layoutespecial.RelativeLayout;
 import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
@@ -40,6 +41,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
+
+import org.graphstream.graph.Graph;
+import org.graphstream.ui.swing_viewer.SwingViewer;
+import org.graphstream.ui.view.View;
+
 import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JCheckBox;
@@ -55,11 +61,13 @@ public class Principal extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		try {
 			UIManager.setLookAndFeel( new FlatDarkLaf() );
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -76,6 +84,15 @@ public class Principal extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal() {
+		
+		SwingViewer grafo = Grafo.crearGrafo();
+		View view = grafo.addDefaultView(false);
+		crearInterfaz(new IncidenciasPanel(this), view);
+		
+	}
+	
+	private void crearInterfaz(JPanel panel_izquierdo, View vista_derecha)
+	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 550);
 		contentPane = new JPanel();
@@ -87,7 +104,7 @@ public class Principal extends JFrame {
 		rl.setFill(true);
 		contentPane.setLayout(rl);
 
-		JPanel panel_izquierdo =  new ParadasPanel(this);	//Cambiar para ver otra interfaz
+		//JPanel panel_izquierdo =  new ParadasPanel(this);	//Cambiar para ver otra interfaz
 
 		panel_izquierdo.setBorder(UIManager.getBorder("ComboBox.border"));
 		contentPane.add(panel_izquierdo, 1f);
@@ -97,12 +114,11 @@ public class Principal extends JFrame {
 		contentPane.add(panel_grafo, 1.5f);
 		panel_grafo.setLayout(new BorderLayout(0, 0));
 		
-		JLabel labelSinGrafo = new JLabel("");
-		labelSinGrafo.setIcon(new ImageIcon(getClass().getResource("/thumbnail.jpg")));
-		labelSinGrafo.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_grafo.add(labelSinGrafo, BorderLayout.CENTER);
-
-		
-	}
+//		JLabel labelSinGrafo = new JLabel("");
+//		labelSinGrafo.setIcon(new ImageIcon(getClass().getResource("/thumbnail.jpg")));
+//		labelSinGrafo.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_grafo.add((Component) vista_derecha, BorderLayout.CENTER);
+	} 
+				
 
 }

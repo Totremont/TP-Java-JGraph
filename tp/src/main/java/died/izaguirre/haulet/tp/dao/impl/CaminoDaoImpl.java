@@ -25,7 +25,7 @@ public class CaminoDaoImpl implements CaminoDao {
 	public void add(Camino t) throws SQLException {
 		// TODO Auto-generated method stub
 		try (PreparedStatement pstm = con.prepareStatement(
-				"INSERT INTO tp.camino (origen,destino,capacidad,distancia,origen,destino) VALUES (?,?,?,?,?,?)",
+				"INSERT INTO tp.camino (origen,destino,capacidad,distancia) VALUES (?,?,?,?)",
 				PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setInt(1, t.getOrigen().getId());
 			pstm.setInt(2, t.getDestino().getId());
@@ -38,25 +38,28 @@ public class CaminoDaoImpl implements CaminoDao {
 	}
 
 	@Override
-	public void remove(Integer id_origen, Integer id_destino) {
-		// TODO Auto-generated method stub
+	public void remove(Integer id_origen, Integer id_destino) throws SQLException {
 		try (PreparedStatement pstm = con.prepareStatement("DELETE FROM tp.camino WHERE origen=? AND destino=?")) {
 			pstm.setInt(1, id_origen);
 			pstm.setInt(2, id_destino);
 			pstm.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
 	@Override
-	public void remove(Parada origen, Parada destino) {
+	public void remove(Parada origen, Parada destino) throws SQLException {
 		// TODO Auto-generated method stub
-		this.remove(origen.getId(), destino.getId());
+		try {
+			this.remove(origen.getId(), destino.getId());
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	@Override
-	public Camino find(Integer id_origen, Integer id_destino) {
+	public Camino find(Integer id_origen, Integer id_destino) throws SQLException {
 		// TODO Auto-generated method stub
 		Camino auxCamino = null;
 		try (PreparedStatement pstm = con.prepareStatement(
@@ -69,20 +72,20 @@ public class CaminoDaoImpl implements CaminoDao {
 				auxCamino = new Camino();
 				ParadaDao aux = new ParadaDaoImpl();
 				auxCamino.setId(rs.getInt(1));
-				auxCamino.setOrigen(aux.findByNroParada(rs.getInt(2)));
-				auxCamino.setDestino(aux.findByNroParada(rs.getInt(3)));
+				auxCamino.setOrigen(aux.find(rs.getInt(2)));
+				auxCamino.setDestino(aux.find(rs.getInt(3)));
 				auxCamino.setCapacidad(rs.getInt(4));
 				auxCamino.setDistancia(rs.getInt(5));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
 
 		return auxCamino;
 	}
 	
 	@Override
-	public Camino find(Parada origen, Parada destino) {
+	public Camino find(Parada origen, Parada destino) throws SQLException {
 		return this.find(origen.getId(),destino.getId());
 	}
 
@@ -94,14 +97,16 @@ public class CaminoDaoImpl implements CaminoDao {
 		try (PreparedStatement pstm = con
 				.prepareStatement("SELECT id_camino,origen,destino,capacidad,distancia FROM tp.camino")) {
 			ResultSet rs = pstm.executeQuery();
-			ParadaDao aux = new ParadaDaoImpl();
+			ParadaDao paradaDao = new ParadaDaoImpl();
 			while (rs.next()) {
 				Camino auxCamino = new Camino();
+
 				auxCamino.setId(rs.getInt(1));
-				auxCamino.setOrigen(aux.find(rs.getInt(2)));
-				auxCamino.setDestino(aux.find(rs.getInt(3)));
+				auxCamino.setOrigen(paradaDao.find(rs.getInt(2)));
+				auxCamino.setDestino(paradaDao.find(rs.getInt(3)));
 				auxCamino.setCapacidad(rs.getInt(4));
 				auxCamino.setDistancia(rs.getInt(5));
+
 				caminos.add(auxCamino);
 			}
 		} catch (SQLException e) {

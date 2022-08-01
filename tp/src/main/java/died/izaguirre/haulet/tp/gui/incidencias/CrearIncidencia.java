@@ -58,10 +58,10 @@ public class CrearIncidencia extends JDialog {
 	private ArrayList<Incidencia> incidencias;
 	private ControladorIncidencia controlador = new ControladorIncidencia();
 	
-	private JComboBox<Parada> comboBox = new JComboBox();
+	private JComboBox<Parada> comboBox = new JComboBox<Parada>();
 	private JDateChooser dateChooser = new JDateChooser();
 	private JDateChooser dateChooser2 = new JDateChooser();
-	private JComboBox comboBox2 = new JComboBox();
+	private JComboBox comboBox2 = new JComboBox<Object>();
 	private JTextField textField;
 	private JCheckBox chckbxNewCheckBox = new JCheckBox("Resuelto");
 	

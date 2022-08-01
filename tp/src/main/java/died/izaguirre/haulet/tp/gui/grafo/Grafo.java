@@ -6,6 +6,8 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.swing_viewer.SwingViewer;
+import org.graphstream.ui.view.Viewer;
 
 import died.izaguirre.haulet.tp.dao.impl.CaminoDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
@@ -19,8 +21,11 @@ public class Grafo {
 	private GrafoConPeso grafo;
 
 	public static void main(String[] args) {
+		
 		System.setProperty("org.graphstream.ui", "swing"); 
 		Graph graph = new SingleGraph("Sistema de Transporte");
+		SwingViewer viewer = new SwingViewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		viewer.addDefaultView(false);
 		ParadaDaoImpl paradaDao = new ParadaDaoImpl();
 		CaminoDaoImpl caminoDao = new CaminoDaoImpl();		
 		ArrayList<Parada> paradas = (ArrayList<Parada>) paradaDao.getAll();
@@ -41,20 +46,11 @@ public class Grafo {
 		
 	}
 	
-	public GrafoConPeso crearGrafo2() 
+	public static SwingViewer crearGrafo()
 	{
-		ParadaDaoImpl paradaDao = new ParadaDaoImpl();
-		CaminoDaoImpl caminoDao = new CaminoDaoImpl();
-		ArrayList<Parada> paradas = (ArrayList<Parada>) paradaDao.getAll();
-		ArrayList<Camino> caminos = (ArrayList<Camino>) caminoDao.getAll();
-		grafo = new GrafoConPeso(paradas, caminos);
-		return grafo;
-		
-	}
-	
-	public Graph crearGrafo() 
-	{
+		System.setProperty("org.graphstream.ui", "swing"); 
 		Graph graph = new SingleGraph("Sistema de Transporte");
+		SwingViewer viewer = new SwingViewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		ParadaDaoImpl paradaDao = new ParadaDaoImpl();
 		CaminoDaoImpl caminoDao = new CaminoDaoImpl();		
 		ArrayList<Parada> paradas = (ArrayList<Parada>) paradaDao.getAll();
@@ -71,8 +67,10 @@ public class Grafo {
 			aristas.add(graph.addEdge(it.getId().toString(), it.getOrigen().getCalle(), it.getDestino().getCalle()));
 		});
 		
-		return graph;
+		return viewer;
+		//graph.display();
 		
 	}
+	
 
 }
