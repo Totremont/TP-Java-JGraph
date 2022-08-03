@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
-import died.izaguirre.haulet.tp.gui.grafo.Grafo;
+import died.izaguirre.haulet.tp.controladores.ControladorGrafo;
 import died.izaguirre.haulet.tp.gui.incidencias.IncidenciasPanel;
 import died.izaguirre.haulet.tp.gui.layoutespecial.RelativeLayout;
 import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
@@ -51,14 +51,16 @@ import javax.swing.JTextArea;
 import javax.swing.JCheckBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.SystemColor;
 
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtOpciones;
+	private ControladorGrafo controladorGrafo = new ControladorGrafo();
 
 	/**
-	 * Launch the application.
+	 * Lanza la aplicación manejando el GUI desde un hilo secundario
 	 */
 	public static void main(String[] args) {
 		
@@ -80,15 +82,13 @@ public class Principal extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
+
 	public Principal() {
 		
-		SwingViewer grafo = Grafo.crearGrafo();
+		SwingViewer grafo = controladorGrafo.crearGrafo();
 		grafo.enableAutoLayout();
 		View view = grafo.addDefaultView(false);
-		crearInterfaz(new PrincipalPanel(), view);
+		crearInterfaz(new MenuVerLineas(this), view);
 		
 	}
 	
@@ -105,19 +105,16 @@ public class Principal extends JFrame {
 		rl.setFill(true);
 		contentPane.setLayout(rl);
 
-		//JPanel panel_izquierdo =  new ParadasPanel(this);	//Cambiar para ver otra interfaz
 
 		panel_izquierdo.setBorder(UIManager.getBorder("ComboBox.border"));
 		contentPane.add(panel_izquierdo, 1f);
 
 		JPanel panel_grafo = new JPanel();
+		panel_grafo.setBackground(SystemColor.textInactiveText);
 		panel_grafo.setBorder(null);
 		contentPane.add(panel_grafo, 1.5f);
 		panel_grafo.setLayout(new BorderLayout(0, 0));
 		
-//		JLabel labelSinGrafo = new JLabel("");
-//		labelSinGrafo.setIcon(new ImageIcon(getClass().getResource("/thumbnail.jpg")));
-//		labelSinGrafo.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_grafo.add((Component) vista_derecha, BorderLayout.CENTER);
 	} 
 				

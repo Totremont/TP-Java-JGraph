@@ -1,5 +1,7 @@
 package died.izaguirre.haulet.tp;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,6 +14,7 @@ import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
 import died.izaguirre.haulet.tp.estructuras.*;
 import died.izaguirre.haulet.tp.estructuras.grafo.*;
 import died.izaguirre.haulet.tp.estructuras.matriz.Matriz;
+import died.izaguirre.haulet.tp.gui.utilities.CSSParser;
 import died.izaguirre.haulet.tp.tablas.Boleto;
 import died.izaguirre.haulet.tp.tablas.Camino;
 import died.izaguirre.haulet.tp.tablas.Parada;
@@ -25,10 +28,11 @@ public class App
 {
     public static void main( String[] args )
     {
+    	
         
-        int[][] mat = {{1,0,0,1},{0,0,0,1},{1,0,0,0},{0,1,0,0}};
-        Matriz m = new Matriz(mat);
-        pruebaGrafo();
+//        int[][] mat = {{1,0,0,1},{0,0,0,1},{1,0,0,0},{0,1,0,0}};
+//        Matriz m = new Matriz(mat);
+//        pruebaGrafo();
                
 //        GrafoConPeso warshal = new GrafoDirigido(null, null, m);
 //        Matriz resultado = warshal.warshall();  
