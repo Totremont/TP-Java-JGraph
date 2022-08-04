@@ -76,36 +76,40 @@ public class ControladorLineas {
 
 	private void trayectosListener() {
 		//TODO ESTO DA NULL POINTER EXCEPTION, NO SE POR QUE, CUANDO CAMBIO EL ORIGEN O DESTINO
-		vista.getTrayectoCBx().addActionListener(e -> pintarTrayecto(vista.getTrayectoCBx().getSelectedItem().toString()));
+		vista.getTrayectoCBx().addActionListener(e -> {
+			despintarTrayectos();
+			pintarTrayecto(vista.getTrayectoCBx().getSelectedItem().toString());
+			});
 	}
-	
+
+	private void despintarTrayectos() {
+		CaminoDao auxc = new CaminoDaoImpl();
+		ArrayList<Camino> mnos = new ArrayList<Camino>(auxc.getAll());
+		Graph grafoVisual = ControladorGrafo.getGraph();
+		for (Camino c : mnos)
+			grafoVisual.getEdge(c.getId().toString()).removeAttribute("ui.class");
+	}
+
 	private void pintarTrayecto(String clave) {
 		pintarTrayecto(caminosNombre.get(clave));
 	}
-	
+
 	private void pintarTrayecto(List<Parada> trayecto) {
 		ParadaDao auxp = new ParadaDaoImpl();
 		CaminoDao auxc = new CaminoDaoImpl();
 		ArrayList<Parada> pdas = new ArrayList<Parada>(auxp.getAll());
 		ArrayList<Camino> mnos = new ArrayList<Camino>(auxc.getAll());
-		GrafoConPeso grafo = new GrafoConPeso(pdas,mnos);
-		
-		
-		List<Camino> trayectoCamino = grafo.toListCaminos(trayecto);		
+		GrafoConPeso grafo = new GrafoConPeso(pdas, mnos);
+
+		List<Camino> trayectoCamino = grafo.toListCaminos(trayecto);
 		Graph grafoVisual = ControladorGrafo.getGraph();
-		
-		// Primero despinto los otros
-		for(Camino m : mnos) {
-			grafoVisual.getEdge(m.getId().toString()).removeAttribute("ui.class");
-		}
-		
-		for(Camino c : trayectoCamino) {
-			//TODO MEJORAR ESTO, ES SOLO PARA PROBAR QUE SE MODIFIQUE BIEN EN LA VISTA
+
+		for (Camino c : trayectoCamino) {
 			grafoVisual.getEdge(c.getId().toString()).setAttribute("ui.class", "marked");
 		}
-		
+
 	}
-	
+
 	private void orDestListener() {
 		vista.getOrigenCBx().addActionListener(e -> cargarTrayectos());
 		vista.getDestinoCBx().addActionListener(e -> cargarTrayectos());
@@ -113,7 +117,7 @@ public class ControladorLineas {
 
 	private void cargarTrayectos() {
 
-		if (origenDestinoIguales()){
+		if (origenDestinoIguales()) {
 			vista.getTrayectoCBx().removeAllItems();
 			return;
 		}
@@ -210,9 +214,9 @@ public class ControladorLineas {
 		Parada o = (Parada) vista.getOrigenCBx().getSelectedItem();
 		Parada d = (Parada) vista.getDestinoCBx().getSelectedItem();
 
-		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(),
-				vista.getNombreLineaText().getText(), vista.getColorCBx().getSelectedItem().toString(),
-				Integer.parseInt(vista.getCapSentadoText().getText()), o, d);
+		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
+				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
+				o, d);
 
 		return l;
 
@@ -223,10 +227,9 @@ public class ControladorLineas {
 		Parada o = (Parada) vista.getOrigenCBx().getSelectedItem();
 		Parada d = (Parada) vista.getDestinoCBx().getSelectedItem();
 
-		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(),
-				vista.getNombreLineaText().getText(), vista.getColorCBx().getSelectedItem().toString(),
-				Integer.parseInt(vista.getCapSentadoText().getText()), vista.getAireCk().isSelected(),
-				vista.getWifiCk().isSelected(), o, d);
+		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
+				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
+				vista.getAireCk().isSelected(), vista.getWifiCk().isSelected(), o, d);
 
 		return l;
 	}
