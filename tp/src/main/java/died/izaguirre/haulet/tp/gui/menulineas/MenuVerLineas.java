@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 import died.izaguirre.haulet.tp.controladores.ControladorLineas;
+import died.izaguirre.haulet.tp.tablas.Parada;
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
 import died.izaguirre.haulet.tp.tablas.linea.LineaColores;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -39,9 +41,9 @@ public class MenuVerLineas extends JPanel {
 	private JLabel lblNewLabel;
 	private JLabel tipoLineaLabel;
 	private JLabel lblNewLabel_2;
-	private JComboBox lineaTipoCBx;
+	private JComboBox<LineaTipoEnum> lineaTipoCBx;
 	private JLabel colorLineaLabel;
-	private JComboBox colorCBx;
+	private JComboBox<LineaColores> colorCBx;
 	private JLabel nombreLineaLabel;
 	private JTextField nombreLineaText;
 	private JLabel capSentadoLabel;
@@ -50,10 +52,10 @@ public class MenuVerLineas extends JPanel {
 	private JCheckBox wifiCk;
 	private JLabel origenLabel;
 	private JLabel destinoLabel;
-	private JComboBox origenCBx;
-	private JComboBox destinoCBx;
+	private JComboBox<Parada> origenCBx;
+	private JComboBox<Parada> destinoCBx;
 	private JLabel trayectoLabel;
-	private JComboBox trayectoCBx;
+	private JComboBox<String> trayectoCBx;
 	private JPanel panelVerLineas;
 	private JPanel panelVerLineasHead;
 	private JLabel verLineasTitulo;
@@ -164,7 +166,7 @@ public class MenuVerLineas extends JPanel {
 		gbc_tipoLineaLabel.gridy = 0;
 		panelCrearLineaBody.add(tipoLineaLabel, gbc_tipoLineaLabel);
 
-		lineaTipoCBx = new JComboBox();
+		lineaTipoCBx = new JComboBox<LineaTipoEnum>();
 		lineaTipoCBx.setModel(new DefaultComboBoxModel(LineaTipoEnum.values()));
 		GridBagConstraints gbc_lineaTipoCBx = new GridBagConstraints();
 		gbc_lineaTipoCBx.insets = new Insets(0, 0, 5, 5);
@@ -190,7 +192,7 @@ public class MenuVerLineas extends JPanel {
 		panelCrearLineaBody.add(colorLineaLabel, gbc_colorLineaLabel);
 		
 
-		colorCBx = new JComboBox();
+		colorCBx = new JComboBox<LineaColores>();
 		colorCBx.setModel(new DefaultComboBoxModel(LineaColores.values()));
 		GridBagConstraints gbc_colorCBx = new GridBagConstraints();
 		gbc_colorCBx.insets = new Insets(0, 0, 5, 5);
@@ -259,7 +261,7 @@ public class MenuVerLineas extends JPanel {
 		gbc_origenLabel.gridy = 6;
 		panelCrearLineaBody.add(origenLabel, gbc_origenLabel);
 
-		origenCBx = new JComboBox();
+		origenCBx = new JComboBox<Parada>();
 		GridBagConstraints gbc_origenCBx = new GridBagConstraints();
 		gbc_origenCBx.insets = new Insets(0, 0, 5, 5);
 		gbc_origenCBx.fill = GridBagConstraints.HORIZONTAL;
@@ -275,7 +277,7 @@ public class MenuVerLineas extends JPanel {
 		gbc_destinoLabel.gridy = 7;
 		panelCrearLineaBody.add(destinoLabel, gbc_destinoLabel);
 
-		destinoCBx = new JComboBox();
+		destinoCBx = new JComboBox<Parada>();
 		GridBagConstraints gbc_destinoCBx = new GridBagConstraints();
 		gbc_destinoCBx.insets = new Insets(0, 0, 5, 5);
 		gbc_destinoCBx.fill = GridBagConstraints.HORIZONTAL;
@@ -291,7 +293,7 @@ public class MenuVerLineas extends JPanel {
 		gbc_trayectoLabel.gridy = 8;
 		panelCrearLineaBody.add(trayectoLabel, gbc_trayectoLabel);
 
-		trayectoCBx = new JComboBox();
+		trayectoCBx = new JComboBox<String>();
 		GridBagConstraints gbc_trayectoCBx = new GridBagConstraints();
 		gbc_trayectoCBx.insets = new Insets(0, 0, 5, 5);
 		gbc_trayectoCBx.fill = GridBagConstraints.HORIZONTAL;
@@ -527,11 +529,11 @@ public class MenuVerLineas extends JPanel {
 		this.lblNewLabel_2 = lblNewLabel_2;
 	}
 
-	public JComboBox getLineaTipoCBx() {
+	public JComboBox<LineaTipoEnum> getLineaTipoCBx() {
 		return lineaTipoCBx;
 	}
 
-	public void setLineaTipoCBx(JComboBox lineaTipoCBx) {
+	public void setLineaTipoCBx(JComboBox<LineaTipoEnum> lineaTipoCBx) {
 		this.lineaTipoCBx = lineaTipoCBx;
 	}
 
@@ -543,11 +545,11 @@ public class MenuVerLineas extends JPanel {
 		this.colorLineaLabel = colorLineaLabel;
 	}
 
-	public JComboBox getColorCBx() {
+	public JComboBox<LineaColores> getColorCBx() {
 		return colorCBx;
 	}
 
-	public void setColorCBx(JComboBox comboBox) {
+	public void setColorCBx(JComboBox<LineaColores> comboBox) {
 		this.colorCBx = comboBox;
 	}
 
@@ -615,19 +617,19 @@ public class MenuVerLineas extends JPanel {
 		this.destinoLabel = destinoLabel;
 	}
 
-	public JComboBox getOrigenCBx() {
+	public JComboBox<Parada> getOrigenCBx() {
 		return origenCBx;
 	}
 
-	public void setOrigenCBx(JComboBox origenCBx) {
+	public void setOrigenCBx(JComboBox<Parada> origenCBx) {
 		this.origenCBx = origenCBx;
 	}
 
-	public JComboBox getDestinoCBx() {
+	public JComboBox<Parada> getDestinoCBx() {
 		return destinoCBx;
 	}
 
-	public void setDestinoCBx(JComboBox destinoCBx) {
+	public void setDestinoCBx(JComboBox<Parada> destinoCBx) {
 		this.destinoCBx = destinoCBx;
 	}
 
@@ -639,11 +641,11 @@ public class MenuVerLineas extends JPanel {
 		this.trayectoLabel = trayectoLabel;
 	}
 
-	public JComboBox getTrayectoCBx() {
+	public JComboBox<String> getTrayectoCBx() {
 		return trayectoCBx;
 	}
 
-	public void setTrayectoCBx(JComboBox trayectoCBx) {
+	public void setTrayectoCBx(JComboBox<String> trayectoCBx) {
 		this.trayectoCBx = trayectoCBx;
 	}
 

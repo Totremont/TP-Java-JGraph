@@ -19,17 +19,37 @@ import died.izaguirre.haulet.tp.tablas.Parada;
 
 public class ControladorGrafo {
 	
-	public static Graph grafo;
-	public static SwingViewer view;
+	public static Graph graph = null;
+	public static SwingViewer view = null;
 	
+	private ControladorGrafo() {
+
+	}
 	
+	public static Graph getGraph() {
+		if(graph == null) {
+			ControladorGrafo ctrl = new ControladorGrafo();
+			view = ctrl.crearGrafo();
+		}
 		
-	public SwingViewer crearGrafo()
+		return graph;
+	}
+	
+	public static SwingViewer getViewer() {
+		if(view == null) {
+			ControladorGrafo ctrl = new ControladorGrafo();
+			view = ctrl.crearGrafo();
+		}
+		
+		return view;
+	}
+		
+	private SwingViewer crearGrafo()
 	{
 		System.setProperty("org.graphstream.ui", "swing");
 		String style = CSSParser.parseStyle("/stylesheets/graphStyle.css",this.getClass());
 		
-		Graph graph = new SingleGraph("Sistema de Transporte");
+		graph = new SingleGraph("Sistema de Transporte");
 		graph.setAutoCreate(true);	//Crear nodos bajo demanda
 		graph.setStrict(false);
 		graph.setAttribute("ui.stylesheet",style);

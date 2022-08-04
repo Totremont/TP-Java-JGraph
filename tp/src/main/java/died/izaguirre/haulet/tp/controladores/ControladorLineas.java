@@ -4,11 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -17,14 +20,20 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.postgresql.util.PSQLException;
 
+import died.izaguirre.haulet.tp.dao.impl.CaminoDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
+import died.izaguirre.haulet.tp.dao.interfaces.CaminoDao;
 import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
 import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
+import died.izaguirre.haulet.tp.estructuras.grafo.GrafoConPeso;
 import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
 import died.izaguirre.haulet.tp.gui.menulineas.VerInfoLinea;
+import died.izaguirre.haulet.tp.tablas.Camino;
 import died.izaguirre.haulet.tp.tablas.Parada;
 import died.izaguirre.haulet.tp.tablas.linea.Linea;
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
@@ -36,12 +45,13 @@ public class ControladorLineas {
 	private List<Linea> lineas;
 	private List<Parada> paradas;
 	private MenuVerLineas vista;
+	private Map<String, List<Parada>> caminosNombre;
 
 	private ControladorLineas() {
 		lineaDao = new LineaDaoImpl();
 		paradaDao = new ParadaDaoImpl();
 		lineas = new ArrayList<Linea>();
-
+		caminosNombre = new HashMap<String, List<Parada>>();
 	}
 
 	public ControladorLineas(MenuVerLineas vista) {
@@ -58,6 +68,74 @@ public class ControladorLineas {
 		buscadorListener(); // Para poder filtrar tuplas en la tabla
 		cargarTabla(); // Para cargar las lineas de la bdd en la tabla
 		cargarParadas(); // Agrega Las paradas a los ComboBox Origen y Destino
+		cargarTrayectos(); // Cargar combo box de trayectos
+		orDestListener(); // Para que cuando se seleccione un origen o destino diferente se carguen de
+							// nuevo los trayectos
+		trayectosListener(); // Para pintar el grafo con el trayecto seleccionado
+	}
+
+	private void trayectosListener() {
+		//TODO ESTO DA NULL POINTER EXCEPTION, NO SE POR QUE, CUANDO CAMBIO EL ORIGEN O DESTINO
+		vista.getTrayectoCBx().addActionListener(e -> pintarTrayecto(vista.getTrayectoCBx().getSelectedItem().toString()));
+	}
+	
+	private void pintarTrayecto(String clave) {
+		pintarTrayecto(caminosNombre.get(clave));
+	}
+	
+	private void pintarTrayecto(List<Parada> trayecto) {
+		ParadaDao auxp = new ParadaDaoImpl();
+		CaminoDao auxc = new CaminoDaoImpl();
+		ArrayList<Parada> pdas = new ArrayList<Parada>(auxp.getAll());
+		ArrayList<Camino> mnos = new ArrayList<Camino>(auxc.getAll());
+		GrafoConPeso grafo = new GrafoConPeso(pdas,mnos);
+		
+		
+		List<Camino> trayectoCamino = grafo.toListCaminos(trayecto);		
+		Graph grafoVisual = ControladorGrafo.getGraph();
+		
+		// Primero despinto los otros
+		for(Camino m : mnos) {
+			grafoVisual.getEdge(m.getId().toString()).removeAttribute("ui.class");
+		}
+		
+		for(Camino c : trayectoCamino) {
+			//TODO MEJORAR ESTO, ES SOLO PARA PROBAR QUE SE MODIFIQUE BIEN EN LA VISTA
+			grafoVisual.getEdge(c.getId().toString()).setAttribute("ui.class", "marked");
+		}
+		
+	}
+	
+	private void orDestListener() {
+		vista.getOrigenCBx().addActionListener(e -> cargarTrayectos());
+		vista.getDestinoCBx().addActionListener(e -> cargarTrayectos());
+	}
+
+	private void cargarTrayectos() {
+
+		if (origenDestinoIguales()){
+			vista.getTrayectoCBx().removeAllItems();
+			return;
+		}
+
+		caminosNombre = new HashMap<String, List<Parada>>();
+
+		vista.getTrayectoCBx().removeAllItems();
+
+		CaminoDao cd = new CaminoDaoImpl();
+		ParadaDao pd = new ParadaDaoImpl();
+		List<Camino> aristas = cd.getAll();
+		List<Parada> nodos = pd.getAll();
+		GrafoConPeso aux = new GrafoConPeso(new ArrayList<Parada>(nodos), new ArrayList<Camino>(aristas));
+		Parada or = (Parada) vista.getOrigenCBx().getSelectedItem();
+		Parada dest = (Parada) vista.getDestinoCBx().getSelectedItem();
+		List<List<Parada>> todosLosCaminos = aux.caminos(or, dest);
+		for (int i = 0; i < todosLosCaminos.size(); i++) {
+			String clave = "Trayecto" + i;
+			caminosNombre.put(clave, todosLosCaminos.get(i));
+			vista.getTrayectoCBx().addItem(clave);
+		}
+
 	}
 
 	private void tipoLineaListener() {
@@ -86,22 +164,23 @@ public class ControladorLineas {
 				if (camposRellenados() && !origenDestinoIguales()) {
 					if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica.toString())) {
 						try {
-						l = crearLineaEconomica();
-						lineaDao.add(l);
-						agregarLineaTabla(l);
-						} catch(SQLException excp) {
+							l = crearLineaEconomica();
+							lineaDao.add(l);
+							agregarLineaTabla(l);
+
+						} catch (SQLException excp) {
 							System.out.println("No se pudo crear la linea");
 						}
 					} else
 						try {
-						l = crearLineaSuperior();
-						lineaDao.add(l);
-						agregarLineaTabla(l);
-						}catch(SQLException excp) {
+							l = crearLineaSuperior();
+							lineaDao.add(l);
+							agregarLineaTabla(l);
+						} catch (SQLException excp) {
 							System.out.println("No se pudo crear la linea");
 						}
 
-				}else
+				} else
 					System.out.println("No se puede crear la linea");
 
 			}
@@ -120,42 +199,36 @@ public class ControladorLineas {
 		// Los unicos campos que el usuario puede no ingresar nada son en Nombre y
 		// capacidad sentado
 		if (vista.getNombreLineaText().getText().isEmpty() || vista.getCapSentadoText().getText().isEmpty()
-				|| vista.getOrigenCBx().getSelectedItem() == null || vista.getDestinoCBx().getSelectedItem() == null) {
+				|| vista.getOrigenCBx().getSelectedItem() == null || vista.getDestinoCBx().getSelectedItem() == null
+				|| vista.getTrayectoCBx().getSelectedItem().toString().isEmpty()) {
 			return false;
 		} else
 			return true;
 	}
 
 	private Linea crearLineaEconomica() throws SQLException {
-		try {
-		Parada o = paradaDao.findByNroParada(Integer.parseInt(vista.getOrigenCBx().getSelectedItem().toString()));
-		Parada d = paradaDao.findByNroParada(Integer.parseInt(vista.getDestinoCBx().getSelectedItem().toString()));
+		Parada o = (Parada) vista.getOrigenCBx().getSelectedItem();
+		Parada d = (Parada) vista.getDestinoCBx().getSelectedItem();
 
-		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
-				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
-				o, d);
-		
+		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(),
+				vista.getNombreLineaText().getText(), vista.getColorCBx().getSelectedItem().toString(),
+				Integer.parseInt(vista.getCapSentadoText().getText()), o, d);
+
 		return l;
-		}catch (SQLException excp) {
-			throw excp;
-		}
-		
+
 	}
 
 	private Linea crearLineaSuperior() throws SQLException {
-		
-		try {
-		Parada o = paradaDao.findByNroParada(Integer.parseInt(vista.getOrigenCBx().getSelectedItem().toString()));
-		Parada d = paradaDao.findByNroParada(Integer.parseInt(vista.getDestinoCBx().getSelectedItem().toString()));
 
-		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
-				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
-				vista.getAireCk().isSelected(), vista.getWifiCk().isSelected(), o, d);
+		Parada o = (Parada) vista.getOrigenCBx().getSelectedItem();
+		Parada d = (Parada) vista.getDestinoCBx().getSelectedItem();
+
+		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(),
+				vista.getNombreLineaText().getText(), vista.getColorCBx().getSelectedItem().toString(),
+				Integer.parseInt(vista.getCapSentadoText().getText()), vista.getAireCk().isSelected(),
+				vista.getWifiCk().isSelected(), o, d);
 
 		return l;
-		}catch(SQLException excp) {
-			throw excp;
-		}
 	}
 
 	private void agregarLineaTabla(Linea l) {
@@ -198,13 +271,12 @@ public class ControladorLineas {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private void cargarParadas() {
 
 		paradas = paradaDao.getAll();
 		for (Parada p : paradas) {
-			vista.getOrigenCBx().addItem(p.getNroParada());
-			vista.getDestinoCBx().addItem(p.getNroParada());
+			vista.getOrigenCBx().addItem(p);
+			vista.getDestinoCBx().addItem(p);
 		}
 
 	}

@@ -76,4 +76,11 @@ public class Camino {
 				|| this.getId() == otro.getId());
 	}
 
+	@Override
+	public String toString() {
+		return "Camino [id=" + id + "]";
+	}
+	
+	
+	
 }

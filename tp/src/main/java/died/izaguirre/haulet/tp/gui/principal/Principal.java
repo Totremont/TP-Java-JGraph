@@ -57,7 +57,7 @@ public class Principal extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtOpciones;
-	private ControladorGrafo controladorGrafo = new ControladorGrafo();
+//	private ControladorGrafo controladorGrafo = new ControladorGrafo();
 
 	/**
 	 * Lanza la aplicación manejando el GUI desde un hilo secundario
@@ -85,7 +85,7 @@ public class Principal extends JFrame {
 
 	public Principal() {
 		
-		SwingViewer grafo = controladorGrafo.crearGrafo();
+		SwingViewer grafo = ControladorGrafo.getViewer();
 		grafo.enableAutoLayout();
 		View view = grafo.addDefaultView(false);
 		crearInterfaz(new MenuVerLineas(this), view);

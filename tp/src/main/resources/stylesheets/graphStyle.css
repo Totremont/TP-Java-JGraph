@@ -26,5 +26,7 @@ edge
 
 }
 
-
+edge.marked {
+	fill-color : red;
+}
 
