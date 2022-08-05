@@ -49,7 +49,7 @@ public class ParadasPanel extends JPanel {
 	private ControladorParadas controlador;
 
 	private JFrame ventanaPadre;
-	private JButton modificarButton;
+	private JButton caminosButton;
 	private JLabel agregarButton = new JLabel("Agregar");
 
 	/**
@@ -177,13 +177,12 @@ public class ParadasPanel extends JPanel {
 		gbc_separator_1.gridy = 4;
 		panel.add(separator_1, gbc_separator_1);
 
-		modificarButton = new JButton("Modificar");
-		modificarButton.setEnabled(false);
-		GridBagConstraints gbc_modificarButton = new GridBagConstraints();
-		gbc_modificarButton.insets = new Insets(0, 0, 5, 0);
-		gbc_modificarButton.gridx = 3;
-		gbc_modificarButton.gridy = 4;
-		panel.add(modificarButton, gbc_modificarButton);
+		caminosButton = new JButton("Caminos");
+		GridBagConstraints gbc_caminosButton = new GridBagConstraints();
+		gbc_caminosButton.insets = new Insets(0, 0, 5, 0);
+		gbc_caminosButton.gridx = 3;
+		gbc_caminosButton.gridy = 4;
+		panel.add(caminosButton, gbc_caminosButton);
 		JLabel textPaneIcon = new JLabel();
 		textPaneIcon.setIcon(new ImageIcon(getClass().getResource("/magnify.png")));
 		JTextField fieldText = new JTextField();
@@ -293,6 +292,14 @@ public class ParadasPanel extends JPanel {
 	
 	public TableRowSorter<TableModel> getTableSorter(){
 		return this.tableSorter;
+	}
+
+	public JFrame getVentanaPadre() {
+		return ventanaPadre;
+	}
+
+	public JButton getCaminosButton() {
+		return caminosButton;
 	}
 	
 }

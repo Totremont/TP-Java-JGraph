@@ -27,25 +27,30 @@ import javax.swing.table.TableRowSorter;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.swing_viewer.SwingViewer;
+import org.graphstream.ui.view.Viewer;
 import org.postgresql.util.PSQLException;
 
 import died.izaguirre.haulet.tp.dao.impl.CaminoDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
+import died.izaguirre.haulet.tp.dao.impl.PoseeDaoImpl;
 import died.izaguirre.haulet.tp.dao.interfaces.CaminoDao;
 import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
 import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
+import died.izaguirre.haulet.tp.dao.interfaces.PoseeDao;
 import died.izaguirre.haulet.tp.estructuras.grafo.GrafoConPeso;
 import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
 import died.izaguirre.haulet.tp.gui.menulineas.VerInfoLinea;
 import died.izaguirre.haulet.tp.tablas.Camino;
 import died.izaguirre.haulet.tp.tablas.Parada;
+import died.izaguirre.haulet.tp.tablas.Posee;
 import died.izaguirre.haulet.tp.tablas.linea.Linea;
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 
 public class ControladorLineas {
 
 	private LineaDao lineaDao = new LineaDaoImpl();
+	private PoseeDao poseeDao = new PoseeDaoImpl();
 	private ParadaDao paradaDao = new ParadaDaoImpl();
 	private CaminoDao caminoDao = new CaminoDaoImpl();
 	private List<Linea> lineas = new ArrayList<>();
@@ -203,22 +208,36 @@ public class ControladorLineas {
 			public void actionPerformed(ActionEvent e) {
 				Linea l;
 				if (camposRellenados() && !origenDestinoIguales()) {
-					if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica.toString())) {
+					List<Camino> trayectoPorAristas = caminosNombre.get(vista.getTrayectoCBx().getSelectedItem());
+					
+					// Obtengo las paradas
+					List<Parada> trayectoPorParadas = new ArrayList<Parada>();
+					for(Camino c : trayectoPorAristas) {
+						if(!trayectoPorParadas.contains(c.getOrigen()))
+							trayectoPorParadas.add(c.getOrigen());
+						if(!trayectoPorParadas.contains(c.getDestino()))
+							trayectoPorParadas.add(c.getDestino());							
+					}
+					
+					if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 						try {
 							l = crearLineaEconomica();
 							lineaDao.add(l);
+							agregarTrayectoLineaBdd(l, trayectoPorParadas);
 							agregarLineaTabla(l);
 
 						} catch (SQLException excp) {
-							System.out.println("No se pudo crear la linea");
+							System.out.println("No se pudo crear la linea economica");
+							excp.printStackTrace();
 						}
 					} else
 						try {
 							l = crearLineaSuperior();
 							lineaDao.add(l);
+							agregarTrayectoLineaBdd(l, trayectoPorParadas);
 							agregarLineaTabla(l);
 						} catch (SQLException excp) {
-							System.out.println("No se pudo crear la linea");
+							System.out.println("No se pudo crear la linea superior");
 						}
 
 				} else
@@ -226,6 +245,20 @@ public class ControladorLineas {
 
 			}
 		});
+	}
+	
+	private void agregarTrayectoLineaBdd(Linea l, List<Parada> trayecto) throws SQLException {
+		
+		PoseeDao pdao = new PoseeDaoImpl();
+		
+		for(Parada p : trayecto) {
+			try {
+				Posee posee = new Posee(p, l);
+				pdao.add(posee);
+			}catch(SQLException excp) {
+				throw excp;
+			}
+		}
 	}
 
 	private Boolean origenDestinoIguales() {
@@ -240,8 +273,7 @@ public class ControladorLineas {
 		// Los unicos campos que el usuario puede no ingresar nada son en Nombre y
 		// capacidad sentado
 		if (vista.getNombreLineaText().getText().isEmpty() || vista.getCapSentadoText().getText().isEmpty()
-				|| vista.getOrigenCBx().getSelectedItem() == null || vista.getDestinoCBx().getSelectedItem() == null
-				|| vista.getTrayectoCBx().getSelectedItem().toString().isEmpty()) {
+				|| vista.getOrigenCBx().getSelectedItem() == null || vista.getDestinoCBx().getSelectedItem() == null) {
 			return false;
 		} else
 			return true;
@@ -331,11 +363,13 @@ public class ControladorLineas {
 					asd.setVisible(true);
 				} else if (columna == 4) {
 					// Codigo para ver camino
-					
+					Integer id = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
+					mostrarTrayecto(id);
 				} else if (columna == 5) {
 					// Codigo para eliminar linea
 					try {
 						Integer id = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
+						poseeDao.removeByLinea(id);
 						lineaDao.remove(id);
 						eliminarFilaTabla(fila);
 						vista.validate();
@@ -409,5 +443,12 @@ public class ControladorLineas {
 				vista.getModel().setValueAt(l.getColor(), i, 2);
 			}
 		}
+	}
+	
+	private void mostrarTrayecto(Integer idLinea) {
+		PoseeDao pdao = new PoseeDaoImpl();
+		List<Posee> paradasDeLinea = pdao.paradasDeLinea(idLinea);
+		List<Parada> paradas = paradasDeLinea.stream().map(ps -> ps.getParada()).collect(Collectors.toList());
+		pintarTrayecto(convertirCamino(paradas));
 	}
 }

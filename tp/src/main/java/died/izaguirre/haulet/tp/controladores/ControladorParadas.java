@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
 import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
+import died.izaguirre.haulet.tp.gui.menuparadas.CrearCamino;
 import died.izaguirre.haulet.tp.gui.menuparadas.CrearParada;
 import died.izaguirre.haulet.tp.gui.menuparadas.ParadasPanel;
 import died.izaguirre.haulet.tp.tablas.Parada;
@@ -40,9 +41,14 @@ public class ControladorParadas {
 		filtrarTablaListener(); // Para que el buscado de la tabla funciona (filtra en la columna calle)
 		agregarButtonListener(); // Para que el boton Agregar cree paradas (por ahora es solo demostrativo)
 		agregarTablaListener(); // Para que al dar click en el boton elimianr de la tabla se elimine la parada
+		caminosListener(); // Para mostrar el jdialog de crear caminos
 		cargarTabla();
 	}
-
+	
+	private void caminosListener() {
+		vista.getCaminosButton().addActionListener(e -> new CrearCamino());
+	}
+	
 	public void agregarParadaTabla(Parada p) {
 
 		Object[] nuevaParada = new Object[3];
