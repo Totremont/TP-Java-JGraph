@@ -59,7 +59,7 @@ public class ControladorGrafo {
 		
 		caminos.forEach(it -> 
 		{
-			Edge edge = graph.addEdge(it.getId().toString(), it.getOrigen().getCalle(), it.getDestino().getCalle());
+			Edge edge = graph.addEdge(it.getId().toString(), it.getOrigen().getCalle(), it.getDestino().getCalle(), true);
 			edge.setAttribute("ui.label", it.getDistancia() + " Km");
 		});
 		

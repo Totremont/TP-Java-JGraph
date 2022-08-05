@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -21,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.postgresql.util.PSQLException;
 
@@ -139,7 +141,7 @@ public class ControladorLineas {
 			caminosNombre.put(clave, todosLosCaminos.get(i));
 			vista.getTrayectoCBx().addItem(clave);
 		}
-
+		
 	}
 
 	private void tipoLineaListener() {
@@ -242,13 +244,6 @@ public class ControladorLineas {
 		ImageIcon imgVerCamino = new ImageIcon(getClass().getResource("/eye-outline.png"));
 		ImageIcon imgDelete = new ImageIcon(getClass().getResource("/delete.png"));
 
-//		JLabel info = new JLabel("");
-//		info.setIcon(imgInfo);
-//		JLabel verCamino = new JLabel("");
-//		info.setIcon(imgVerCamino);
-//		JLabel borrarLinea = new JLabel("");
-//		borrarLinea.setIcon(imgDelete);
-
 		nuevaLinea[0] = l.getId();
 		nuevaLinea[1] = l.getNombre();
 		nuevaLinea[2] = l.getColor();
@@ -299,6 +294,7 @@ public class ControladorLineas {
 					asd.setVisible(true);
 				} else if (columna == 4) {
 					// Codigo para ver camino
+					
 				} else if (columna == 5) {
 					// Codigo para eliminar linea
 					try {
