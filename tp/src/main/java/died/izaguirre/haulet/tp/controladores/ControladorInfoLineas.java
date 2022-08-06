@@ -121,7 +121,7 @@ public class ControladorInfoLineas {
 	}
 
 	private void capParado() {
-		vista.getCapParadoLbl().setText(linea.getCapParado().toString());
+		vista.getCapParado().setValue((Integer) (linea.getCapParado()/linea.getCapSentado()));
 	}
 
 	private void cargarNombreLinea() {
@@ -276,7 +276,9 @@ public class ControladorInfoLineas {
 		if (vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 			Linea l = new Linea(vista.getTipoCBx().getSelectedItem().toString(), vista.getNombreLinea().getText(),
 					vista.getColorCBx().getSelectedItem().toString(),
-					Integer.parseInt(vista.getCapSentadoTxt().getText()), (Parada) vista.getOrigenCBx().getSelectedItem(),
+					Integer.parseInt(vista.getCapSentadoTxt().getText()), 
+					((Integer) vista.getCapParado().getValue()), 
+					(Parada) vista.getOrigenCBx().getSelectedItem(),
 					(Parada) vista.getDestinoCBx().getSelectedItem());
 			l.setId(id);
 			return l;

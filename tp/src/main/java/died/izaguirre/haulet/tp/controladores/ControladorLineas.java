@@ -192,9 +192,11 @@ public class ControladorLineas {
 				if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 					vista.getAireCk().setEnabled(false);
 					vista.getWifiCk().setEnabled(false);
+					vista.getPorcentaje().setEnabled(true);
 				} else if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Superior)) {
 					vista.getAireCk().setEnabled(true);
 					vista.getWifiCk().setEnabled(true);
+					vista.getPorcentaje().setEnabled(false);
 				}
 				vista.validate();
 			}
@@ -322,7 +324,7 @@ public class ControladorLineas {
 		nuevaLinea[4] = imgVerCamino;
 		nuevaLinea[5] = imgDelete;
 
-		vista.getModel().addRow(nuevaLinea);
+		vista.getTableModel().addRow(nuevaLinea);
 		vista.validate();
 
 	}
@@ -330,7 +332,7 @@ public class ControladorLineas {
 	private void eliminarFilaTabla(int fila) {
 		if (fila < 0)
 			return;
-		((DefaultTableModel) vista.getModel()).removeRow(fila);
+		((DefaultTableModel) vista.getTableModel()).removeRow(fila);
 	}
 
 	private void cargarTabla() {
@@ -422,7 +424,7 @@ public class ControladorLineas {
 
 		@SuppressWarnings("rawtypes")
 		TableRowSorter sorter = vista.getTableSorter();
-		sorter.setRowFilter(RowFilter.regexFilter(vista.getBuscarText().getText(), 1));
+		sorter.setRowFilter(RowFilter.regexFilter("(?i)" + "^" + vista.getBuscarText().getText()));
 		vista.getTable().setRowSorter(sorter);
 	}
 
@@ -440,11 +442,11 @@ public class ControladorLineas {
 	}
 
 	public void actualizarLineaDeTabla(Linea l) {
-		for (int i = 0; i < vista.getModel().getRowCount(); i++) {
-			Integer idModelo = (Integer) vista.getModel().getValueAt(i, 0);
+		for (int i = 0; i < vista.getTableModel().getRowCount(); i++) {
+			Integer idModelo = (Integer) vista.getTableModel().getValueAt(i, 0);
 			if (idModelo.equals(l.getId())) {
-				vista.getModel().setValueAt(l.getNombre(), i, 1);
-				vista.getModel().setValueAt(l.getColor(), i, 2);
+				vista.getTableModel().setValueAt(l.getNombre(), i, 1);
+				vista.getTableModel().setValueAt(l.getColor(), i, 2);
 			}
 		}
 	}

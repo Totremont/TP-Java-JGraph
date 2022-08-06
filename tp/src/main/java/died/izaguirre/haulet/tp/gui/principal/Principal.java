@@ -31,6 +31,7 @@ import javax.swing.Icon;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JComboBox;
@@ -52,6 +53,7 @@ import javax.swing.JCheckBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 
 public class Principal extends JFrame {
 
@@ -61,7 +63,8 @@ public class Principal extends JFrame {
 
 	/**
 	 * Lanza la aplicación manejando el GUI desde un hilo secundario
-	 */
+	 */	
+	
 	public static void main(String[] args) {
 		
 		try {
@@ -73,7 +76,10 @@ public class Principal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Principal frame = new Principal();
+					Principal frame = new Principal("Sistema de Transporte");
+					Image icon = Toolkit.getDefaultToolkit().
+							getImage(getClass().getResource("/navigation-variant.png").getFile());  
+					frame.setIconImage(icon);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -83,12 +89,14 @@ public class Principal extends JFrame {
 	}
 
 
-	public Principal() {
+	public Principal(String titulo) {
+		
+		super(titulo);
 		
 		SwingViewer grafo = ControladorGrafo.getViewer();
 		grafo.enableAutoLayout();
 		View view = grafo.addDefaultView(false);
-		crearInterfaz(new MenuVerLineas(this), view);
+		crearInterfaz(new PrincipalPanel(), view);
 		
 	}
 	

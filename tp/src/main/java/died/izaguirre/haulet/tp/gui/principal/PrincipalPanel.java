@@ -25,6 +25,9 @@ public class PrincipalPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
+	
+	
+	
 	public PrincipalPanel() {
 		
 		

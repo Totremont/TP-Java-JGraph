@@ -21,6 +21,8 @@ import died.izaguirre.haulet.tp.tablas.Parada;
 import died.izaguirre.haulet.tp.tablas.linea.LineaColores;
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 import javax.swing.JCheckBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class VerInfoLinea extends JDialog {
 
@@ -40,8 +42,8 @@ public class VerInfoLinea extends JDialog {
 	private JButton modificarButton;
 	private JButton guardarButton;
 	private JButton salirButton;
-	private JLabel capParadoLbl;
 	private JLabel capParadoLabel;
+	private JSpinner paradoSpinner;
 
 	/**
 	 * Launch the application.
@@ -259,13 +261,13 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(capParadoLabel, gbc_capParadoLabel);
 		}
 		{
-			capParadoLbl = new JLabel("New label");
-			GridBagConstraints gbc_capParadoLbl = new GridBagConstraints();
-			gbc_capParadoLbl.anchor = GridBagConstraints.EAST;
-			gbc_capParadoLbl.insets = new Insets(0, 0, 5, 5);
-			gbc_capParadoLbl.gridx = 5;
-			gbc_capParadoLbl.gridy = 3;
-			contentPanel.add(capParadoLbl, gbc_capParadoLbl);
+			paradoSpinner = new JSpinner();
+			paradoSpinner.setModel(new SpinnerNumberModel(0, 0, 40, 1));
+			GridBagConstraints gbc_paradoSpinner = new GridBagConstraints();
+			gbc_paradoSpinner.insets = new Insets(0, 0, 5, 5);
+			gbc_paradoSpinner.gridx = 5;
+			gbc_paradoSpinner.gridy = 3;
+			contentPanel.add(paradoSpinner, gbc_paradoSpinner);
 		}
 		{
 			wifiCk = new JCheckBox("Wifi");
@@ -434,12 +436,8 @@ public class VerInfoLinea extends JDialog {
 		this.salirButton = salirButton;
 	}
 
-	public JLabel getCapParadoLbl() {
-		return capParadoLbl;
-	}
-
-	public void setCapParadoLbl(JLabel capParadoLbl) {
-		this.capParadoLbl = capParadoLbl;
+	public JSpinner getCapParado() {
+		return paradoSpinner;
 	}
 
 	public JLabel getCapParadoLabel() {
