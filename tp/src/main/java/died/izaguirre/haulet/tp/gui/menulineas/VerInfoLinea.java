@@ -17,10 +17,10 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 import died.izaguirre.haulet.tp.controladores.ControladorInfoLineas;
+import died.izaguirre.haulet.tp.tablas.Parada;
 import died.izaguirre.haulet.tp.tablas.linea.LineaColores;
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 import javax.swing.JCheckBox;
-import javax.swing.UIManager;
 
 public class VerInfoLinea extends JDialog {
 
@@ -30,16 +30,18 @@ public class VerInfoLinea extends JDialog {
 	private MenuVerLineas menu;
 	private Integer idLinea;
 	private ControladorInfoLineas controlador;
-	private JComboBox tipoCBx;
-	private JComboBox origenCBx;
-	private JComboBox destinoCBx;
-	private JComboBox colorCBx;
-	private JComboBox trayectoCBx;
+	private JComboBox<LineaTipoEnum> tipoCBx;
+	private JComboBox<Parada> origenCBx;
+	private JComboBox<Parada> destinoCBx;
+	private JComboBox<LineaColores> colorCBx;
+	private JComboBox<String> trayectoCBx;
 	private JCheckBox wifiCk;
 	private JCheckBox aireCk;
 	private JButton modificarButton;
 	private JButton guardarButton;
 	private JButton salirButton;
+	private JLabel capParadoLbl;
+	private JLabel capParadoLabel;
 
 	/**
 	 * Launch the application.
@@ -62,9 +64,6 @@ public class VerInfoLinea extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	private VerInfoLinea() {
-		cargarVista();
-	}
 
 	public VerInfoLinea(MenuVerLineas menu, Integer idLinea) {
 		setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
@@ -134,7 +133,7 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(origenLabel, gbc_origenLabel);
 		}
 		{
-			origenCBx = new JComboBox();
+			origenCBx = new JComboBox<Parada>();
 			origenCBx.setEnabled(false);
 			GridBagConstraints gbc_origenCBx = new GridBagConstraints();
 			gbc_origenCBx.weightx = 0.1;
@@ -163,7 +162,7 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(tipoLineaLabel, gbc_tipoLineaLabel);
 		}
 		{
-			tipoCBx = new JComboBox();
+			tipoCBx = new JComboBox<LineaTipoEnum>();
 			tipoCBx.setEnabled(false);
 			tipoCBx.setModel(new DefaultComboBoxModel(LineaTipoEnum.values()));
 			GridBagConstraints gbc_tipoCBx = new GridBagConstraints();
@@ -183,7 +182,7 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(destinoLabel, gbc_destinoLabel);
 		}
 		{
-			destinoCBx = new JComboBox();
+			destinoCBx = new JComboBox<Parada>();
 			destinoCBx.setEnabled(false);
 			GridBagConstraints gbc_destinoCBx = new GridBagConstraints();
 			gbc_destinoCBx.insets = new Insets(0, 0, 5, 5);
@@ -202,7 +201,7 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(colorLabel, gbc_colorLabel);
 		}
 		{
-			colorCBx = new JComboBox();
+			colorCBx = new JComboBox<LineaColores>();
 			colorCBx.setEnabled(false);
 			colorCBx.setModel(new DefaultComboBoxModel(LineaColores.values()));
 			GridBagConstraints gbc_colorCBx = new GridBagConstraints();
@@ -222,7 +221,7 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(trayectoLabel, gbc_trayectoLabel);
 		}
 		{
-			trayectoCBx = new JComboBox();
+			trayectoCBx = new JComboBox<String>();
 			trayectoCBx.setEnabled(false);
 			GridBagConstraints gbc_trayectoCBx = new GridBagConstraints();
 			gbc_trayectoCBx.insets = new Insets(0, 0, 5, 5);
@@ -250,6 +249,23 @@ public class VerInfoLinea extends JDialog {
 			gbc_capSentadoTxt.gridy = 3;
 			contentPanel.add(capSentadoTxt, gbc_capSentadoTxt);
 			capSentadoTxt.setColumns(10);
+		}
+		{
+			capParadoLabel = new JLabel("Cap. Parado");
+			GridBagConstraints gbc_capParadoLabel = new GridBagConstraints();
+			gbc_capParadoLabel.insets = new Insets(0, 0, 5, 5);
+			gbc_capParadoLabel.gridx = 4;
+			gbc_capParadoLabel.gridy = 3;
+			contentPanel.add(capParadoLabel, gbc_capParadoLabel);
+		}
+		{
+			capParadoLbl = new JLabel("New label");
+			GridBagConstraints gbc_capParadoLbl = new GridBagConstraints();
+			gbc_capParadoLbl.anchor = GridBagConstraints.EAST;
+			gbc_capParadoLbl.insets = new Insets(0, 0, 5, 5);
+			gbc_capParadoLbl.gridx = 5;
+			gbc_capParadoLbl.gridy = 3;
+			contentPanel.add(capParadoLbl, gbc_capParadoLbl);
 		}
 		{
 			wifiCk = new JCheckBox("Wifi");
@@ -338,43 +354,43 @@ public class VerInfoLinea extends JDialog {
 		return contentPanel;
 	}
 
-	public JComboBox getTipoCBx() {
+	public JComboBox<LineaTipoEnum> getTipoCBx() {
 		return tipoCBx;
 	}
 
-	public void setTipoCBx(JComboBox tipoCBx) {
+	public void setTipoCBx(JComboBox<LineaTipoEnum> tipoCBx) {
 		this.tipoCBx = tipoCBx;
 	}
 
-	public JComboBox getOrigenCBx() {
+	public JComboBox<Parada> getOrigenCBx() {
 		return origenCBx;
 	}
 
-	public void setOrigenCBx(JComboBox origenCBx) {
+	public void setOrigenCBx(JComboBox<Parada> origenCBx) {
 		this.origenCBx = origenCBx;
 	}
 
-	public JComboBox getDestinoCBx() {
+	public JComboBox<Parada> getDestinoCBx() {
 		return destinoCBx;
 	}
 
-	public void setDestinoCBx(JComboBox destinoCBx) {
+	public void setDestinoCBx(JComboBox<Parada> destinoCBx) {
 		this.destinoCBx = destinoCBx;
 	}
 
-	public JComboBox getColorCBx() {
+	public JComboBox<LineaColores> getColorCBx() {
 		return colorCBx;
 	}
 
-	public void setColorCBx(JComboBox colorCBx) {
+	public void setColorCBx(JComboBox<LineaColores> colorCBx) {
 		this.colorCBx = colorCBx;
 	}
 
-	public JComboBox getTrayectoCBx() {
+	public JComboBox<String> getTrayectoCBx() {
 		return trayectoCBx;
 	}
 
-	public void setTrayectoCBx(JComboBox trayectoCBx) {
+	public void setTrayectoCBx(JComboBox<String> trayectoCBx) {
 		this.trayectoCBx = trayectoCBx;
 	}
 
@@ -418,4 +434,20 @@ public class VerInfoLinea extends JDialog {
 		this.salirButton = salirButton;
 	}
 
+	public JLabel getCapParadoLbl() {
+		return capParadoLbl;
+	}
+
+	public void setCapParadoLbl(JLabel capParadoLbl) {
+		this.capParadoLbl = capParadoLbl;
+	}
+
+	public JLabel getCapParadoLabel() {
+		return capParadoLabel;
+	}
+
+	public void setCapParadoLabel(JLabel capParadoLabel) {
+		this.capParadoLabel = capParadoLabel;
+	}
+	
 }
