@@ -25,13 +25,13 @@ public class Linea {
 	}
 
 	// Linea economica
-	public Linea(String tipo, String nombre, String color, Integer capSentado, Parada origen, Parada destino) {
+	public Linea(String tipo, String nombre, String color, Integer capSentado, Integer porcentajeParado, Parada origen, Parada destino) {
 		this(origen, destino);
 		this.tipo = tipo;
 		this.nombre = nombre;
 		this.color = color;
 		this.capSentado = capSentado;
-		this.capParado = ((Double) (capSentado * 0.40)).intValue();
+		this.capParado = (int) (capSentado * ((float)porcentajeParado/100f));
 		this.tieneWifi = false;
 		this.tieneAire = false;
 	}

@@ -272,7 +272,7 @@ public class ControladorLineas {
 	private Boolean camposRellenados() {
 		// Los unicos campos que el usuario puede no ingresar nada son en Nombre y
 		// capacidad sentado
-		if (vista.getNombreLineaText().getText().isEmpty() || vista.getCapSentadoText().getText().isEmpty()
+		if (vista.getNombreLineaText().getText().isEmpty() || vista.getCapSentadoText().getValue() == null
 				|| vista.getOrigenCBx().getSelectedItem() == null || vista.getDestinoCBx().getSelectedItem() == null) {
 			return false;
 		} else
@@ -283,8 +283,11 @@ public class ControladorLineas {
 		Parada o = (Parada) vista.getOrigenCBx().getSelectedItem();
 		Parada d = (Parada) vista.getDestinoCBx().getSelectedItem();
 
-		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
-				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
+		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), 
+				vista.getNombreLineaText().getText(),
+				vista.getColorCBx().getSelectedItem().toString(), 
+				((Integer) vista.getCapSentadoText().getValue()),
+				((Integer)vista.getPorcentaje().getValue()),
 				o, d);
 
 		return l;
@@ -297,7 +300,8 @@ public class ControladorLineas {
 		Parada d = (Parada) vista.getDestinoCBx().getSelectedItem();
 
 		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
-				vista.getColorCBx().getSelectedItem().toString(), Integer.parseInt(vista.getCapSentadoText().getText()),
+				vista.getColorCBx().getSelectedItem().toString(), 
+				((Integer) vista.getCapSentadoText().getValue()),
 				vista.getAireCk().isSelected(), vista.getWifiCk().isSelected(), o, d);
 
 		return l;
