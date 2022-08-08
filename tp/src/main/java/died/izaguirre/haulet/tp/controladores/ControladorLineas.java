@@ -58,7 +58,10 @@ public class ControladorLineas {
 	private ArrayList<Camino> caminos = new ArrayList<>();
 	private MenuVerLineas vista;
 	private Map<String, List<Camino>> caminosNombre;
-	private Graph grafoVisual = ControladorGrafo.getGraph();
+	
+	private ControladorGrafo controladorGrafo = ControladorGrafo.getInstance();
+	private Graph grafoVisual = controladorGrafo.getGraph();
+	private GrafoConPeso grafoPeso = controladorGrafo.getGrafoPeso();
 
 	public ControladorLineas(MenuVerLineas vista) {
 		this.vista = vista;
@@ -152,37 +155,37 @@ public class ControladorLineas {
 		
 			for (int i = 0; i < todosLosCaminos.size(); i++) {
 				String clave = "Trayecto: " + i;
-				caminosNombre.put(clave, convertirCamino(todosLosCaminos.get(i)));
+				caminosNombre.put(clave, grafoPeso.toListCaminos(todosLosCaminos.get(i)));
 				vista.getTrayectoCBx().addItem(clave);
 			}
 		}
 		
 	}
 	
-	private List<Camino> convertirCamino(List<Parada> caminoParadas)	//Convierte camino de lista de paradas a lista de caminos
-	{
-		//Asumiendo que el camino está ordenado
-		ArrayList<Camino> caminoReal = new ArrayList<>();
-		Camino aux = null;
-		
-		for(int i = 0; i < caminoParadas.size(); i++) 
-		{
-			if((i + 1) >= caminoParadas.size()) break;
-			for(Camino c : caminos) 
-			{
-				if(aux != null) break;				
-				else 
-					if(c.getOrigen().equals(caminoParadas.get(i)) && c.getDestino().equals(caminoParadas.get(i + 1))) 
-				{
-					aux = c;
-					caminoReal.add(aux);
-				}
-			}
-			aux = null;
-		}
-		return caminoReal;
-		
-	}
+//	private List<Camino> convertirCamino(List<Parada> caminoParadas)	//Convierte camino de lista de paradas a lista de caminos
+//	{
+//		//Asumiendo que el camino está ordenado
+//		ArrayList<Camino> caminoReal = new ArrayList<>();
+//		Camino aux = null;
+//		
+//		for(int i = 0; i < caminoParadas.size(); i++) 
+//		{
+//			if((i + 1) >= caminoParadas.size()) break;
+//			for(Camino c : caminos) 
+//			{
+//				if(aux != null) break;				
+//				else 
+//					if(c.getOrigen().equals(caminoParadas.get(i)) && c.getDestino().equals(caminoParadas.get(i + 1))) 
+//				{
+//					aux = c;
+//					caminoReal.add(aux);
+//				}
+//			}
+//			aux = null;
+//		}
+//		return caminoReal;
+//		
+//	}
 
 	private void tipoLineaListener() {
 		vista.getLineaTipoCBx().addActionListener(new ActionListener() {
@@ -252,10 +255,11 @@ public class ControladorLineas {
 	private void agregarTrayectoLineaBdd(Linea l, List<Parada> trayecto) throws SQLException {
 		
 		PoseeDao pdao = new PoseeDaoImpl();
-		
+		int i = 0;
 		for(Parada p : trayecto) {
 			try {
-				Posee posee = new Posee(p, l);
+				Posee posee = new Posee(p, l,i);
+				i++;
 				pdao.add(posee);
 			}catch(SQLException excp) {
 				throw excp;
@@ -455,6 +459,24 @@ public class ControladorLineas {
 		PoseeDao pdao = new PoseeDaoImpl();
 		List<Posee> paradasDeLinea = pdao.paradasDeLinea(idLinea);
 		List<Parada> paradas = paradasDeLinea.stream().map(ps -> ps.getParada()).collect(Collectors.toList());
-		pintarTrayecto(convertirCamino(paradas));
+		pintarTrayecto(grafoPeso.toListCaminos(paradas));
+	}
+	
+	public static List<Linea> getLineas() 
+	{
+		LineaDaoImpl lineaDao = new LineaDaoImpl();
+		return lineaDao.getAll();
+	}
+	
+	public static List<List<Posee>> getTrayectoLineas(List<Linea> lineas2) 
+	{	
+		PoseeDaoImpl poseeDao = new PoseeDaoImpl();
+		List<List<Posee>> aux = new ArrayList<>();
+		lineas2.forEach(it -> 
+		{
+			aux.add(poseeDao.paradasDeLinea(it.getId()));
+		});
+		return aux;
+		
 	}
 }

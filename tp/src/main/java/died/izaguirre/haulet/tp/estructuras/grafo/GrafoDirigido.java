@@ -138,5 +138,25 @@ public class GrafoDirigido {
 			}
 		}
 	}
+	
+	public void eliminarNodo(Parada nodo) 
+	{
+		nodos.remove(nodo);
+	}
+	
+	public void eliminarNodo(List<Parada> nodos) 
+	{
+		nodos.removeAll(nodos);
+	}
+	
+	public void eliminarArista(Camino arista) 
+	{
+		aristas.remove(arista);
+	}
+	
+	public void eliminarArista(List<Camino> aristas) 
+	{
+		aristas.removeAll(aristas);
+	}
 
 }

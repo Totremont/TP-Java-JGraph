@@ -25,6 +25,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JMenu;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 
@@ -54,12 +56,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import javax.swing.JMenuBar;
 
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
+	private JPanel ultimoPanel;
+	private JPanel panel_grafo;
 	private JTextField txtOpciones;
-//	private ControladorGrafo controladorGrafo = new ControladorGrafo();
+	private ControladorGrafo controladorGrafo = ControladorGrafo.getInstance();
 
 	/**
 	 * Lanza la aplicación manejando el GUI desde un hilo secundario
@@ -93,18 +98,54 @@ public class Principal extends JFrame {
 		
 		super(titulo);
 		
-		SwingViewer grafo = ControladorGrafo.getViewer();
+		SwingViewer grafo = controladorGrafo.getViewer();
 		grafo.enableAutoLayout();
 		View view = grafo.addDefaultView(false);
-		crearInterfaz(new PrincipalPanel(), view);
+		crearInterfaz(new PrincipalPanel(this), view);
 		
+	}
+	
+	public void cambiarInterfaz(JPanel nuevaInterfaz) 
+	{
+		contentPane.remove(ultimoPanel);
+		contentPane.remove(panel_grafo);
+		contentPane.add(nuevaInterfaz, 1f);
+		contentPane.add(panel_grafo, 1.5f);
+		ultimoPanel = nuevaInterfaz;
+		revalidate();
+	}
+	
+	private void volverAtras() 
+	{
+		cambiarInterfaz(new PrincipalPanel(this));
 	}
 	
 	private void crearInterfaz(JPanel panel_izquierdo, View vista_derecha)
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1000, 550);
+		setBounds(100, 100, 1010, 560);
 		contentPane = new JPanel();
+		ultimoPanel = panel_izquierdo;
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		//Boton volver
+		JMenu volver = new JMenu("Volver");
+		volver.setIcon(new ImageIcon(getClass().getResource("/chevron-white.png")));
+		volver.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(!(ultimoPanel.getClass() == PrincipalPanel.class)) volverAtras();
+				
+			}
+		});
+		menuBar.add(volver);
+		
+		//Boton saber mas
+		JMenu saberMas = new JMenu("Acerca de");
+		saberMas.setIcon(new ImageIcon(getClass().getResource("/information-variant.png")));
+		menuBar.add(saberMas);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -116,13 +157,13 @@ public class Principal extends JFrame {
 
 		panel_izquierdo.setBorder(UIManager.getBorder("ComboBox.border"));
 		contentPane.add(panel_izquierdo, 1f);
-
-		JPanel panel_grafo = new JPanel();
+		
+		panel_grafo = new JPanel();		
 		panel_grafo.setBackground(SystemColor.textInactiveText);
 		panel_grafo.setBorder(null);
 		contentPane.add(panel_grafo, 1.5f);
 		panel_grafo.setLayout(new BorderLayout(0, 0));
-		
+			
 		panel_grafo.add((Component) vista_derecha, BorderLayout.CENTER);
 	} 
 				

@@ -46,7 +46,11 @@ public class ControladorParadas {
 	}
 	
 	private void caminosListener() {
-		vista.getCaminosButton().addActionListener(e -> new CrearCamino());
+		vista.getCaminosButton().addActionListener(e -> {
+		JDialog camino = new CrearCamino();
+		camino.setVisible(true);
+		
+		});
 	}
 	
 	public void agregarParadaTabla(Parada p) {

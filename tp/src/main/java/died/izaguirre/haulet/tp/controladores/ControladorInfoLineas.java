@@ -319,9 +319,11 @@ public class ControladorInfoLineas {
 	private void actualizarTrayecto(Linea l) {
 		PoseeDao pdao = new PoseeDaoImpl();
 		pdao.removeByLinea(l);
+		int i = 0;
 		List<Parada> trayecto = trayectosByParada.get(vista.getTrayectoCBx().getSelectedItem());
 		for (Parada p : trayecto) {
-			Posee aux = new Posee(p, l);
+			Posee aux = new Posee(p, l,i);
+			i++;
 			try {
 				pdao.add(aux);
 			} catch (SQLException e) {

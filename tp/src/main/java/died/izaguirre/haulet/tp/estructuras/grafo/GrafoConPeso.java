@@ -108,5 +108,15 @@ public class GrafoConPeso extends GrafoDirigido {
 		
 		return trayecto;
 	}
+	
+	public Integer distanciaTotal(List<Camino> camino) 
+	{
+		Integer distancia = 0;
+		for(int i = 0; i < camino.size(); i++) 
+		{
+			distancia += camino.get(i).getDistancia();
+		}
+		return distancia;
+	}
 
 }

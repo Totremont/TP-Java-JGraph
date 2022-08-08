@@ -6,13 +6,15 @@ public class Posee {
 
 	private Parada parada;
 	private Linea linea;
+	private Integer ordenParada;
 
 	public Posee() {
 	}
 
-	public Posee(Parada parada, Linea linea) {
+	public Posee(Parada parada, Linea linea, Integer ordenParada) {
 		this.parada = parada;
 		this.linea = linea;
+		this.ordenParada = ordenParada;
 	}
 
 	public Parada getParada() {
@@ -31,6 +33,15 @@ public class Posee {
 		this.linea = linea;
 	}
 	
+	
+	public Integer getOrdenParada() {
+		return ordenParada;
+	}
+
+	public void setOrdenParada(Integer ordenParada) {
+		this.ordenParada = ordenParada;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		Posee otro = (Posee) obj;

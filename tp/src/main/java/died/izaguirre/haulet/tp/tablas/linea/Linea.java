@@ -146,5 +146,10 @@ public class Linea {
 		Linea otro = (Linea) obj;
 		return ((otro == this) || (this.getId() == otro.getId()));
 	}
+	
+	@Override
+	public String toString() {
+		return ("Línea: " + this.getNombre() + " (" + this.getTipo() + ")");
+	}
 
 }

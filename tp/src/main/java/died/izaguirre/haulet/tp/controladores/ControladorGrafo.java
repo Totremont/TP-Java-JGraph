@@ -1,6 +1,8 @@
 package died.izaguirre.haulet.tp.controladores;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -19,29 +21,37 @@ import died.izaguirre.haulet.tp.tablas.Parada;
 
 public class ControladorGrafo {
 	
-	public static Graph graph = null;
-	public static SwingViewer view = null;
+	private Graph graph = null;
+	private SwingViewer view = null;
+	private GrafoConPeso grafoPeso = null;
+	private static ControladorGrafo instance = null;
+	
+	public static ControladorGrafo getInstance() 
+	{
+		if(instance == null) instance = new ControladorGrafo();
+		return instance;
+	}
+	
 	
 	private ControladorGrafo() {
 
 	}
 	
-	public static Graph getGraph() {
-		if(graph == null) {
-			ControladorGrafo ctrl = new ControladorGrafo();
-			view = ctrl.crearGrafo();
-		}
-		
+	public Graph getGraph() {
+		if(graph == null) view = crearGrafo();
 		return graph;
 	}
 	
-	public static SwingViewer getViewer() {
-		if(view == null) {
-			ControladorGrafo ctrl = new ControladorGrafo();
-			view = ctrl.crearGrafo();
-		}
+	public SwingViewer getViewer() {
 		
+		if(view == null) view = crearGrafo();
 		return view;
+	}
+	
+	public GrafoConPeso getGrafoPeso() 
+	{
+		if(grafoPeso == null) crearGrafo();
+		return grafoPeso;
 	}
 		
 	private SwingViewer crearGrafo()
@@ -54,27 +64,51 @@ public class ControladorGrafo {
 		graph.setStrict(false);
 		graph.setAttribute("ui.stylesheet",style);
 		SwingViewer viewer = new SwingViewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-		CaminoDaoImpl caminoDao = new CaminoDaoImpl();		
+		CaminoDaoImpl caminoDao = new CaminoDaoImpl();	
+		ParadaDaoImpl paradaDao = new ParadaDaoImpl();
 		ArrayList<Camino> caminos = (ArrayList<Camino>) caminoDao.getAll();
+		ArrayList<Parada> paradas = (ArrayList<Parada>) paradaDao.getAll();
 		
 		caminos.forEach(it -> 
 		{
 			Edge edge = graph.addEdge(it.getId().toString(), it.getOrigen().getCalle(), it.getDestino().getCalle(), true);
 			edge.setAttribute("ui.label", it.getDistancia() + " Km");
 		});
-		
-		
+				
 		for(Node node : graph)
 		{
 			node.setAttribute("ui.label", node.getId());
 			
 		}
 		
+		grafoPeso = new GrafoConPeso(paradas, caminos);
+		
 		graph.setAttribute("ui.quality");
 		graph.setAttribute("ui.antialias");
 		
 		return viewer;	//Objecto que muestra el grafo. Se acopla al resto del GUI
 		
+	}
+	
+	public void pintarTrayecto(List<Camino> trayecto) 
+	{
+		List<String> ids = trayecto.stream().map(it -> it.getId().toString()).collect(Collectors.toList());
+		graph.edges().forEach(it -> 
+		{
+			if(ids.contains(it.getId())) 
+			{
+				it.setAttribute("ui.class", "marked");
+			} else if(it.hasAttribute("ui.class")) it.removeAttribute("ui.class");
+		});
+		
+	}
+	
+	public void despintar() 
+	{
+		graph.edges().forEach(it -> 
+		{
+			if(it.hasAttribute("ui.class")) it.removeAttribute("ui.class");
+		});
 	}
 	
 

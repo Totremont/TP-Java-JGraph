@@ -24,9 +24,10 @@ public class PoseeDaoImpl implements PoseeDao {
 
 	@Override
 	public void add(Posee t) throws SQLException {
-		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.posee (id_parada,id_linea) VALUES (?,?)")) {
+		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.posee (id_parada,id_linea,orden_parada) VALUES (?,?,?)")) {
 			pstm.setInt(1, t.getParada().getId());
 			pstm.setInt(2, t.getLinea().getId());
+			pstm.setInt(3, t.getOrdenParada());
 			pstm.executeUpdate();
 		} catch (SQLException e) {
 			throw e;
@@ -53,7 +54,7 @@ public class PoseeDaoImpl implements PoseeDao {
 	public List<Posee> getAll() {
 		List<Posee> poseeList = new ArrayList<Posee>();
 
-		try (PreparedStatement pstm = con.prepareStatement("SELECT id_parada,id_linea FROM tp.posee")) {
+		try (PreparedStatement pstm = con.prepareStatement("SELECT id_parada,id_linea,orden_parada FROM tp.posee ORDER BY orden_parada")) {
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
 				Posee aux = new Posee();
@@ -61,6 +62,7 @@ public class PoseeDaoImpl implements PoseeDao {
 				ParadaDao auxP = new ParadaDaoImpl();
 				aux.setParada(auxP.find(rs.getInt(1)));
 				aux.setLinea(auxL.find(rs.getInt(2)));
+				aux.setOrdenParada(rs.getInt(3));
 				poseeList.add(aux);
 			}
 		}catch(SQLException e) {
@@ -74,7 +76,7 @@ public class PoseeDaoImpl implements PoseeDao {
 	public List<Posee> paradasDeLinea(Integer idLinea) {
 		List<Posee> poseeList = new ArrayList<Posee>();
 
-		try (PreparedStatement pstm = con.prepareStatement("SELECT id_parada,id_linea FROM tp.posee WHERE id_linea=?")) {
+		try (PreparedStatement pstm = con.prepareStatement("SELECT id_parada,id_linea,orden_parada FROM tp.posee WHERE id_linea=?")) {
 			pstm.setInt(1, idLinea);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {
@@ -83,6 +85,7 @@ public class PoseeDaoImpl implements PoseeDao {
 				ParadaDao auxP = new ParadaDaoImpl();
 				aux.setParada(auxP.find(rs.getInt(1)));
 				aux.setLinea(auxL.find(rs.getInt(2)));
+				aux.setOrdenParada(rs.getInt(3));
 				poseeList.add(aux);
 			}
 		}catch(SQLException e) {
