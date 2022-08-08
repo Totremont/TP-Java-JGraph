@@ -4,6 +4,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import org.postgresql.util.PSQLException;
 
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
@@ -53,23 +56,31 @@ public class ControladorCrearParada {
 				ParadaDao aux = new ParadaDaoImpl();
 				try {
 					aux.add(p);
-				}catch(SQLException excp) {
-					System.out.println("Ya existe una parada con este numero");
+				} catch (SQLException excp) {
+					JOptionPane.showMessageDialog(vista, "Ya existe una parada con ese número.", "Error de validación.",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				vista.getPanelPadre().getControlador().agregarParadaTabla(p);
 				vista.dispose();
+				JFrame creada = new JFrame();
+				JOptionPane.showMessageDialog(creada, "Parada creada exitosamente.", "Información.",
+						JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(vista,
+						"No se pudo crear la parada, asegúrese de haber completado todos los campos.",
+						"Error de validación.", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}
-	
+
 	private Boolean camposRellenos() {
-		if(vista.getNroParadaTxt().getText().isEmpty() || vista.getCalleTxt().getText().isEmpty())
+		if (vista.getNroParadaTxt().getText().isEmpty() || vista.getCalleTxt().getText().isEmpty())
 			return false;
 		else
 			return true;
 	}
-	
+
 	private void botonCancelarListener() {
 		vista.getCancelButton().addActionListener(e -> vista.dispose());
 	}

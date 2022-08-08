@@ -50,6 +50,7 @@ public class ParadasPanel extends JPanel {
 	private JLabel calleResumenTxt;
 	private JLabel paradasAdyResumenTxt;
 	private JLabel numeroParadaResumenTxt;
+	private JLabel pintarAdyacentesResumenLbl;
 
 	private JFrame ventanaPadre;
 	private JButton caminosButton;
@@ -155,13 +156,13 @@ public class ParadasPanel extends JPanel {
 		gbc_paradasAdyResumenTxt.gridy = 3;
 		panel.add(paradasAdyResumenTxt, gbc_paradasAdyResumenTxt);
 
-		JLabel lblNewLabel_9 = new JLabel("");
-		lblNewLabel_9.setIcon(new ImageIcon("C:\\Users\\ezequ\\Desktop\\Iconos\\help-circle.png"));
-		GridBagConstraints gbc_lblNewLabel_9 = new GridBagConstraints();
-		gbc_lblNewLabel_9.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_9.gridx = 3;
-		gbc_lblNewLabel_9.gridy = 3;
-		panel.add(lblNewLabel_9, gbc_lblNewLabel_9);
+		pintarAdyacentesResumenLbl = new JLabel("");
+		pintarAdyacentesResumenLbl.setIcon(new ImageIcon(getClass().getResource("/help-circle.png")));
+		GridBagConstraints gbc_pintarAdyacentesResumenLbl = new GridBagConstraints();
+		gbc_pintarAdyacentesResumenLbl.insets = new Insets(0, 0, 5, 0);
+		gbc_pintarAdyacentesResumenLbl.gridx = 3;
+		gbc_pintarAdyacentesResumenLbl.gridy = 3;
+		panel.add(pintarAdyacentesResumenLbl, gbc_pintarAdyacentesResumenLbl);
 
 		JLabel lblNewLabel_15 = new JLabel("Lista");
 		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
@@ -248,7 +249,8 @@ public class ParadasPanel extends JPanel {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		add(scrollPane, BorderLayout.CENTER);
-
+		table.getTableHeader().setReorderingAllowed(false);
+		
 		controlador = new ControladorParadas(this);
 	}
 
@@ -314,6 +316,10 @@ public class ParadasPanel extends JPanel {
 
 	public JLabel getNumeroParadaResumenTxt() {
 		return numeroParadaResumenTxt;
+	}
+
+	public JLabel getPintarAdyacentesResumenLbl() {
+		return pintarAdyacentesResumenLbl;
 	}
 
 }

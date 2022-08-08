@@ -111,5 +111,46 @@ public class ControladorGrafo {
 		});
 	}
 	
-
+	public void pintarNodo(String id) {
+		graph.getNode(id).setAttribute("ui.class", "marked");
+	}
+	
+	public void despintarNodo(String id) {
+		if(graph.getNode(id).hasAttribute("ui.class"))
+			graph.getNode(id).removeAttribute("ui.class");
+	}
+	
+	public void pintarNodo(Parada p) {
+		pintarNodo(p.getCalle());
+	}
+	
+	public void despintarNodo(Parada p) {
+		despintarNodo(p.getCalle());
+	}
+	
+	public void pintarNodos(List<Parada> paradas) {
+		paradas.forEach(p -> pintarNodo(p));
+	}
+	
+	public void despintarNodos(List<Parada> paradas) {
+		paradas.forEach(p -> despintarNodo(p));
+	}
+	
+	public void pintarTrayectoByParadas(List<Parada> trayecto) {
+		List<String> ids = trayecto.stream().map(t -> t.getCalle()).collect(Collectors.toList());
+		graph.nodes().forEach(n -> {
+			if(ids.contains(n.getId())) {
+				pintarNodo(n.getId());
+			}else {
+				despintarNodo(n.getId());
+			}
+		});
+	}
+	
+	public void despintarTodosLosNodos() {
+		graph.nodes().forEach(n -> {
+			despintarNodo(n.getId());
+		});
+	}
+	
 }

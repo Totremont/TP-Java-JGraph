@@ -238,6 +238,7 @@ public class CrearCamino extends JDialog {
 		
 		tableSorter = new TableRowSorter<>(tableModel);
 		table.setRowSorter(tableSorter);
+		table.getTableHeader().setReorderingAllowed(false);
 		setLocationRelativeTo(panelPadre.getVentanaPadre());
 	}
 

@@ -47,6 +47,8 @@ public class ControladorCrearCamino {
 			public void mouseClicked(MouseEvent e) {
 				int fila = vista.getTable().rowAtPoint(e.getPoint());
 				int columna = vista.getTable().columnAtPoint(e.getPoint());
+				if(fila<0 || columna<0)
+					return;
 				if(columna == 4) {
 					Parada or = (Parada) vista.getTableModel().getValueAt(fila, 0);
 					Parada dest = (Parada) vista.getTableModel().getValueAt(fila, 1);

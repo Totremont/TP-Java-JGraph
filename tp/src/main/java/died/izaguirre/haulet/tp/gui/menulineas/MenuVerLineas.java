@@ -388,6 +388,7 @@ public class MenuVerLineas extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 
 		table = new JTable();
+		table.getTableHeader().setReorderingAllowed(false);
 		model = new DefaultTableModel(new Object[][] {},
 				new String[] { "Nro", "Nombre", "Color", "Info.", "Camino", "Eliminar" }) {
 

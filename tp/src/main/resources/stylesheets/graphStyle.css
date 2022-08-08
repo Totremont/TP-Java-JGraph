@@ -30,3 +30,6 @@ edge.marked {
 	fill-color : DarkOrange;
 }
 
+node.marked {
+	fill-color : green;
+}

@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,6 +34,7 @@ public class ControladorParadas {
 	private ParadasPanel vista;
 	private static List<Parada> paradas = new ArrayList<Parada>();
 	private List<Parada> adyacentesDeLaUltimaSeleccionada;
+	private Parada ultimaParadaSeleccionada;
 
 //	private ControladorParadas() {
 //		paradasDao = new ParadaDaoImpl();
@@ -39,28 +42,66 @@ public class ControladorParadas {
 //	}
 
 	public ControladorParadas(ParadasPanel vista) {
-		//this();
+		// this();
 		this.vista = vista;
 		adyacentesDeLaUltimaSeleccionada = new ArrayList<Parada>();
 		inicializar();
 	}
 
 	private void inicializar() {
+		resumenInicial();
 		filtrarTablaListener(); // Para que el buscado de la tabla funciona (filtra en la columna calle)
 		agregarButtonListener(); // Para que el boton Agregar cree paradas (por ahora es solo demostrativo)
 		agregarTablaListener(); // Para que al dar click en el boton elimianr de la tabla se elimine la parada
 		caminosListener(); // Para mostrar el jdialog de crear caminos
+		verAdyacentesListener(); // Para ver las paradas adyacentes de la parada seleccionada
 		cargarTabla();
 	}
-	
-	private void caminosListener() {
-		vista.getCaminosButton().addActionListener(e -> {
-		JDialog camino = new CrearCamino(vista);
-		camino.setVisible(true);
-		
+
+	private void resumenInicial() {
+		vista.getCalleResumenTxt().setText("-");
+		vista.getNumeroParadaResumenTxt().setText("Número#: ?");
+		vista.getParadasAdyResumenTxt().setText("-");
+		ultimaParadaSeleccionada = null;
+	}
+
+	private void verAdyacentesListener() {
+		vista.getPintarAdyacentesResumenLbl().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				pintarParadaSeleccionada();
+			}
 		});
 	}
-	
+
+	private void pintarParadaSeleccionada() {
+		if (ultimaParadaSeleccionada == null) {
+			JFrame aviso = new JFrame();
+			JOptionPane.showMessageDialog(aviso, "Debe seleccionar una parada de la tabla primero.", "Advertencia.",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		if (adyacentesDeLaUltimaSeleccionada.isEmpty()) {
+			JFrame aviso = new JFrame();
+			JOptionPane.showMessageDialog(aviso, "Esta parada no tiene adyacentes.", "Información.",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+
+		ControladorGrafo cg = ControladorGrafo.getInstance();
+		cg.pintarTrayectoByParadas(adyacentesDeLaUltimaSeleccionada);
+		cg.pintarNodo(ultimaParadaSeleccionada);
+	}
+
+	private void caminosListener() {
+		vista.getCaminosButton().addActionListener(e -> {
+			JDialog camino = new CrearCamino(vista);
+			camino.setVisible(true);
+
+		});
+	}
+
 	public void agregarParadaTabla(Parada p) {
 
 		Object[] nuevaParada = new Object[3];
@@ -78,13 +119,14 @@ public class ControladorParadas {
 		vista.getBuscadorTxt().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				vista.getTableSorter().setRowFilter(RowFilter.regexFilter("(?i)" + "^" + vista.getBuscadorTxt().getText()));
+				vista.getTableSorter()
+						.setRowFilter(RowFilter.regexFilter("(?i)" + "^" + vista.getBuscadorTxt().getText()));
 			}
 		});
 	}
 
 	private void agregarButtonListener() {
-		
+
 		vista.getAgregarButton().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -102,61 +144,69 @@ public class ControladorParadas {
 				int fila = vista.getTable().rowAtPoint(e.getPoint());
 				int columna = vista.getTable().columnAtPoint(e.getPoint());
 
+				if (fila < 0 || columna < 0)
+					return;
+
 				if (columna == 2) { // Columna que contiene el boton eliminar
 					Integer nroParada = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
 					ParadaDao aux = new ParadaDaoImpl();
 					try {
-					aux.removeByNroParada(nroParada);
-					eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
-											// la parada de la BDD tambien
+						aux.removeByNroParada(nroParada);
+						eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
+												// la parada de la BDD tambien
 					} catch (SQLException excp) {
-						System.out.println("No se pudo eliminar la parada, probablemente porque una linea la esta usando");
+						JFrame error = new JFrame();
+						JOptionPane.showMessageDialog(error,
+								"No se pudo eliminar la parada, verifique no esté siendo utilizada por alguna línea.",
+								"Error.", JOptionPane.ERROR_MESSAGE);
 					}
-				}
-				else {
-					actualizarResumen(fila,columna);
+				} else {
+					actualizarResumen(fila, columna);
 				}
 			}
 		});
 	}
 
 	private void eliminarParada(int fila) {
-		
-		if(fila < 0)
+
+		if (fila < 0)
 			return;
 //		int nroParada = vista.getTableModel().getValueAt(fila, 0); // Esto obtiene el nroParada, para buscar la parada en la BBD
 		vista.getTableModel().removeRow(fila);
 	}
-	
+
 	private void cargarTabla() {
 		ParadaDao aux = new ParadaDaoImpl();
 		paradas = aux.getAll();
-		
-		for(Parada p : paradas)
+
+		for (Parada p : paradas)
 			agregarParadaTabla(p);
 	}
-	
-	public static ArrayList<Parada> buscarParadas() 
-	{
+
+	public static ArrayList<Parada> buscarParadas() {
 		paradas = paradasDao.getAll();
 		return (ArrayList<Parada>) paradas;
 	}
-	
+
 	private void actualizarResumen(Integer fila, Integer columna) {
 		Integer nroParada = (Integer) vista.getTable().getValueAt(fila, 0);
 		ControladorGrafo cg = ControladorGrafo.getInstance();
 		CRUD dao = new ParadaDaoImpl();
 		try {
 			Parada parada = ((ParadaDao) dao).findByNroParada(nroParada);
-			vista.getCalleResumenTxt().setText(parada.getCalle());
-			adyacentesDeLaUltimaSeleccionada = cg.getGrafoPeso().adyacentesDe(parada).stream().collect(Collectors.toList());
+			ultimaParadaSeleccionada = parada;
+
+			adyacentesDeLaUltimaSeleccionada = cg.getGrafoPeso().adyacentesDe(parada).stream()
+					.collect(Collectors.toList());
 			Integer adyacentesCount = adyacentesDeLaUltimaSeleccionada.size();
+
+			vista.getCalleResumenTxt().setText(parada.getCalle());
 			vista.getParadasAdyResumenTxt().setText(adyacentesCount.toString());
 			vista.getNumeroParadaResumenTxt().setText("Número# " + parada.getNroParada().toString());
 		} catch (SQLException e) {
 			System.out.println("Problema al encontrar el numero de parada en la bdd.");
 		}
-		
+
 	}
-	
+
 }

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -58,7 +59,7 @@ public class ControladorLineas {
 	private ArrayList<Camino> caminos = new ArrayList<>();
 	private MenuVerLineas vista;
 	private Map<String, List<Camino>> caminosNombre;
-	
+
 	private ControladorGrafo controladorGrafo = ControladorGrafo.getInstance();
 	private Graph grafoVisual = controladorGrafo.getGraph();
 	private GrafoConPeso grafoPeso = controladorGrafo.getGrafoPeso();
@@ -76,7 +77,7 @@ public class ControladorLineas {
 		buscadorListener(); // Para poder filtrar tuplas en la tabla
 		cargarTabla(); // Para cargar las lineas de la bdd en la tabla
 		cargarParadas(); // Agrega Las paradas a los ComboBox Origen y Destino
-		
+
 		cargarTrayectos(); // Cargar combo box de trayectos
 		orDestListener(); // Para que cuando se seleccione un origen o destino diferente se carguen de
 							// nuevo los trayectos
@@ -84,11 +85,9 @@ public class ControladorLineas {
 	}
 
 	private void trayectosListener() {
-		
-		vista.getTrayectoCBx().addActionListener(e -> 
-		{
-			if(vista.getTrayectoCBx().isEnabled() && vista.getTrayectoCBx().getSelectedIndex() >= 0) 
-			{
+
+		vista.getTrayectoCBx().addActionListener(e -> {
+			if (vista.getTrayectoCBx().isEnabled() && vista.getTrayectoCBx().getSelectedIndex() >= 0) {
 				pintarTrayecto(vista.getTrayectoCBx().getSelectedItem().toString());
 			}
 		});
@@ -106,62 +105,56 @@ public class ControladorLineas {
 		pintarTrayecto(caminosNombre.get(clave));
 	}
 
-	private void pintarTrayecto(List<Camino> trayecto) 
-	{
+	private void pintarTrayecto(List<Camino> trayecto) {
 		List<String> ids = trayecto.stream().map(it -> it.getId().toString()).collect(Collectors.toList());
-		grafoVisual.edges().forEach(it -> 
-		{
-			if(ids.contains(it.getId())) 
-			{
+		grafoVisual.edges().forEach(it -> {
+			if (ids.contains(it.getId())) {
 				it.setAttribute("ui.class", "marked");
-			} else if(it.hasAttribute("ui.class")) it.removeAttribute("ui.class");
+			} else if (it.hasAttribute("ui.class"))
+				it.removeAttribute("ui.class");
 		});
-		
-	}
-	
-	private void despintar() 
-	{
-		grafoVisual.edges().forEach(it -> 
-		{
-			if(it.hasAttribute("ui.class")) it.removeAttribute("ui.class");
-		});
+
 	}
 
-	
+	private void despintar() {
+		grafoVisual.edges().forEach(it -> {
+			if (it.hasAttribute("ui.class"))
+				it.removeAttribute("ui.class");
+		});
+	}
 
 	private void orDestListener() {
 		vista.getOrigenCBx().addActionListener(e -> cargarTrayectos());
 		vista.getDestinoCBx().addActionListener(e -> cargarTrayectos());
 	}
-	
+
 	private void cargarTrayectos() {
-		
+
 		JComboBox<Parada> origenCombo = vista.getOrigenCBx();
 		JComboBox<Parada> destinoCombo = vista.getDestinoCBx();
-		
-		if(origenCombo.getSelectedIndex() >= 0 && destinoCombo.getSelectedIndex() >= 0) 
-		{		
+
+		if (origenCombo.getSelectedIndex() >= 0 && destinoCombo.getSelectedIndex() >= 0) {
 			vista.getTrayectoCBx().removeAllItems();
 			caminosNombre = new HashMap<String, List<Camino>>();
 			GrafoConPeso aux = new GrafoConPeso(paradas, caminos);
 			Parada or = (Parada) origenCombo.getSelectedItem();
 			Parada dest = (Parada) destinoCombo.getSelectedItem();
 			List<List<Parada>> todosLosCaminos = aux.caminos(or, dest);
-			if(todosLosCaminos.isEmpty()) {
+			if (todosLosCaminos.isEmpty()) {
 				vista.getTrayectoCBx().setEnabled(false);
 				despintar();
-			}
-			else vista.getTrayectoCBx().setEnabled(true);
-		
+			} else
+				vista.getTrayectoCBx().setEnabled(true);
+
 			for (int i = 0; i < todosLosCaminos.size(); i++) {
 				String clave = "Trayecto: " + i;
 				caminosNombre.put(clave, grafoPeso.toListCaminos(todosLosCaminos.get(i)));
 				vista.getTrayectoCBx().addItem(clave);
 			}
 		}
-		
+
 	}
-	
+
 //	private List<Camino> convertirCamino(List<Parada> caminoParadas)	//Convierte camino de lista de paradas a lista de caminos
 //	{
 //		//Asumiendo que el camino está ordenado
@@ -214,23 +207,25 @@ public class ControladorLineas {
 				Linea l;
 				if (camposRellenados() && !origenDestinoIguales()) {
 					List<Camino> trayectoPorAristas = caminosNombre.get(vista.getTrayectoCBx().getSelectedItem());
-					
+
 					// Obtengo las paradas
 					List<Parada> trayectoPorParadas = new ArrayList<Parada>();
-					for(Camino c : trayectoPorAristas) {
-						if(!trayectoPorParadas.contains(c.getOrigen()))
+					for (Camino c : trayectoPorAristas) {
+						if (!trayectoPorParadas.contains(c.getOrigen()))
 							trayectoPorParadas.add(c.getOrigen());
-						if(!trayectoPorParadas.contains(c.getDestino()))
-							trayectoPorParadas.add(c.getDestino());							
+						if (!trayectoPorParadas.contains(c.getDestino()))
+							trayectoPorParadas.add(c.getDestino());
 					}
-					
+
 					if (vista.getLineaTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 						try {
 							l = crearLineaEconomica();
 							lineaDao.add(l);
 							agregarTrayectoLineaBdd(l, trayectoPorParadas);
 							agregarLineaTabla(l);
-
+							JFrame lineaCreada = new JFrame();
+							JOptionPane.showMessageDialog(lineaCreada, "Línea creada exitosamente", "Información",
+									JOptionPane.INFORMATION_MESSAGE);
 						} catch (SQLException excp) {
 							System.out.println("No se pudo crear la linea economica");
 							excp.printStackTrace();
@@ -241,27 +236,34 @@ public class ControladorLineas {
 							lineaDao.add(l);
 							agregarTrayectoLineaBdd(l, trayectoPorParadas);
 							agregarLineaTabla(l);
+							JFrame lineaCreada = new JFrame();
+							JOptionPane.showMessageDialog(lineaCreada, "Línea creada exitosamente", "Información",
+									JOptionPane.INFORMATION_MESSAGE);
 						} catch (SQLException excp) {
 							System.out.println("No se pudo crear la linea superior");
 						}
 
-				} else
-					System.out.println("No se puede crear la linea");
-
+				} else {
+//					System.out.println("No se puede crear la linea");
+					JFrame errorFrame = new JFrame("Error de validación");
+					JOptionPane.showMessageDialog(errorFrame,
+							"No se pudo crear la línea, asegurese de completar todos los campos.",
+							"Error de validación", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 	}
-	
+
 	private void agregarTrayectoLineaBdd(Linea l, List<Parada> trayecto) throws SQLException {
-		
+
 		PoseeDao pdao = new PoseeDaoImpl();
 		int i = 0;
-		for(Parada p : trayecto) {
+		for (Parada p : trayecto) {
 			try {
-				Posee posee = new Posee(p, l,i);
+				Posee posee = new Posee(p, l, i);
 				i++;
 				pdao.add(posee);
-			}catch(SQLException excp) {
+			} catch (SQLException excp) {
 				throw excp;
 			}
 		}
@@ -289,12 +291,9 @@ public class ControladorLineas {
 		Parada o = (Parada) vista.getOrigenCBx().getSelectedItem();
 		Parada d = (Parada) vista.getDestinoCBx().getSelectedItem();
 
-		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), 
-				vista.getNombreLineaText().getText(),
-				vista.getColorCBx().getSelectedItem().toString(), 
-				((Integer) vista.getCapSentadoText().getValue()),
-				((Integer)vista.getPorcentaje().getValue()),
-				o, d);
+		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
+				vista.getColorCBx().getSelectedItem().toString(), ((Integer) vista.getCapSentadoText().getValue()),
+				((Integer) vista.getPorcentaje().getValue()), o, d);
 
 		return l;
 
@@ -306,8 +305,7 @@ public class ControladorLineas {
 		Parada d = (Parada) vista.getDestinoCBx().getSelectedItem();
 
 		Linea l = new Linea(vista.getLineaTipoCBx().getSelectedItem().toString(), vista.getNombreLineaText().getText(),
-				vista.getColorCBx().getSelectedItem().toString(), 
-				((Integer) vista.getCapSentadoText().getValue()),
+				vista.getColorCBx().getSelectedItem().toString(), ((Integer) vista.getCapSentadoText().getValue()),
 				vista.getAireCk().isSelected(), vista.getWifiCk().isSelected(), o, d);
 
 		return l;
@@ -346,12 +344,10 @@ public class ControladorLineas {
 
 	}
 
-	private void cargarParadas() 
-	{
+	private void cargarParadas() {
 		paradas = (ArrayList<Parada>) paradaDao.getAll();
 		caminos = (ArrayList<Camino>) caminoDao.getAll();
-		for (Parada p : paradas) 
-		{
+		for (Parada p : paradas) {
 			vista.getOrigenCBx().addItem(p);
 			vista.getDestinoCBx().addItem(p);
 		}
@@ -365,6 +361,9 @@ public class ControladorLineas {
 			public void mouseClicked(MouseEvent e) {
 				int fila = vista.getTable().rowAtPoint(e.getPoint());
 				int columna = vista.getTable().columnAtPoint(e.getPoint());
+
+				if (fila < 0 || columna < 0)
+					return;
 
 				if (columna == 3) {
 					// Codigo para ver info
@@ -454,29 +453,26 @@ public class ControladorLineas {
 			}
 		}
 	}
-	
+
 	private void mostrarTrayecto(Integer idLinea) {
 		PoseeDao pdao = new PoseeDaoImpl();
 		List<Posee> paradasDeLinea = pdao.paradasDeLinea(idLinea);
 		List<Parada> paradas = paradasDeLinea.stream().map(ps -> ps.getParada()).collect(Collectors.toList());
 		pintarTrayecto(grafoPeso.toListCaminos(paradas));
 	}
-	
-	public static List<Linea> getLineas() 
-	{
+
+	public static List<Linea> getLineas() {
 		LineaDaoImpl lineaDao = new LineaDaoImpl();
 		return lineaDao.getAll();
 	}
-	
-	public static List<List<Posee>> getTrayectoLineas(List<Linea> lineas2) 
-	{	
+
+	public static List<List<Posee>> getTrayectoLineas(List<Linea> lineas2) {
 		PoseeDaoImpl poseeDao = new PoseeDaoImpl();
 		List<List<Posee>> aux = new ArrayList<>();
-		lineas2.forEach(it -> 
-		{
+		lineas2.forEach(it -> {
 			aux.add(poseeDao.paradasDeLinea(it.getId()));
 		});
 		return aux;
-		
+
 	}
 }
