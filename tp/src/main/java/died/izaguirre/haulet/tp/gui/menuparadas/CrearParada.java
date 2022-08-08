@@ -29,6 +29,7 @@ import java.awt.Font;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dialog;
 import java.awt.SystemColor;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -66,9 +67,11 @@ public class CrearParada extends JDialog {
 	 */
 
 	public CrearParada(ParadasPanel panelPadre) {
+		super(panelPadre.getVentanaPadre(), "Crear paradas menú", Dialog.ModalityType.DOCUMENT_MODAL);
 		cargarVista();
 		this.panelPadre = panelPadre;
 		controlador = new ControladorCrearParada(this);
+		setLocationRelativeTo(panelPadre.getVentanaPadre());
 	}
 
 	private void cargarVista() {

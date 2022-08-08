@@ -1,6 +1,7 @@
 package died.izaguirre.haulet.tp.gui.menuparadas;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
@@ -20,6 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -42,29 +45,33 @@ public class CrearCamino extends JDialog {
 	private JComboBox<Parada> destinoCBx = new JComboBox<Parada>();
 	private JComboBox<Parada> origenCBx = new JComboBox<Parada>();
 	private JButton salirButton;
+	private ParadasPanel panelPadre;
+	private TableRowSorter<TableModel> tableSorter;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		try {
-			CrearCamino dialog = new CrearCamino();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//		try {
+//			CrearCamino dialog = new CrearCamino();
+//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//			dialog.setVisible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * Create the dialog.
 	 */
-	public CrearCamino() {
+	public CrearCamino(ParadasPanel panelPadre) {
+		super(panelPadre.getVentanaPadre(), "Crear paradas menú", Dialog.ModalityType.DOCUMENT_MODAL);
+		this.panelPadre = panelPadre;
 		setBounds(100, 100, 565, 331);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -228,6 +235,10 @@ public class CrearCamino extends JDialog {
 		TableUtility.setCellsAlignment(table, SwingConstants.CENTER);
 		table.getColumnModel().getColumn(4).setCellRenderer(table.getDefaultRenderer(ImageIcon.class));
 		this.controlador = new ControladorCrearCamino(this);
+		
+		tableSorter = new TableRowSorter<>(tableModel);
+		table.setRowSorter(tableSorter);
+		setLocationRelativeTo(panelPadre.getVentanaPadre());
 	}
 
 	public JPanel getContentPanel() {

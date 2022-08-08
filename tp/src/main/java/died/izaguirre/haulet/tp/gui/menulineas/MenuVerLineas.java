@@ -788,4 +788,84 @@ public class MenuVerLineas extends JPanel {
 		this.controlador = controlador;
 	}
 
+	public JLabel getBuscarButton() {
+		return buscarButton;
+	}
+
+	public JScrollPane getScrollPane() {
+		return scrollPane;
+	}
+
+	public DefaultTableModel getModel() {
+		return model;
+	}
+
+	public JFrame getMenuPadre() {
+		return menuPadre;
+	}
+
+	public JPanel getPanel() {
+		return panel;
+	}
+
+	public JLabel getLblNewLabel_4() {
+		return lblNewLabel_4;
+	}
+
+	public JPanel getPanel_3() {
+		return panel_3;
+	}
+
+	public JLabel getLblNewLabel_1() {
+		return lblNewLabel_1;
+	}
+
+	public JSpinner getPorcentajeSpinner() {
+		return porcentajeSpinner;
+	}
+
+	public JPanel getPanel_4() {
+		return panel_4;
+	}
+
+	public JLabel getLblNewLabel_3() {
+		return lblNewLabel_3;
+	}
+
+	public JLabel getLblNewLabel_6() {
+		return lblNewLabel_6;
+	}
+
+	public JSeparator getSeparator() {
+		return separator;
+	}
+
+	public JSeparator getSeparator_2() {
+		return separator_2;
+	}
+
+	public JLabel getLblTrayecto() {
+		return lblTrayecto;
+	}
+
+	public JSeparator getSeparator_3() {
+		return separator_3;
+	}
+
+	public JSeparator getSeparator_4() {
+		return separator_4;
+	}
+
+	public JSeparator getSeparator_5() {
+		return separator_5;
+	}
+
+	public JPanel getPanel_1() {
+		return panel_1;
+	}
+
+	public JLabel getLblNewLabel_5() {
+		return lblNewLabel_5;
+	}
+
 }

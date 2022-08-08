@@ -47,6 +47,9 @@ public class ParadasPanel extends JPanel {
 	private DefaultTableModel tableModel;
 	private TableRowSorter<TableModel> tableSorter;
 	private ControladorParadas controlador;
+	private JLabel calleResumenTxt;
+	private JLabel paradasAdyResumenTxt;
+	private JLabel numeroParadaResumenTxt;
 
 	private JFrame ventanaPadre;
 	private JButton caminosButton;
@@ -101,13 +104,13 @@ public class ParadasPanel extends JPanel {
 		gbc_separator_2.gridy = 1;
 		panel.add(separator_2, gbc_separator_2);
 
-		JLabel lblNewLabel_5 = new JLabel("Número #4");
-		lblNewLabel_5.setIcon(null);
-		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
-		gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel_5.gridx = 3;
-		gbc_lblNewLabel_5.gridy = 1;
-		panel.add(lblNewLabel_5, gbc_lblNewLabel_5);
+		numeroParadaResumenTxt = new JLabel("Número #4");
+		numeroParadaResumenTxt.setIcon(null);
+		GridBagConstraints gbc_numeroParadaResumenTxt = new GridBagConstraints();
+		gbc_numeroParadaResumenTxt.insets = new Insets(0, 0, 5, 0);
+		gbc_numeroParadaResumenTxt.gridx = 3;
+		gbc_numeroParadaResumenTxt.gridy = 1;
+		panel.add(numeroParadaResumenTxt, gbc_numeroParadaResumenTxt);
 
 		JSeparator separator = new JSeparator();
 		separator.setForeground(SystemColor.activeCaption);
@@ -129,12 +132,12 @@ public class ParadasPanel extends JPanel {
 		gbc_lblNewLabel_2.gridy = 2;
 		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
 
-		JLabel lblNewLabel_7 = new JLabel("Alberdi");
-		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
-		gbc_lblNewLabel_7.insets = new Insets(5, 0, 5, 5);
-		gbc_lblNewLabel_7.gridx = 2;
-		gbc_lblNewLabel_7.gridy = 2;
-		panel.add(lblNewLabel_7, gbc_lblNewLabel_7);
+		calleResumenTxt = new JLabel("Alberdi");
+		GridBagConstraints gbc_calleResumenTxt = new GridBagConstraints();
+		gbc_calleResumenTxt.insets = new Insets(5, 0, 5, 5);
+		gbc_calleResumenTxt.gridx = 2;
+		gbc_calleResumenTxt.gridy = 2;
+		panel.add(calleResumenTxt, gbc_calleResumenTxt);
 
 		JLabel lblNewLabel_3 = new JLabel("Paradas adyacentes");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
@@ -145,12 +148,12 @@ public class ParadasPanel extends JPanel {
 		gbc_lblNewLabel_3.gridy = 3;
 		panel.add(lblNewLabel_3, gbc_lblNewLabel_3);
 
-		JLabel lblNewLabel_8 = new JLabel("4");
-		GridBagConstraints gbc_lblNewLabel_8 = new GridBagConstraints();
-		gbc_lblNewLabel_8.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_8.gridx = 2;
-		gbc_lblNewLabel_8.gridy = 3;
-		panel.add(lblNewLabel_8, gbc_lblNewLabel_8);
+		paradasAdyResumenTxt = new JLabel("4");
+		GridBagConstraints gbc_paradasAdyResumenTxt = new GridBagConstraints();
+		gbc_paradasAdyResumenTxt.insets = new Insets(0, 0, 5, 5);
+		gbc_paradasAdyResumenTxt.gridx = 2;
+		gbc_paradasAdyResumenTxt.gridy = 3;
+		panel.add(paradasAdyResumenTxt, gbc_paradasAdyResumenTxt);
 
 		JLabel lblNewLabel_9 = new JLabel("");
 		lblNewLabel_9.setIcon(new ImageIcon("C:\\Users\\ezequ\\Desktop\\Iconos\\help-circle.png"));
@@ -186,7 +189,7 @@ public class ParadasPanel extends JPanel {
 		JLabel textPaneIcon = new JLabel();
 		textPaneIcon.setIcon(new ImageIcon(getClass().getResource("/magnify.png")));
 		JTextField fieldText = new JTextField();
-		
+
 		GridBagConstraints gbc_agregarButton = new GridBagConstraints();
 		gbc_agregarButton.insets = new Insets(0, 0, 5, 5);
 		gbc_agregarButton.gridx = 0;
@@ -214,8 +217,7 @@ public class ParadasPanel extends JPanel {
 
 		table = new JTable();
 		table.setFillsViewportHeight(true);
-		tableModel = new DefaultTableModel(new Object[][] {},
-				new String[] { "Nro. Parada", "Calle", "Eliminar" }) {
+		tableModel = new DefaultTableModel(new Object[][] {}, new String[] { "Nro. Parada", "Calle", "Eliminar" }) {
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -246,7 +248,7 @@ public class ParadasPanel extends JPanel {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		add(scrollPane, BorderLayout.CENTER);
-		
+
 		controlador = new ControladorParadas(this);
 	}
 
@@ -289,8 +291,8 @@ public class ParadasPanel extends JPanel {
 	public void setAgregarButton(JLabel agregarButton) {
 		this.agregarButton = agregarButton;
 	}
-	
-	public TableRowSorter<TableModel> getTableSorter(){
+
+	public TableRowSorter<TableModel> getTableSorter() {
 		return this.tableSorter;
 	}
 
@@ -301,5 +303,17 @@ public class ParadasPanel extends JPanel {
 	public JButton getCaminosButton() {
 		return caminosButton;
 	}
-	
+
+	public JLabel getCalleResumenTxt() {
+		return calleResumenTxt;
+	}
+
+	public JLabel getParadasAdyResumenTxt() {
+		return paradasAdyResumenTxt;
+	}
+
+	public JLabel getNumeroParadaResumenTxt() {
+		return numeroParadaResumenTxt;
+	}
+
 }

@@ -15,11 +15,11 @@ public class Parada {
 		this.calle = calle;
 	}
 
-	public int getNroParada() {
+	public Integer getNroParada() {
 		return nroParada;
 	}
 
-	public void setNroParada(int nroParada) {
+	public void setNroParada(Integer nroParada) {
 		this.nroParada = nroParada;
 	}
 
@@ -31,11 +31,11 @@ public class Parada {
 		this.calle = calle;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

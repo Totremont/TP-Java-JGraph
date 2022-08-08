@@ -68,11 +68,12 @@ public class VerInfoLinea extends JDialog {
 	 */
 
 	public VerInfoLinea(MenuVerLineas menu, Integer idLinea) {
-		setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
+		super(menu.getMenuPadre(),"Ver información de la línea", Dialog.ModalityType.DOCUMENT_MODAL);
 		this.menu = menu;
 		this.idLinea = idLinea;
 		cargarVista();
 		controlador = new ControladorInfoLineas(this, idLinea);
+		setLocationRelativeTo(menu.getMenuPadre());
 	}
 
 	private void cargarVista() {

@@ -7,14 +7,20 @@ import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
+import died.izaguirre.haulet.tp.dao.interfaces.CRUD;
 import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
+import died.izaguirre.haulet.tp.estructuras.grafo.GrafoConPeso;
 import died.izaguirre.haulet.tp.gui.menuparadas.CrearCamino;
 import died.izaguirre.haulet.tp.gui.menuparadas.CrearParada;
 import died.izaguirre.haulet.tp.gui.menuparadas.ParadasPanel;
@@ -25,6 +31,7 @@ public class ControladorParadas {
 	private static ParadaDao paradasDao = new ParadaDaoImpl();
 	private ParadasPanel vista;
 	private static List<Parada> paradas = new ArrayList<Parada>();
+	private List<Parada> adyacentesDeLaUltimaSeleccionada;
 
 //	private ControladorParadas() {
 //		paradasDao = new ParadaDaoImpl();
@@ -34,6 +41,7 @@ public class ControladorParadas {
 	public ControladorParadas(ParadasPanel vista) {
 		//this();
 		this.vista = vista;
+		adyacentesDeLaUltimaSeleccionada = new ArrayList<Parada>();
 		inicializar();
 	}
 
@@ -47,7 +55,7 @@ public class ControladorParadas {
 	
 	private void caminosListener() {
 		vista.getCaminosButton().addActionListener(e -> {
-		JDialog camino = new CrearCamino();
+		JDialog camino = new CrearCamino(vista);
 		camino.setVisible(true);
 		
 		});
@@ -70,7 +78,7 @@ public class ControladorParadas {
 		vista.getBuscadorTxt().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				vista.getTableSorter().setRowFilter(RowFilter.regexFilter(vista.getBuscadorTxt().getText(), 1));
+				vista.getTableSorter().setRowFilter(RowFilter.regexFilter("(?i)" + "^" + vista.getBuscadorTxt().getText()));
 			}
 		});
 	}
@@ -105,6 +113,9 @@ public class ControladorParadas {
 						System.out.println("No se pudo eliminar la parada, probablemente porque una linea la esta usando");
 					}
 				}
+				else {
+					actualizarResumen(fila,columna);
+				}
 			}
 		});
 	}
@@ -130,4 +141,22 @@ public class ControladorParadas {
 		paradas = paradasDao.getAll();
 		return (ArrayList<Parada>) paradas;
 	}
+	
+	private void actualizarResumen(Integer fila, Integer columna) {
+		Integer nroParada = (Integer) vista.getTable().getValueAt(fila, 0);
+		ControladorGrafo cg = ControladorGrafo.getInstance();
+		CRUD dao = new ParadaDaoImpl();
+		try {
+			Parada parada = ((ParadaDao) dao).findByNroParada(nroParada);
+			vista.getCalleResumenTxt().setText(parada.getCalle());
+			adyacentesDeLaUltimaSeleccionada = cg.getGrafoPeso().adyacentesDe(parada).stream().collect(Collectors.toList());
+			Integer adyacentesCount = adyacentesDeLaUltimaSeleccionada.size();
+			vista.getParadasAdyResumenTxt().setText(adyacentesCount.toString());
+			vista.getNumeroParadaResumenTxt().setText("Número# " + parada.getNroParada().toString());
+		} catch (SQLException e) {
+			System.out.println("Problema al encontrar el numero de parada en la bdd.");
+		}
+		
+	}
+	
 }
