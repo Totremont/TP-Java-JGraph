@@ -12,8 +12,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -22,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+import died.izaguirre.haulet.tp.controladores.ControladorBoleto;
 import died.izaguirre.haulet.tp.controladores.ControladorGrafo;
 import died.izaguirre.haulet.tp.controladores.ControladorLineas;
 import died.izaguirre.haulet.tp.controladores.ControladorParadas;
@@ -31,10 +34,13 @@ import died.izaguirre.haulet.tp.estructuras.grafo.GrafoConPeso;
 import died.izaguirre.haulet.tp.gui.incidencias.IncidenciasPanel;
 import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
 import died.izaguirre.haulet.tp.gui.menuparadas.ParadasPanel;
+import died.izaguirre.haulet.tp.gui.utilities.Precios;
+import died.izaguirre.haulet.tp.tablas.Boleto;
 import died.izaguirre.haulet.tp.tablas.Camino;
 import died.izaguirre.haulet.tp.tablas.Parada;
 import died.izaguirre.haulet.tp.tablas.Posee;
 import died.izaguirre.haulet.tp.tablas.linea.Linea;
+import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 
 import java.awt.SystemColor;
 import java.util.ArrayList;
@@ -57,8 +63,11 @@ public class PrincipalPanel extends JPanel {
 	private ArrayList<List<Camino>> caminosFiltrados = new ArrayList<>();	//Aquellos caminos con lineas
 	
 	private HashMap<Integer, List<Camino>> lineasCaminos = new HashMap<>();	//Relacion linea y su trayecto
+	private Linea ultimaLinea;
+	private int ultimoPrecio;
 	
 	private ControladorGrafo controladorGrafo = ControladorGrafo.getInstance();
+	private ControladorBoleto controladorBoleto = new ControladorBoleto();
 	private GrafoConPeso grafoPeso = controladorGrafo.getGrafoPeso();
 	private Principal padre;
 	
@@ -71,6 +80,7 @@ public class PrincipalPanel extends JPanel {
 	private JRadioButton buttonRutaRapida;
 	private JRadioButton buttonRutaBarata;
 	private ButtonGroup buttonGroup;
+	private JButton buttonBoleto;
 	private JLabel txtOrigen3;
 	private JLabel txtDestino3;
 	private JLabel txtDistancia2;
@@ -97,18 +107,56 @@ public class PrincipalPanel extends JPanel {
 	{
 		this.padre = padre;
 		crearInterfaz();
+		despintar();
 		cargarParadas();
 		lineas = (ArrayList<Linea>) ControladorLineas.getLineas();
 		buscarTrayectoLineas();
 	}
 	
+	private void comprarBoleto() 
+	{
+		if(ultimaLinea != null) 
+		{
+			Boleto boleto = new Boleto();
+			boleto.setLinea(ultimaLinea);
+			boleto.setMonto(ultimoPrecio);
+			boolean accion = controladorBoleto.insertarBoleto(boleto);
+			JDialog dialog = new JDialog();
+			String mensaje = accion ? "Boleto comprado exitosamente" : "No se pudo comprar";
+			dialog.setAlwaysOnTop(true);
+			dialog.setLocationRelativeTo(padre);
+			JOptionPane.showMessageDialog(dialog, mensaje,
+					"Operación", JOptionPane.INFORMATION_MESSAGE);
+			
+		}
+		else 
+		{
+			JDialog dialog = new JDialog();
+			dialog.setAlwaysOnTop(true);
+			dialog.setLocationRelativeTo(padre);
+			JOptionPane.showMessageDialog(dialog, "No se encontró última ruta",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	private void ultimaRuta(Linea linea, List<Camino> camino) 
 	{
+		ultimaLinea = linea;
+		buttonBoleto.setEnabled(true);
+		pintarTrayecto(camino);
 		txtLinea.setText("Línea: " + linea.getNombre());
 		txtOrigen3.setText(camino.get(0).getOrigen().getCalle());
 		txtDestino3.setText(camino.get(camino.size()-1).getDestino().getCalle());
 		txtDistancia2.setText(grafoPeso.distanciaTotal(camino) + " Km");
-		txtPrecio2.setText(grafoPeso.distanciaTotal(camino)*10*1.2 + "");
+		float precio = grafoPeso.distanciaTotal(camino)*Precios.precioKm;
+		if(linea.getTipo().equals(LineaTipoEnum.Economica.toString())) precio *= Precios.porcentajeEconomica;
+		else if(linea.getTipo().equals(LineaTipoEnum.Superior.toString())) { 
+			precio *= Precios.porcentajeSuperior;
+			precio *= linea.getTieneAire() ? Precios.porcentajeAC : 1;
+			precio *= linea.getTieneWifi() ? Precios.porcentajeWifi : 1;
+		}
+		txtPrecio2.setText(Math.round(precio)+"$");
+		ultimoPrecio = Math.round(precio);
 		checkAC.setSelected(linea.getTieneAire() != null ? linea.getTieneAire() : false );
 		checkWifi.setSelected(linea.getTieneWifi() != null ? linea.getTieneWifi() : false );
 	}
@@ -156,6 +204,7 @@ public class PrincipalPanel extends JPanel {
 		buscarCaminos(origen, destino);
 		if(lineasCaminos.isEmpty()) 
 		{
+			despintar();
 			Linea lineaVacia = new Linea() 
 			{
 				@Override
@@ -183,6 +232,7 @@ public class PrincipalPanel extends JPanel {
 		if(!trayecto.isEmpty()) 
 		{
 			List<Linea> aux = new ArrayList<>();
+			comboLinea.setModel(new DefaultComboBoxModel<Linea>());
 			lineasCaminos.forEach((key, value) -> 
 			{
 				if(value.equals(trayecto)) { 
@@ -233,6 +283,11 @@ public class PrincipalPanel extends JPanel {
 	private void pintarTrayecto(List<Camino> trayecto) 
 	{
 		controladorGrafo.pintarTrayecto(trayecto);
+	}
+	
+	private void despintar() 
+	{
+		controladorGrafo.despintar();;
 	}
 	
 	private void verLineasInterfaz() 
@@ -322,6 +377,17 @@ public class PrincipalPanel extends JPanel {
 		add(comboDestino, gbc_comboBox_1);
 		
 		JLabel txtInvertir = new JLabel("Invertir");
+		txtInvertir.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Parada origen = comboOrigen.getSelectedIndex() >= 0 ? 
+						(Parada) comboOrigen.getSelectedItem() : null;
+				Parada destino = comboDestino.getSelectedIndex() >= 0 ? 
+						(Parada) comboDestino.getSelectedItem() : null;
+				if(origen != null) comboDestino.setSelectedItem(origen);
+				if(destino != null) comboOrigen.setSelectedItem(destino);
+			}
+		});
 		GridBagConstraints gbc_txtInvertir = new GridBagConstraints();
 		gbc_txtInvertir.insets = new Insets(0, 0, 5, 5);
 		gbc_txtInvertir.gridx = 3;
@@ -537,7 +603,13 @@ public class PrincipalPanel extends JPanel {
 		gbc_txtPrecio2.gridy = 15;
 		add(txtPrecio2, gbc_txtPrecio2);
 		
-		JButton buttonBoleto = new JButton("Comprar Boleto");
+		buttonBoleto = new JButton("Comprar Boleto");
+		buttonBoleto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				comprarBoleto();
+			}
+		});
+		buttonBoleto.setEnabled(false);
 		GridBagConstraints gbc_buttonBoleto = new GridBagConstraints();
 		gbc_buttonBoleto.insets = new Insets(5, 0, 5, 5);
 		gbc_buttonBoleto.gridx = 2;

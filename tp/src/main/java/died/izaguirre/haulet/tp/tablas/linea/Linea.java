@@ -31,7 +31,7 @@ public class Linea {
 		this.nombre = nombre;
 		this.color = color;
 		this.capSentado = capSentado;
-		this.capParado = (int) (capSentado * ((float)porcentajeParado/100f));
+		this.capParado = Math.round(capSentado * (porcentajeParado/100f));
 		this.tieneWifi = false;
 		this.tieneAire = false;
 	}

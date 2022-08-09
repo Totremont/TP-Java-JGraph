@@ -41,6 +41,7 @@ import java.awt.Insets;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
@@ -57,6 +58,7 @@ import java.awt.event.MouseEvent;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 public class Principal extends JFrame {
 
@@ -120,6 +122,11 @@ public class Principal extends JFrame {
 		cambiarInterfaz(new PrincipalPanel(this));
 	}
 	
+	private void parametrosMenu() 
+	{
+		new EstablecerKm(this);
+	}
+	
 	private void crearInterfaz(JPanel panel_izquierdo, View vista_derecha)
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -142,10 +149,24 @@ public class Principal extends JFrame {
 		});
 		menuBar.add(volver);
 		
+		//Boton opciones externas
+		JMenu externo = new JMenu("Opciones");
+		externo.setMnemonic(KeyEvent.VK_A);
+		menuBar.add(externo);
+		JMenuItem precioKm = new JMenuItem("Establecer precios");
+		precioKm.setMnemonic(KeyEvent.VK_B);
+		precioKm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				parametrosMenu();
+			}
+		});
+		externo.add(precioKm);
+		menuBar.add(externo);
+		
 		//Boton saber mas
 		JMenu saberMas = new JMenu("Acerca de");
-		saberMas.setIcon(new ImageIcon(getClass().getResource("/information-variant.png")));
 		menuBar.add(saberMas);
+		
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));

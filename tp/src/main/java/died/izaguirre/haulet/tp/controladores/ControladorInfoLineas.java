@@ -121,7 +121,9 @@ public class ControladorInfoLineas {
 	}
 
 	private void capParado() {
-		vista.getCapParado().setValue((Integer) (linea.getCapParado()/linea.getCapSentado()));
+		int sentado = linea.getCapSentado();
+		float parado = linea.getCapParado();
+		vista.getCapParado().setValue(Math.round((parado/sentado)*100));
 	}
 
 	private void cargarNombreLinea() {
@@ -155,7 +157,7 @@ public class ControladorInfoLineas {
 	}
 
 	private void cargarCapSentado() {
-		vista.getCapSentadoTxt().setText(linea.getCapSentado().toString());
+		vista.getCapSentadoTxt().setValue(linea.getCapSentado());
 	}
 
 	private void cargarAireWifi() {
@@ -191,7 +193,7 @@ public class ControladorInfoLineas {
 		vista.getNombreLinea().setEditable(estado);
 		vista.getTipoCBx().setEnabled(estado);
 		vista.getColorCBx().setEnabled(estado);
-		vista.getCapSentadoTxt().setEditable(estado);
+		vista.getCapSentadoTxt().setEnabled(estado);
 		vista.getWifiCk().setEnabled(estado);
 		vista.getAireCk().setEnabled(estado);
 		vista.getOrigenCBx().setEnabled(estado);
@@ -207,11 +209,13 @@ public class ControladorInfoLineas {
 				if (vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 					vista.getAireCk().setEnabled(false);
 					vista.getWifiCk().setEnabled(false);
-					vista.getAireCk().setSelected(false);
-					vista.getWifiCk().setSelected(false);
+//					vista.getAireCk().setSelected(false);
+//					vista.getWifiCk().setSelected(false);
+					vista.getCapParado().setEnabled(true);
 				} else if (vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Superior)) {
 					vista.getAireCk().setEnabled(true);
 					vista.getWifiCk().setEnabled(true);
+					vista.getCapParado().setEnabled(false);
 				}
 				vista.validate();
 			}
@@ -274,18 +278,24 @@ public class ControladorInfoLineas {
 //		}
 
 		if (vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
-			Linea l = new Linea(vista.getTipoCBx().getSelectedItem().toString(), vista.getNombreLinea().getText(),
+			Linea l = new Linea(
+					vista.getTipoCBx().getSelectedItem().toString(), 
+					vista.getNombreLinea().getText(),
 					vista.getColorCBx().getSelectedItem().toString(),
-					Integer.parseInt(vista.getCapSentadoTxt().getText()), 
+					((Integer) vista.getCapSentadoTxt().getValue()), 
 					((Integer) vista.getCapParado().getValue()), 
 					(Parada) vista.getOrigenCBx().getSelectedItem(),
 					(Parada) vista.getDestinoCBx().getSelectedItem());
 			l.setId(id);
 			return l;
 		}else {
-			Linea l = new Linea(vista.getTipoCBx().getSelectedItem().toString(), vista.getNombreLinea().getText(),
+			Linea l = new Linea(
+					vista.getTipoCBx().getSelectedItem().toString(), 
+					vista.getNombreLinea().getText(),
 					vista.getColorCBx().getSelectedItem().toString(),
-					Integer.parseInt(vista.getCapSentadoTxt().getText()), vista.getAireCk().isSelected(), vista.getWifiCk().isSelected(), (Parada) vista.getOrigenCBx().getSelectedItem(),
+					((Integer) vista.getCapSentadoTxt().getValue()), 
+					vista.getAireCk().isSelected(), vista.getWifiCk().isSelected(), 
+					(Parada) vista.getOrigenCBx().getSelectedItem(),
 					(Parada) vista.getDestinoCBx().getSelectedItem());
 			l.setId(id);
 			return l;

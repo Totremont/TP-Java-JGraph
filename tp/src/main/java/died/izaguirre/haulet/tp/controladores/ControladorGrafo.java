@@ -109,6 +109,10 @@ public class ControladorGrafo {
 		{
 			if(it.hasAttribute("ui.class")) it.removeAttribute("ui.class");
 		});
+		graph.nodes().forEach(it -> 
+		{
+			if(it.hasAttribute("ui.class")) it.removeAttribute("ui.class");
+		});
 	}
 	
 	public void pintarNodo(String id) {

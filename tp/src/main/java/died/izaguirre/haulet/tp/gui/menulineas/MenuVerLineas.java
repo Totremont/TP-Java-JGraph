@@ -209,7 +209,7 @@ public class MenuVerLineas extends JPanel {
 		capSentadoText = new JSpinner();
 		panel_4.add(capSentadoText);
 		capSentadoText.setPreferredSize(new JSpinner().getPreferredSize());
-		capSentadoText.setModel(new SpinnerNumberModel(0, 0, null, 1));
+		capSentadoText.setModel(new SpinnerNumberModel(new Integer(10), new Integer(1), null, new Integer(1)));
 		
 		capSentadoLabel = new JLabel("Cap. Sentado");
 		panel_4.add(capSentadoLabel);
@@ -241,6 +241,7 @@ public class MenuVerLineas extends JPanel {
 		panelCrearLineaBody.add(panel_3, gbc_panel_3);
 		
 		porcentajeSpinner = new JSpinner();
+		porcentajeSpinner.setModel(new SpinnerNumberModel(0, 0, 40, 1));
 		panel_3.add(porcentajeSpinner);
 		
 		lblNewLabel_1 = new JLabel("% Parado");

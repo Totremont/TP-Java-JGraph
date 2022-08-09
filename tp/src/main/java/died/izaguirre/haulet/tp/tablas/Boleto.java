@@ -6,11 +6,11 @@ public class Boleto {
 
 	private Integer id;
 	private Linea linea;
-	private Double monto;
+	private int monto;
 	
 	public Boleto() {}
 	
-	public Boleto(Linea linea, Double monto) {
+	public Boleto(Linea linea, int monto) {
 		this();
 		this.linea = linea;
 		this.monto = monto;
@@ -32,12 +32,12 @@ public class Boleto {
 		this.linea = linea;
 	}
 
-	public Double getMonto() {
+	public int getMonto() {
 		return monto;
 	}
 
-	public void setMonto(Double monto) {
-		this.monto = monto;
+	public void setMonto(int ultimoPrecio) {
+		this.monto = ultimoPrecio;
 	}
 	
 	@Override
