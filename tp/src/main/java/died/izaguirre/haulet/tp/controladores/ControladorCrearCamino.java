@@ -5,19 +5,28 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 
 import died.izaguirre.haulet.tp.dao.impl.CaminoDaoImpl;
+import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
+import died.izaguirre.haulet.tp.dao.impl.PoseeDaoImpl;
 import died.izaguirre.haulet.tp.dao.interfaces.CaminoDao;
+import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
 import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
+import died.izaguirre.haulet.tp.dao.interfaces.PoseeDao;
+import died.izaguirre.haulet.tp.estructuras.grafo.GrafoConPeso;
 import died.izaguirre.haulet.tp.gui.menuparadas.CrearCamino;
 import died.izaguirre.haulet.tp.tablas.Camino;
 import died.izaguirre.haulet.tp.tablas.Parada;
+import died.izaguirre.haulet.tp.tablas.linea.Linea;
 
 public class ControladorCrearCamino {
 
@@ -40,46 +49,84 @@ public class ControladorCrearCamino {
 		crearCaminoListener(); // Agrega funcionaldiad al boton crear
 		botonEliminarListener(); // Para poder eliminar caminos
 	}
-	
+
 	private void botonEliminarListener() {
 		vista.getTable().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int fila = vista.getTable().rowAtPoint(e.getPoint());
 				int columna = vista.getTable().columnAtPoint(e.getPoint());
-				if(fila<0 || columna<0)
+				if (fila < 0 || columna < 0)
 					return;
-				if(columna == 4) {
+				if (columna == 4) {
 					Parada or = (Parada) vista.getTableModel().getValueAt(fila, 0);
 					Parada dest = (Parada) vista.getTableModel().getValueAt(fila, 1);
 					try {
-						eliminarDeBdd(or,dest);
-						eliminarDeTabla(fila);
-					}catch(SQLException excp) {
+						if (!existeLinaQuePasaPor(or, dest)) {
+							eliminarDeBdd(or, dest);
+							eliminarDeTabla(fila);
+						} else {
+							JOptionPane.showMessageDialog(vista,
+									"No se puede eliminar este camino, verifique que no esté siendo utilizador por alguna línea.",
+									"Error.", JOptionPane.ERROR_MESSAGE);
+						}
+					} catch (SQLException excp) {
 						System.out.println("No se pudo eliminar el camino");
 					}
 				}
 			}
 		});
 	}
-	
+
+	private Boolean existeLinaQuePasaPor(Parada or, Parada dest) {
+
+		ControladorGrafo cg = ControladorGrafo.getInstance();
+		GrafoConPeso gcp = cg.getGrafoPeso();
+
+		// Camino que se desea eliminar
+		Camino caminoEliminar = gcp.encontrarCamino(or, dest);
+
+		LineaDao ldao = new LineaDaoImpl();
+		List<Linea> todasLasLineas = ldao.getAll();
+
+		Map<Linea, List<Camino>> caminosDeCadaLinea = new HashMap<Linea, List<Camino>>();
+
+		PoseeDao pdao = new PoseeDaoImpl();
+
+		// Cargo el trayecto de cada linea en el map
+		for (Linea l : todasLasLineas) {
+			// Recupero el trayecto de la linea
+			List<Parada> trayectoByParada = pdao.paradasDeLinea(l).stream().map(p -> p.getParada())
+					.collect(Collectors.toList());
+			List<Camino> trayectoByCamino = gcp.toListCaminos(trayectoByParada);
+			caminosDeCadaLinea.put(l, trayectoByCamino);
+		}
+
+		for (Linea l : todasLasLineas) {
+			if (caminosDeCadaLinea.get(l).contains(caminoEliminar))
+				return true;
+		}
+
+		return false;
+	}
+
 	private void eliminarDeTabla(Integer fila) {
-		if(fila < 0)
+		if (fila < 0)
 			return;
-		
+
 		vista.getTableModel().removeRow(fila);
 	}
-	
+
 	private void eliminarDeBdd(Parada orig, Parada destin) throws SQLException {
 		CaminoDao aux = new CaminoDaoImpl();
 		ParadaDao auxP = new ParadaDaoImpl();
 		try {
 			aux.remove(orig.getId(), destin.getId());
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			throw e;
 		}
 	}
-	
+
 	private void caminoDistanciaSoloNumeros() {
 		vista.getCapacidadTxt().addKeyListener(new KeyAdapter() {
 			@Override
@@ -110,8 +157,7 @@ public class ControladorCrearCamino {
 			vista.getOrigenCBx().addItem(p);
 			vista.getDestinoCBx().addItem(p);
 		}
-		if(!paradas.isEmpty()) 
-		{
+		if (!paradas.isEmpty()) {
 			vista.getOrigenCBx().setSelectedIndex(0);
 			vista.getDestinoCBx().setSelectedIndex(0);
 		}
@@ -138,7 +184,7 @@ public class ControladorCrearCamino {
 
 	private void crearCaminoListener() {
 		vista.getCrearButton().addActionListener(e -> {
-			if(camposRellenados() && !origenDestinoIguales()) {
+			if (camposRellenados() && !origenDestinoIguales()) {
 				ParadaDao paux = new ParadaDaoImpl();
 				Camino c = new Camino();
 				try {
@@ -150,11 +196,12 @@ public class ControladorCrearCamino {
 					c.setDistancia(Integer.parseInt(vista.getDistanciaTxt().getText().toString()));
 					CaminoDao caux = new CaminoDaoImpl();
 					caux.add(c);
-					agregarCaminoTabla(c);					
-				}catch(SQLException excp) {
-					System.out.println("No se pudo crear el camino, probablemente porque ya exista uno entre esas dos paradas");
+					agregarCaminoTabla(c);
+				} catch (SQLException excp) {
+					System.out.println(
+							"No se pudo crear el camino, probablemente porque ya exista uno entre esas dos paradas");
 				}
-			}else {
+			} else {
 				System.out.println("No se puede crear el camino.");
 			}
 		});
@@ -163,11 +210,11 @@ public class ControladorCrearCamino {
 	private Boolean camposRellenados() {
 		return (!vista.getCapacidadTxt().getText().isEmpty() && !vista.getDistanciaTxt().getText().isEmpty());
 	}
-	
+
 	private Boolean origenDestinoIguales() {
 		return vista.getOrigenCBx().getSelectedItem().equals(vista.getDestinoCBx().getSelectedItem());
 	}
-	
+
 	private void botonSalirListener() {
 		vista.getSalirButton().addActionListener(e -> vista.dispose());
 	}
