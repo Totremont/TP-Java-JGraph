@@ -76,7 +76,7 @@ public class PoseeDaoImpl implements PoseeDao {
 	public List<Posee> paradasDeLinea(Integer idLinea) {
 		List<Posee> poseeList = new ArrayList<Posee>();
 
-		try (PreparedStatement pstm = con.prepareStatement("SELECT id_parada,id_linea,orden_parada FROM tp.posee WHERE id_linea=?")) {
+		try (PreparedStatement pstm = con.prepareStatement("SELECT id_parada,id_linea,orden_parada FROM tp.posee WHERE id_linea=? ORDER BY orden_parada")) {
 			pstm.setInt(1, idLinea);
 			ResultSet rs = pstm.executeQuery();
 			while(rs.next()) {

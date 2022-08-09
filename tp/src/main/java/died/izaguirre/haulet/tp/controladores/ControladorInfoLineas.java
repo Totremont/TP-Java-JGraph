@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -14,6 +15,7 @@ import died.izaguirre.haulet.tp.dao.impl.CaminoDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.LineaDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.PoseeDaoImpl;
+import died.izaguirre.haulet.tp.dao.interfaces.CRUD;
 import died.izaguirre.haulet.tp.dao.interfaces.CaminoDao;
 import died.izaguirre.haulet.tp.dao.interfaces.LineaDao;
 import died.izaguirre.haulet.tp.dao.interfaces.ParadaDao;
@@ -111,17 +113,40 @@ public class ControladorInfoLineas {
 		Parada or = (Parada) vista.getOrigenCBx().getSelectedItem();
 		Parada dest = (Parada) vista.getDestinoCBx().getSelectedItem();
 
-		ArrayList<ArrayList<Parada>> allCaminosByParada = grafo.todosLosCaminos(or, dest);
+		List<List<Parada>> allCaminosByParada = grafo.caminos(or, dest);
 
 		for (int i = 0; i < allCaminosByParada.size(); i++) {
 			String clave = "Trayecto : " + i;
 			trayectosByParada.put(clave, allCaminosByParada.get(i));
 			vista.getTrayectoCBx().addItem(clave);
 		}
+		
+		seleccionarTrayecto(); // Para que este seleccionado por defecto el que usa.
+	}
+	
+	private void seleccionarTrayecto() {
+		PoseeDao dao = new PoseeDaoImpl();
+		List<Parada> paradas =dao.paradasDeLinea(linea).stream().map(p -> p.getParada()).collect(Collectors.toList());
+//		List<List<Parada>> paradasDelMap = (List<List<Parada>>) trayectosByParada.values();
+//		
+//		for(List<Parada> i : paradasDelMap) {
+//			if(i.containsAll(paradas)) {
+//				vista.getTrayectoCBx().setSelectedItem(trayectosByParada.);
+//			}
+//		}
+		
+		trayectosByParada.keySet().forEach(k -> {
+			if(trayectosByParada.get(k).containsAll(paradas)) {
+				vista.getTrayectoCBx().setSelectedItem(k);
+			}
+		});
 	}
 
 	private void capParado() {
-		vista.getCapParado().setValue((Integer) (linea.getCapParado()/linea.getCapSentado()));
+		if(linea.getCapSentado() != 0)
+			vista.getCapParado().setValue((Integer) (linea.getCapParado()/linea.getCapSentado()));
+		else
+			vista.getCapParado().setValue(caminos);
 	}
 
 	private void cargarNombreLinea() {
