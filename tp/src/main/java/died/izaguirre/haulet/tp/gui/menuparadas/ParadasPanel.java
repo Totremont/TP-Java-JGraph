@@ -40,6 +40,7 @@ import java.awt.SystemColor;
 import javax.swing.UIManager;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
 
 public class ParadasPanel extends JPanel {
 	private JTable table;
@@ -223,6 +224,7 @@ public class ParadasPanel extends JPanel {
 		buscadorTxt.setColumns(10);
 
 		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFillsViewportHeight(true);
 		tableModel = new DefaultTableModel(new Object[][] {}, new String[] { "Nro. Parada", "Calle", "Eliminar" }) {
 
@@ -256,6 +258,7 @@ public class ParadasPanel extends JPanel {
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		add(scrollPane, BorderLayout.CENTER);
 		table.getTableHeader().setReorderingAllowed(false);
+//		table.setColumnSelectionAllowed(false);
 		
 		controlador = new ControladorParadas(this);
 	}

@@ -15,7 +15,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.graphstream.graph.Graph;
@@ -172,9 +177,28 @@ public class ControladorParadas {
 								"Error.", JOptionPane.ERROR_MESSAGE);
 					}
 				} else {
-					actualizarResumen(fila, columna);
+//					actualizarResumen(fila, columna);
 				}
 			}
+		});
+		
+		ListSelectionModel rowSM = vista.getTable().getSelectionModel();
+		rowSM.addListSelectionListener(new ListSelectionListener() {
+
+		    public void valueChanged(ListSelectionEvent e) {
+		        //Ignore extra messages.
+		        if (e.getValueIsAdjusting()) return;
+
+		        ListSelectionModel lsm =
+		            (ListSelectionModel)e.getSource();
+
+		        if (lsm.isSelectionEmpty()) {
+		            
+		        } else {
+		            int selectedRow = lsm.getMinSelectionIndex();
+		            actualizarResumen((Integer) selectedRow, 0);
+		        }
+		    }
 		});
 	}
 
