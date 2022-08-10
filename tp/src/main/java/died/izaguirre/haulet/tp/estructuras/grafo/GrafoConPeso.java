@@ -118,5 +118,15 @@ public class GrafoConPeso extends GrafoDirigido {
 		}
 		return distancia;
 	}
+	
+	public float tiempoTotal(List<Camino> camino) 
+	{
+		float tiempo = 0f;
+		for(int i = 0; i < camino.size(); i++) 
+		{
+			tiempo += camino.get(i).getDistancia()/camino.get(i).getCapacidad();
+		}
+		return tiempo;
+	}
 
 }

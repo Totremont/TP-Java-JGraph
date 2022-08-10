@@ -35,6 +35,7 @@ public class ControladorParadas {
 	private static List<Parada> paradas = new ArrayList<Parada>();
 	private List<Parada> adyacentesDeLaUltimaSeleccionada;
 	private Parada ultimaParadaSeleccionada;
+	private ControladorGrafo grafo = ControladorGrafo.getInstance();
 
 //	private ControladorParadas() {
 //		paradasDao = new ParadaDaoImpl();
@@ -151,7 +152,9 @@ public class ControladorParadas {
 					Integer nroParada = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
 					ParadaDao aux = new ParadaDaoImpl();
 					try {
+						Parada eliminar = aux.findByNroParada(nroParada);
 						aux.removeByNroParada(nroParada);
+						grafo.eliminarParada(eliminar);
 						eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
 												// la parada de la BDD tambien
 					} catch (SQLException excp) {

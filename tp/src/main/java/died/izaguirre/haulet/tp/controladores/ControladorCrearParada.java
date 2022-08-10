@@ -17,6 +17,7 @@ import died.izaguirre.haulet.tp.tablas.Parada;
 public class ControladorCrearParada {
 
 	private CrearParada vista;
+	private ControladorGrafo grafo = ControladorGrafo.getInstance();
 
 	private ControladorCrearParada() {
 
@@ -56,6 +57,8 @@ public class ControladorCrearParada {
 				ParadaDao aux = new ParadaDaoImpl();
 				try {
 					aux.add(p);
+					Parada nueva = aux.findByNroParada(p.getNroParada());
+					grafo.agregarParada(nueva);
 				} catch (SQLException excp) {
 					JOptionPane.showMessageDialog(vista, "Ya existe una parada con ese número.", "Error de validación.",
 							JOptionPane.ERROR_MESSAGE);

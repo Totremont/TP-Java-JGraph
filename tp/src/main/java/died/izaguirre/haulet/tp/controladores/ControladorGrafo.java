@@ -32,6 +32,8 @@ public class ControladorGrafo {
 	private static ControladorGrafo instance = null;
 	private static SpriteManager manager;
 	private ArrayList<Parada> deshabilitadas = new ArrayList<>();
+	private ArrayList<Parada> paradas = new ArrayList<>();
+	private ArrayList<Camino> caminos = new ArrayList<>();
 	
 	public static ControladorGrafo getInstance() 
 	{
@@ -42,6 +44,36 @@ public class ControladorGrafo {
 	
 	private ControladorGrafo() {
 
+	}
+	
+	public void agregarCamino(Camino camino) 
+	{
+		caminos.add(camino);
+		Edge edge = graph.addEdge(camino.getId().toString(), camino.getOrigen().getId().toString(),camino.getDestino().getId().toString(), true);
+		edge.setAttribute("ui.label", camino.getDistancia() + " Km");
+		grafoPeso = new GrafoConPeso(paradas, caminos);
+	}
+	
+	public void agregarParada(Parada parada) 
+	{
+		paradas.add(parada);
+		Node node = graph.addNode(parada.getId().toString());
+		node.setAttribute("ui.label", parada.getCalle());
+		grafoPeso = new GrafoConPeso(paradas, caminos);
+	}
+	
+	public void eliminarCamino(Camino camino) 
+	{
+		caminos.remove(camino);
+		graph.removeEdge(camino.getId());
+		grafoPeso = new GrafoConPeso(paradas, caminos);
+	}
+	
+	public void eliminarParada(Parada parada) 
+	{
+		paradas.remove(parada);
+		graph.removeNode(parada.getId());
+		grafoPeso = new GrafoConPeso(paradas, caminos);
 	}
 	
 	public Graph getGraph() {
@@ -76,22 +108,22 @@ public class ControladorGrafo {
 		SwingViewer viewer = new SwingViewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		CaminoDaoImpl caminoDao = new CaminoDaoImpl();	
 		ParadaDaoImpl paradaDao = new ParadaDaoImpl();
-		ArrayList<Camino> caminos = (ArrayList<Camino>) caminoDao.getAll();
-		ArrayList<Parada> paradas = (ArrayList<Parada>) paradaDao.getAll();
+		caminos = (ArrayList<Camino>) caminoDao.getAll();
+		paradas = (ArrayList<Parada>) paradaDao.getAll();
+		
+		paradas.forEach(it -> 
+		{
+			Node node = graph.addNode(it.getId().toString());
+			node.setAttribute("ui.label", it.getCalle());
+		});
 		
 		caminos.forEach(it -> 
 		{
-			Edge edge = graph.addEdge(it.getId().toString(), it.getOrigen().getCalle(), it.getDestino().getCalle(), true);
+			Edge edge = graph.addEdge(it.getId().toString(), it.getOrigen().getId().toString(),it.getDestino().getId().toString(), true);
 			edge.setAttribute("ui.label", it.getDistancia() + " Km");
 		});
-				
-		for(Node node : graph)
-		{
-			node.setAttribute("ui.label", node.getId());
-			
-		}
 		
-		grafoPeso = new GrafoConPeso(paradas, caminos);
+		if(!paradas.isEmpty()) grafoPeso = new GrafoConPeso(paradas, caminos);
 		
 		graph.setAttribute("ui.quality");
 		graph.setAttribute("ui.antialias");

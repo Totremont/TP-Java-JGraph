@@ -41,6 +41,7 @@ import died.izaguirre.haulet.tp.tablas.Parada;
 import died.izaguirre.haulet.tp.tablas.Posee;
 import died.izaguirre.haulet.tp.tablas.linea.Linea;
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
+import java.util.Map;
 
 import java.awt.SystemColor;
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class PrincipalPanel extends JPanel {
 	private List<List<Camino>> caminos = new ArrayList<>();
 	private Linea ultimaLinea;
 	private int ultimoPrecio;
+	private int indexBarato = -1;
 	
 	private ControladorGrafo controladorGrafo = ControladorGrafo.getInstance();
 	private ControladorBoleto controladorBoleto = new ControladorBoleto();
@@ -77,6 +79,9 @@ public class PrincipalPanel extends JPanel {
 	private JRadioButton buttonRutaCorta;
 	private JRadioButton buttonRutaRapida;
 	private JRadioButton buttonRutaBarata;
+	private boolean rutaCortaChecked = false;
+	private boolean rutaRapidaChecked = false;
+	private boolean rutaBarataChecked = false;
 	private ButtonGroup buttonGroup;
 	private JButton buttonBoleto;
 	private JLabel txtOrigen3;
@@ -218,13 +223,21 @@ public class PrincipalPanel extends JPanel {
 			comboLinea.addItem(lineaVacia);
 		} else 
 		{
-			comboTrayecto.setEnabled(true);
 			for(int i = 0; i < caminos.size(); i++) 
 			{
 				comboTrayecto.addItem("Trayecto: " + i + 
 						" (" + grafoPeso.distanciaTotal(caminos.get(i)) + " Km)");
 				
 			}
+			comboTrayecto.setEnabled(true);
+			if(buttonRutaCorta.isSelected()) comboTrayecto.setSelectedIndex(caminoCorto());
+			else if(buttonRutaRapida.isSelected()) comboTrayecto.setSelectedIndex(caminoRapido());
+			else if(buttonRutaBarata.isSelected()) 
+			{
+				indexBarato = caminoBarato();
+				comboTrayecto.setSelectedIndex(caminos.indexOf(lineasCaminos.get(indexBarato)));
+				
+			} else comboTrayecto.setSelectedIndex(0);
 		}
 		
 	}
@@ -245,6 +258,12 @@ public class PrincipalPanel extends JPanel {
 				}
 			});
 			comboLinea.setEnabled(true);
+			if(buttonRutaBarata.isSelected()) 
+			{
+				Linea linea = lineas.stream().filter(it -> it.getId() == indexBarato).
+						findFirst().get();
+				comboLinea.setSelectedItem(linea);
+			}
 		}
 	}
 	
@@ -266,6 +285,75 @@ public class PrincipalPanel extends JPanel {
 				if(!this.caminos.contains(aux)) this.caminos.add(aux);
 			}
 		}
+	}
+	
+	private int caminoCorto() //Posicion dentro de ComboBox
+	{
+		int pos = -1;
+		if(!caminos.isEmpty()) 
+		{
+			pos = 0;
+			int distanciaMinima = grafoPeso.distanciaTotal(caminos.get(0));
+			if(caminos.size() > 1) for(int i = 1; i < caminos.size(); i++) 
+			{
+				int distancia = grafoPeso.distanciaTotal(caminos.get(i));
+				if(distanciaMinima > distancia) 
+				{
+					distanciaMinima = distancia;
+					pos = i;
+				}
+			}
+		}
+		return pos;
+	}
+	
+	private int caminoRapido() //Posicion dentro de ComboBox
+	{
+		int pos = -1;
+		if(!caminos.isEmpty()) 
+		{
+			pos = 0;
+			float tiempoMinimo = grafoPeso.tiempoTotal(caminos.get(0));
+			if(caminos.size() > 1) for(int i = 1; i < caminos.size(); i++) 
+			{
+				float tiempo = grafoPeso.tiempoTotal(caminos.get(i));
+				if(tiempoMinimo > tiempo) 
+				{
+					tiempoMinimo = tiempo;
+					pos = i;
+				}
+			}
+		}
+		return pos;
+	}
+	
+	private int caminoBarato() 	//Key en HashMap
+	{
+		int pos = -1;
+		if(!lineasCaminos.isEmpty()) 
+		{
+			boolean primero = true;
+			int precioMinimo = 0;
+			for (Map.Entry<Integer, List<Camino>> set : lineasCaminos.entrySet()) 
+			{
+				Linea linea = lineas.stream().filter(it -> it.getId() == set.getKey()).
+						findFirst().get();
+				if(primero) 
+				{
+					precioMinimo = ControladorLineas.precioLinea(linea,set.getValue());
+					pos = set.getKey();
+				} else 
+				{
+					int precio = ControladorLineas.precioLinea(linea,set.getValue());
+					if(precioMinimo > precio) 
+					{
+						precioMinimo = precio;
+						pos = set.getKey();
+					}
+				}
+			};
+		}
+		return pos;
 	}
 	
 	private void pintarTrayecto(List<Camino> trayecto) 
@@ -303,7 +391,7 @@ public class PrincipalPanel extends JPanel {
 		gbl_panel_izquierdo.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		gbl_panel_izquierdo.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		setLayout(gbl_panel_izquierdo);
-		JScrollPane scrollPane = new JScrollPane();
+		//JScrollPane scrollPane = new JScrollPane();
 		setBorder(null);
 		
 		JLabel txtTitulo = new JLabel("SISTEMA DE TRANSPORTE");
@@ -399,6 +487,19 @@ public class PrincipalPanel extends JPanel {
 		add(buttonBuscar, gbc_buttonBuscar);
 		
 		buttonRutaCorta = new JRadioButton("Ruta más corta");
+		buttonRutaCorta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rutaCortaChecked){ 
+					buttonGroup.clearSelection();
+					rutaCortaChecked = false;
+				}
+				else { 
+					rutaCortaChecked = true;
+					rutaBarataChecked = false;
+					rutaRapidaChecked = false;
+				}
+			}
+		});
 		GridBagConstraints gbc_buttonRutaCorta = new GridBagConstraints();
 		gbc_buttonRutaCorta.insets = new Insets(0, 0, 5, 5);
 		gbc_buttonRutaCorta.gridx = 1;
@@ -406,6 +507,19 @@ public class PrincipalPanel extends JPanel {
 		add(buttonRutaCorta, gbc_buttonRutaCorta);
 		
 		buttonRutaRapida = new JRadioButton("Ruta más rápida");
+		buttonRutaRapida.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rutaRapidaChecked){ 
+					buttonGroup.clearSelection();
+					rutaRapidaChecked = false;
+				}
+				else { 
+					rutaRapidaChecked = true;
+					rutaBarataChecked = false;
+					rutaCortaChecked = false;
+				}
+			}
+		});
 		GridBagConstraints gbc_buttonRutaRapida = new GridBagConstraints();
 		gbc_buttonRutaRapida.insets = new Insets(0, 0, 5, 5);
 		gbc_buttonRutaRapida.gridx = 2;
@@ -413,6 +527,19 @@ public class PrincipalPanel extends JPanel {
 		add(buttonRutaRapida, gbc_buttonRutaRapida);
 		
 		buttonRutaBarata = new JRadioButton("Ruta más barata");
+		buttonRutaBarata.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rutaBarataChecked) { 
+					buttonGroup.clearSelection();
+					rutaBarataChecked = false;
+				}
+				else { 
+					rutaBarataChecked = true;
+					rutaRapidaChecked = false;
+					rutaCortaChecked = false;
+				}
+			}
+		});
 		GridBagConstraints gbc_buttonRutaBarata = new GridBagConstraints();
 		gbc_buttonRutaBarata.insets = new Insets(0, 0, 5, 5);
 		gbc_buttonRutaBarata.gridx = 3;

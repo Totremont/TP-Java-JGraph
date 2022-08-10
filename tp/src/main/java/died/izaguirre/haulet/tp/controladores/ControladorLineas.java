@@ -44,6 +44,7 @@ import died.izaguirre.haulet.tp.dao.interfaces.PoseeDao;
 import died.izaguirre.haulet.tp.estructuras.grafo.GrafoConPeso;
 import died.izaguirre.haulet.tp.gui.menulineas.MenuVerLineas;
 import died.izaguirre.haulet.tp.gui.menulineas.VerInfoLinea;
+import died.izaguirre.haulet.tp.gui.utilities.Precios;
 import died.izaguirre.haulet.tp.tablas.Camino;
 import died.izaguirre.haulet.tp.tablas.Parada;
 import died.izaguirre.haulet.tp.tablas.Posee;
@@ -529,5 +530,24 @@ public class ControladorLineas {
 		};
 		return aux;
 
+	}
+	
+	public static int precioLinea(Linea linea, List<Camino> trayecto) 
+	{
+		float precio = 0f;
+		ControladorGrafo grafo = ControladorGrafo.getInstance();
+		GrafoConPeso grafoPeso = grafo.getGrafoPeso();
+		int distancia = grafoPeso.distanciaTotal(trayecto);
+		precio += distancia*Precios.precioKm;
+		if(linea.getTipo().equals(LineaTipoEnum.Economica.toString())) 
+			precio *= Precios.porcentajeEconomica;
+		else 
+		{
+			precio *= Precios.porcentajeSuperior;
+			if(linea.getTieneAire()) precio *= Precios.porcentajeAC;
+			if(linea.getTieneWifi()) precio *= Precios.porcentajeWifi;
+		}
+		return Math.round(precio);		
+		
 	}
 }

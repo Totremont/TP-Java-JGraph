@@ -482,6 +482,7 @@ public class IncidenciasPanel extends JPanel {
 				
 			}
 		});
+		table.getTableHeader().setReorderingAllowed(false);
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);

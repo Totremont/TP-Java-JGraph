@@ -32,6 +32,7 @@ public class ControladorCrearCamino {
 
 	private CrearCamino vista;
 	private List<Parada> paradas;
+	private ControladorGrafo grafo = ControladorGrafo.getInstance();
 
 	public ControladorCrearCamino(CrearCamino vista) {
 		this.vista = vista;
@@ -121,7 +122,9 @@ public class ControladorCrearCamino {
 		CaminoDao aux = new CaminoDaoImpl();
 		ParadaDao auxP = new ParadaDaoImpl();
 		try {
+			Camino eliminar = aux.find(orig.getId(), destin.getId());
 			aux.remove(orig.getId(), destin.getId());
+			grafo.eliminarCamino(eliminar);
 		} catch (SQLException e) {
 			throw e;
 		}
@@ -196,6 +199,9 @@ public class ControladorCrearCamino {
 					c.setDistancia(Integer.parseInt(vista.getDistanciaTxt().getText().toString()));
 					CaminoDao caux = new CaminoDaoImpl();
 					caux.add(c);
+					Camino nuevo = caux.find(c.getOrigen(), c.getDestino());
+					grafo.agregarCamino(nuevo);
+					
 					agregarCaminoTabla(c);
 				} catch (SQLException excp) {
 					System.out.println(
