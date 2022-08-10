@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
+import died.izaguirre.haulet.tp.controladores.ControladorGrafo;
 import died.izaguirre.haulet.tp.controladores.ControladorLineas;
 import died.izaguirre.haulet.tp.tablas.Parada;
 import died.izaguirre.haulet.tp.tablas.linea.Linea;
@@ -30,11 +31,14 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JTextArea;
 import java.awt.Color;
 import java.awt.SystemColor;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MenuVerLineas extends JPanel {
 	private JPanel body;
@@ -89,6 +93,7 @@ public class MenuVerLineas extends JPanel {
 	private JPanel panel_1;
 	private JLabel lblNewLabel_5;
 	private JTextField buscarText;
+	private JButton btnNewButton;
 
 	/**
 	 * Create the panel.
@@ -207,6 +212,8 @@ public class MenuVerLineas extends JPanel {
 		panelCrearLineaBody.add(panel_4, gbc_panel_4);
 				
 		capSentadoText = new JSpinner();
+		DefaultEditor editor =  (DefaultEditor) capSentadoText.getEditor();
+		editor.getTextField().setEditable(false);
 		panel_4.add(capSentadoText);
 		capSentadoText.setPreferredSize(new JSpinner().getPreferredSize());
 		capSentadoText.setModel(new SpinnerNumberModel(new Integer(10), new Integer(1), null, new Integer(1)));
@@ -241,6 +248,8 @@ public class MenuVerLineas extends JPanel {
 		panelCrearLineaBody.add(panel_3, gbc_panel_3);
 		
 		porcentajeSpinner = new JSpinner();
+		DefaultEditor editor2 =  (DefaultEditor) porcentajeSpinner.getEditor();
+		editor2.getTextField().setEditable(false);
 		porcentajeSpinner.setModel(new SpinnerNumberModel(0, 0, 40, 1));
 		panel_3.add(porcentajeSpinner);
 		
@@ -337,6 +346,19 @@ public class MenuVerLineas extends JPanel {
 		gbc_trayectoCBx.gridx = 3;
 		gbc_trayectoCBx.gridy = 8;
 		panelCrearLineaBody.add(trayectoCBx, gbc_trayectoCBx);
+		
+		btnNewButton = new JButton("Despintar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ControladorGrafo.getInstance().despintar();
+			}
+		});
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 2, 0);
+		gbc_btnNewButton.anchor = GridBagConstraints.WEST;
+		gbc_btnNewButton.gridx = 4;
+		gbc_btnNewButton.gridy = 8;
+		panelCrearLineaBody.add(btnNewButton, gbc_btnNewButton);
 										
 		crearLineaButton = new JButton("Crear Línea");
 		GridBagConstraints gbc_crearLineaButton = new GridBagConstraints();
@@ -361,6 +383,7 @@ public class MenuVerLineas extends JPanel {
 		lblNewLabel_4.setOpaque(true);
 		lblNewLabel_4.setBackground(new Color(70, 130, 180));
 		GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
+		gbc_lblNewLabel_4.insets = new Insets(0, 0, 5, 0);
 		gbc_lblNewLabel_4.fill = GridBagConstraints.BOTH;
 		gbc_lblNewLabel_4.gridwidth = 5;
 		gbc_lblNewLabel_4.gridx = 0;

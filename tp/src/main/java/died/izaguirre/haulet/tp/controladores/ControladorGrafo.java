@@ -3,6 +3,7 @@ package died.izaguirre.haulet.tp.controladores;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -116,10 +117,12 @@ public class ControladorGrafo {
 			Edge edge = graph.addEdge(it.getId().toString(), it.getOrigen().getId().toString(),
 					it.getDestino().getId().toString(), true);
 			edge.setAttribute("ui.label", it.getDistancia() + " Km");
+//			//Para evitar overlapping de labels
+//			//int randomOffset = ThreadLocalRandom.current().nextInt(-10, 10);
+//			edge.setAttribute("ui.style", "text-offset: " + randomOffset +";"); 
 		});
 
-		if (!paradas.isEmpty())
-			grafoPeso = new GrafoConPeso(paradas, caminos);
+		grafoPeso = new GrafoConPeso(paradas, caminos);
 
 		graph.setAttribute("ui.quality");
 		graph.setAttribute("ui.antialias");

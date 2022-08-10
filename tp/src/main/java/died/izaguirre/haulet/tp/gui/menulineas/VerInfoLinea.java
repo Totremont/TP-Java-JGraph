@@ -23,6 +23,7 @@ import died.izaguirre.haulet.tp.tablas.linea.LineaTipoEnum;
 import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.JSpinner.DefaultEditor;
 
 public class VerInfoLinea extends JDialog {
 
@@ -244,6 +245,9 @@ public class VerInfoLinea extends JDialog {
 		}
 		{
 			sentadoSpinner = new JSpinner();
+			sentadoSpinner.setEnabled(false);
+			DefaultEditor editor =  (DefaultEditor) sentadoSpinner.getEditor();
+			editor.getTextField().setEditable(false);
 			sentadoSpinner.setModel(new SpinnerNumberModel(new Integer(10), new Integer(1), null, new Integer(1)));
 			GridBagConstraints gbc_sentadoSpinner = new GridBagConstraints();
 			gbc_sentadoSpinner.insets = new Insets(0, 0, 5, 5);
@@ -261,6 +265,9 @@ public class VerInfoLinea extends JDialog {
 		}
 		{
 			paradoSpinner = new JSpinner();
+			paradoSpinner.setEnabled(false);
+			DefaultEditor editor2 =  (DefaultEditor) paradoSpinner.getEditor();
+			editor2.getTextField().setEditable(false);
 			paradoSpinner.setModel(new SpinnerNumberModel(0, 0, 40, 1));
 			GridBagConstraints gbc_paradoSpinner = new GridBagConstraints();
 			gbc_paradoSpinner.insets = new Insets(0, 0, 5, 5);

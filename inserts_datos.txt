@@ -1,3 +1,10 @@
+INSERT INTO tp.parada VALUES (34, 1, 'Av. Connecticut');
+INSERT INTO tp.parada VALUES (35, 2, 'Paseo Tablado');
+INSERT INTO tp.parada VALUES (36, 3, 'Plaza Park');
+INSERT INTO tp.parada VALUES (37, 4, 'Av. Virginia');
+INSERT INTO tp.parada VALUES (38, 5, 'Av. Illinois');
+INSERT INTO tp.parada VALUES (39, 6, 'Av. Pensylvania');
+
 INSERT INTO tp.camino VALUES (41, 34, 35, 1, 2);
 INSERT INTO tp.camino VALUES (42, 34, 36, 10, 3);
 INSERT INTO tp.camino VALUES (43, 34, 37, 17, 1);
@@ -42,13 +49,6 @@ INSERT INTO tp.linea VALUES (79, 'Economica', 20, 0, 'Línea 28', 'Amarillo', fa
 INSERT INTO tp.linea VALUES (80, 'Economica', 10, 1, 'Linea 29', 'Rojo', false, false, 5, 5);
 INSERT INTO tp.linea VALUES (81, 'Economica', 10, 1, 'Linea 30', 'Verde', false, false, 1, 1);
 INSERT INTO tp.linea VALUES (82, 'Superior', 10, 0, 'Linea 6', 'Rojo', true, true, 3, 3);
-
-INSERT INTO tp.parada VALUES (34, 1, 'Av. Connecticut');
-INSERT INTO tp.parada VALUES (35, 2, 'Paseo Tablado');
-INSERT INTO tp.parada VALUES (36, 3, 'Plaza Park');
-INSERT INTO tp.parada VALUES (37, 4, 'Av. Virginia');
-INSERT INTO tp.parada VALUES (38, 5, 'Av. Illinois');
-INSERT INTO tp.parada VALUES (39, 6, 'Av. Pensylvania');
 
 INSERT INTO tp.posee VALUES (34, 53, 0);
 INSERT INTO tp.posee VALUES (35, 53, 1);

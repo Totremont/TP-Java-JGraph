@@ -56,7 +56,7 @@ public class Linea {
 		this.capSentado = capSentado;
 		this.nombre = nombre;
 		this.color = color;
-		this.capParado = capParado;
+		this.capParado = Math.round(capSentado*(capParado/100f));
 		this.tieneAire = tieneAire;
 		this.tieneWifi = tieneWifi;
 	}

@@ -18,7 +18,6 @@ public class GrafoConPeso extends GrafoDirigido {
 	public GrafoConPeso(ArrayList<Parada> nodos, ArrayList<Camino> aristas) 
 	{		
 		super(nodos, aristas);
-		matrizPesos = new Matriz(nodos.size());
 	}
 	
 	public int getPesoArco(Parada origen, Parada destino) 
@@ -29,6 +28,7 @@ public class GrafoConPeso extends GrafoDirigido {
 	
 	public Matriz getMatrizPeso() 
 	{
+		matrizPesos = new Matriz(nodos.size());
 		matrizPesos.modificarMatriz((i,j) -> 
 		{
 			if(adyacencia.getValor(i,j) > 0) 
@@ -124,7 +124,8 @@ public class GrafoConPeso extends GrafoDirigido {
 		float tiempo = 0f;
 		for(int i = 0; i < camino.size(); i++) 
 		{
-			tiempo += camino.get(i).getDistancia()/camino.get(i).getCapacidad();
+			float distancia = camino.get(i).getDistancia();
+			tiempo += (distancia/camino.get(i).getCapacidad());
 		}
 		return tiempo;
 	}

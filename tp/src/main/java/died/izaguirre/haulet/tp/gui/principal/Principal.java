@@ -37,6 +37,8 @@ import java.awt.Image;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+
 import java.awt.Insets;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
@@ -59,6 +61,7 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 public class Principal extends JFrame {
 
@@ -127,6 +130,15 @@ public class Principal extends JFrame {
 		new EstablecerKm(this);
 	}
 	
+	private void acercaDe() 
+	{
+		JDialog dialog = new JDialog();
+		dialog.setAlwaysOnTop(true);
+		dialog.setLocationRelativeTo(this);
+		JOptionPane.showMessageDialog(dialog, "Aplicación desarrollada por Izaguirre Ezequiel y Tomás Haulet para la cátedra de Disenio e Implementación de Estructuras de Datos de la facultad UTN FRSF. 2022",
+				"Acerca de", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	private void crearInterfaz(JPanel panel_izquierdo, View vista_derecha)
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -165,6 +177,13 @@ public class Principal extends JFrame {
 		
 		//Boton saber mas
 		JMenu saberMas = new JMenu("Acerca de");
+		saberMas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				acercaDe();
+				
+			}
+		});
 		menuBar.add(saberMas);
 		
 		

@@ -9,6 +9,7 @@ node {
     fill-mode : plain;
     fill-color: DarkGoldenRod;
     text-color : Azure;
+    text-size: 12;
     text-alignment : above;
     text-background-color : #5F9EA080;
     text-background-mode : rounded-box;
@@ -20,7 +21,8 @@ edge
     shape : line;
     fill-color: Azure;
     text-color : Azure;
-    text-alignment : above;
+    text-size: 12;
+    text-alignment : along;
     text-background-color : #5F9EA080;
     text-background-mode : rounded-box;
 
@@ -31,5 +33,5 @@ edge.marked {
 }
 
 node.marked {
-	fill-color : green;
+	fill-color : MediumSpringGreen;
 }

@@ -207,7 +207,7 @@ public class ControladorInfoLineas {
 		if (vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 			vista.getAireCk().setEnabled(false);
 			vista.getWifiCk().setEnabled(false);
-		}
+		} else vista.getCapParado().setEnabled(false);
 		vista.getModificarButton().setEnabled(false);
 		vista.getGuardarButton().setEnabled(true);
 	}
@@ -217,6 +217,7 @@ public class ControladorInfoLineas {
 		vista.getTipoCBx().setEnabled(estado);
 		vista.getColorCBx().setEnabled(estado);
 		vista.getCapSentadoTxt().setEnabled(estado);
+		vista.getCapParado().setEnabled(estado);
 		vista.getWifiCk().setEnabled(estado);
 		vista.getAireCk().setEnabled(estado);
 		vista.getOrigenCBx().setEnabled(estado);
@@ -232,8 +233,6 @@ public class ControladorInfoLineas {
 				if (vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Economica)) {
 					vista.getAireCk().setEnabled(false);
 					vista.getWifiCk().setEnabled(false);
-//					vista.getAireCk().setSelected(false);
-//					vista.getWifiCk().setSelected(false);
 					vista.getCapParado().setEnabled(true);
 				} else if (vista.getTipoCBx().getSelectedItem().equals(LineaTipoEnum.Superior)) {
 					vista.getAireCk().setEnabled(true);

@@ -300,7 +300,7 @@ public class ControladorLineas {
 
 	private Boolean camposRellenados() {
 		// Los unicos campos que el usuario puede no ingresar nada son en Nombre y
-		// capacidad sentado
+		// capacidad parado
 		if (vista.getNombreLineaText().getText().isEmpty() || vista.getCapSentadoText().getValue() == null
 				|| vista.getOrigenCBx().getSelectedItem() == null || vista.getDestinoCBx().getSelectedItem() == null) {
 			return false;

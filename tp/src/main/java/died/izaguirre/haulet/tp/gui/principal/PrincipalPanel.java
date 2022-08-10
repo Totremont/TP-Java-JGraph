@@ -90,6 +90,8 @@ public class PrincipalPanel extends JPanel {
 	private JLabel txtPrecio2;
 	private JCheckBox checkAC;
 	private JCheckBox checkWifi;
+	private JLabel tiempoEstimado;
+	
 	private JLabel txtLinea;
 	private Parada paradaPrototype = new Parada() 
 	{
@@ -150,17 +152,14 @@ public class PrincipalPanel extends JPanel {
 		txtOrigen3.setText(camino.get(0).getOrigen().getCalle());
 		txtDestino3.setText(camino.get(camino.size()-1).getDestino().getCalle());
 		txtDistancia2.setText(grafoPeso.distanciaTotal(camino) + " Km");
-		float precio = grafoPeso.distanciaTotal(camino)*Precios.precioKm;
-		if(linea.getTipo().equals(LineaTipoEnum.Economica.toString())) precio *= Precios.porcentajeEconomica;
-		else if(linea.getTipo().equals(LineaTipoEnum.Superior.toString())) { 
-			precio *= Precios.porcentajeSuperior;
-			precio *= linea.getTieneAire() ? Precios.porcentajeAC : 1;
-			precio *= linea.getTieneWifi() ? Precios.porcentajeWifi : 1;
-		}
+		int precio = ControladorLineas.precioLinea(linea, camino);
 		txtPrecio2.setText(Math.round(precio)+"$");
 		ultimoPrecio = Math.round(precio);
 		checkAC.setSelected(linea.getTieneAire() != null ? linea.getTieneAire() : false );
 		checkWifi.setSelected(linea.getTieneWifi() != null ? linea.getTieneWifi() : false );
+		float tiempoTotal = grafoPeso.tiempoTotal(camino);
+		String formattedString = String.format("%.2f", tiempoTotal);
+		tiempoEstimado.setText(formattedString + " Hs");
 	}
 
 	
@@ -706,6 +705,13 @@ public class PrincipalPanel extends JPanel {
 		gbc_txtDistancia2.gridy = 14;
 		add(txtDistancia2, gbc_txtDistancia2);
 		
+		JLabel lblNewLabel_2 = new JLabel("Tiempo estimado");
+		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
+		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_2.gridx = 3;
+		gbc_lblNewLabel_2.gridy = 14;
+		add(lblNewLabel_2, gbc_lblNewLabel_2);
+		
 		JLabel txtPrecio = new JLabel("Precio");
 		GridBagConstraints gbc_txtPrecio = new GridBagConstraints();
 		gbc_txtPrecio.insets = new Insets(5, 0, 5, 5);
@@ -726,6 +732,13 @@ public class PrincipalPanel extends JPanel {
 				comprarBoleto();
 			}
 		});
+		
+		tiempoEstimado = new JLabel("-");
+		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
+		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_3.gridx = 3;
+		gbc_lblNewLabel_3.gridy = 15;
+		add(tiempoEstimado, gbc_lblNewLabel_3);
 		buttonBoleto.setEnabled(false);
 		GridBagConstraints gbc_buttonBoleto = new GridBagConstraints();
 		gbc_buttonBoleto.insets = new Insets(5, 0, 5, 5);
@@ -805,6 +818,12 @@ public class PrincipalPanel extends JPanel {
 		add(imgIncidencia, gbc_imgIncidencia);
 		
 		JLabel txtVerLinea = new JLabel("Ver líneas");
+		txtVerLinea.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				verLineasInterfaz();
+			}
+		});
 		GridBagConstraints gbc_txtVerLinea = new GridBagConstraints();
 		gbc_txtVerLinea.anchor = GridBagConstraints.NORTH;
 		gbc_txtVerLinea.insets = new Insets(0, 0, 5, 5);
@@ -813,6 +832,12 @@ public class PrincipalPanel extends JPanel {
 		add(txtVerLinea, gbc_txtVerLinea);
 		
 		JLabel txtVerParadas = new JLabel("Ver paradas");
+		txtVerParadas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				verParadasInterfaz();
+			}
+		});
 		GridBagConstraints gbc_txtVerParadas = new GridBagConstraints();
 		gbc_txtVerParadas.anchor = GridBagConstraints.NORTH;
 		gbc_txtVerParadas.insets = new Insets(0, 0, 5, 5);
@@ -821,6 +846,12 @@ public class PrincipalPanel extends JPanel {
 		add(txtVerParadas, gbc_txtVerParadas);
 		
 		JLabel txtVerIncidencias = new JLabel("Ver incidencias");
+		txtVerIncidencias.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				verIncidenciasInterfaz();
+			}
+		});
 		GridBagConstraints gbc_txtVerIncidencias = new GridBagConstraints();
 		gbc_txtVerIncidencias.anchor = GridBagConstraints.NORTH;
 		gbc_txtVerIncidencias.insets = new Insets(0, 0, 5, 5);
