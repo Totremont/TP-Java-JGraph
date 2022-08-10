@@ -57,6 +57,7 @@ public class ControladorLineas {
 	private PoseeDao poseeDao = new PoseeDaoImpl();
 	private ParadaDao paradaDao = new ParadaDaoImpl();
 	private CaminoDao caminoDao = new CaminoDaoImpl();
+	
 	private List<Linea> lineas = new ArrayList<>();
 	private ArrayList<Parada> paradas = new ArrayList<>();
 	private ArrayList<Camino> caminos = new ArrayList<>();

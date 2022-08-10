@@ -160,7 +160,7 @@ public class ControladorParadas {
 					} catch (SQLException excp) {
 						JFrame error = new JFrame();
 						JOptionPane.showMessageDialog(error,
-								"No se pudo eliminar la parada, verifique no esté siendo utilizada por alguna línea.",
+								"No se pudo eliminar la parada, verifique no esté siendo utilizada por alguna línea o incidencia.",
 								"Error.", JOptionPane.ERROR_MESSAGE);
 					}
 				} else {

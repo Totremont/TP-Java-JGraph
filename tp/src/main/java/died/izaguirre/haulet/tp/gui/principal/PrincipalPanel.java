@@ -208,6 +208,8 @@ public class PrincipalPanel extends JPanel {
 		comboLinea.setEnabled(false);
 		comboTrayecto.removeAllItems();
 		comboLinea.setModel(new DefaultComboBoxModel<Linea>());
+		caminos.clear();
+		lineasCaminos.clear();
 		buscarCaminos(origen, destino);
 		if(lineasCaminos.isEmpty()) 
 		{
