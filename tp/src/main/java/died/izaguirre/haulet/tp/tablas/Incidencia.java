@@ -30,6 +30,13 @@ public class Incidencia implements Comparable<Incidencia> {
 		else if(!estaResuelto && o.getEstaResuelto()) return -1;
 		else return duracionOtra.compareTo(duracionEsta);
 	}
+	
+	public boolean sucedeAhora() 
+	{
+		LocalDate hoy = LocalDate.now();
+		if(fechaFin == null) return hoy.isAfter(fechaInicio);
+		else return (hoy.isAfter(fechaInicio) && hoy.isBefore(fechaFin));
+	}
 
 	public int getId() {
 		return id;

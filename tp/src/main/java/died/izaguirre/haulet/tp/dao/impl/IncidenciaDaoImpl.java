@@ -132,5 +132,33 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 			throw e;
 		}
 	}
+	
+	public ArrayList<Incidencia> allActivas() {
+
+		ArrayList<Incidencia> lista = new ArrayList<>();
+
+		try (PreparedStatement pstm = con.prepareStatement(
+				"SELECT id_incidencia,id_parada,fecha_inicio,fecha_fin,esta_resuelto,descripcion,motivo FROM tp.incidencia WHERE esta_resuelto=?")) {
+			pstm.setBoolean(1, false);
+			ResultSet rs = pstm.executeQuery();
+			while(rs.next()) 
+			{
+				Incidencia nueva = new Incidencia();
+				nueva.setId(rs.getInt(1));
+				ParadaDao aux = new ParadaDaoImpl();
+				nueva.setParada(aux.find(rs.getInt(2)));
+				nueva.setFechaInicio(rs.getDate(3).toLocalDate());
+				nueva.setFechaFin(rs.getDate(4) == null ? null : rs.getDate(4).toLocalDate());
+				nueva.setEstaResuelto(rs.getBoolean(5));
+				nueva.setDescripción(rs.getString(6));
+				nueva.setMotivo(rs.getString(7));
+				lista.add(nueva);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return lista;
+	}
 
 }

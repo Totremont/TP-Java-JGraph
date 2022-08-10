@@ -56,13 +56,11 @@ import java.awt.event.MouseEvent;
 public class PrincipalPanel extends JPanel {
 
 	private ArrayList<Parada> paradas = new ArrayList<>();
-	private ArrayList<Linea> lineas = new ArrayList<>();
-	private List<List<Posee>> trayectoLineas;
-	private List<List<Parada>> trayectoLineasParadas = new ArrayList<>();
-	private List<List<Parada>> todosCaminos;	//Todos los caminos entre 2 puntos
-	private ArrayList<List<Camino>> caminosFiltrados = new ArrayList<>();	//Aquellos caminos con lineas
+	private List<Linea> lineas = new ArrayList<>();
+	//private List<List<Parada>> trayectoLineasParadas = new ArrayList<>();
 	
 	private HashMap<Integer, List<Camino>> lineasCaminos = new HashMap<>();	//Relacion linea y su trayecto
+	private List<List<Camino>> caminos = new ArrayList<>();
 	private Linea ultimaLinea;
 	private int ultimoPrecio;
 	
@@ -109,8 +107,7 @@ public class PrincipalPanel extends JPanel {
 		crearInterfaz();
 		despintar();
 		cargarParadas();
-		lineas = (ArrayList<Linea>) ControladorLineas.getLineas();
-		buscarTrayectoLineas();
+		cargarLineas();
 	}
 	
 	private void comprarBoleto() 
@@ -194,6 +191,11 @@ public class PrincipalPanel extends JPanel {
 		}
 		
 	}
+	
+	private void cargarLineas() 
+	{
+		lineas = ControladorLineas.getLineas();
+	}
 		
 	private void mostrarTrayecto(Parada origen, Parada destino) 
 	{
@@ -217,10 +219,10 @@ public class PrincipalPanel extends JPanel {
 		} else 
 		{
 			comboTrayecto.setEnabled(true);
-			for(int i = 0; i < caminosFiltrados.size(); i++) 
+			for(int i = 0; i < caminos.size(); i++) 
 			{
 				comboTrayecto.addItem("Trayecto: " + i + 
-						" (" + grafoPeso.distanciaTotal(caminosFiltrados.get(i)) + " Km)");
+						" (" + grafoPeso.distanciaTotal(caminos.get(i)) + " Km)");
 				
 			}
 		}
@@ -248,36 +250,22 @@ public class PrincipalPanel extends JPanel {
 	
 	private void buscarCaminos(Parada origen, Parada destino) 
 	{
-		//Esto obtiene todos los caminos entre origen y destino
-		todosCaminos = grafoPeso.caminos(origen, destino);
-		lineasCaminos.clear();
-		caminosFiltrados.clear();
-		//Esto filtra aquellos caminos (y lineas) en los cuales exista efectivamente una linea
-		//que pase por ellos
-		for(int i = 0; i < lineas.size(); i++) 
+		//Esto obtiene todos los caminos de las lineas
+		List<List<Parada>> caminos = ControladorLineas.getTrayectoLineas(lineas);
+		
+		lineasCaminos.clear();	//Dictionary entre id de linea y su camino
+		
+		for(int i = 0; i < caminos.size(); i++) 
 		{
-			boolean condicion = false;
-			for(int k = 0; k < todosCaminos.size(); k++) 
+			List<Parada> camino = caminos.get(i);
+			if(camino.isEmpty()) continue;
+			if(camino.get(0).equals(origen) && camino.get(camino.size()-1).equals(destino)) 
 			{
-				condicion = trayectoLineasParadas.get(i).equals(todosCaminos.get(k));
-				if(condicion == true) 
-				{
-					List<Camino> camino = grafoPeso.toListCaminos(todosCaminos.get(k));
-					if(!caminosFiltrados.contains(camino)) caminosFiltrados.add(camino);
-					lineasCaminos.put(lineas.get(i).getId(),camino);
-					break;
-				}
+				List<Camino> aux = grafoPeso.toListCaminos(camino);
+				lineasCaminos.put(lineas.get(i).getId(), aux);
+				if(!this.caminos.contains(aux)) this.caminos.add(aux);
 			}
 		}
-	}
-	
-	private void buscarTrayectoLineas() 
-	{
-		trayectoLineas = ControladorLineas.getTrayectoLineas(lineas);
-		trayectoLineas.forEach(it -> 
-		{
-			trayectoLineasParadas.add(it.stream().map(e -> e.getParada()).collect(Collectors.toList()));
-		});
 	}
 	
 	private void pintarTrayecto(List<Camino> trayecto) 
@@ -460,7 +448,7 @@ public class PrincipalPanel extends JPanel {
 		comboTrayecto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(comboTrayecto.isEnabled() && comboTrayecto.getSelectedIndex() >= 0)
-				mostrarLineas(caminosFiltrados.get(comboTrayecto.getSelectedIndex()));
+				mostrarLineas(caminos.get(comboTrayecto.getSelectedIndex()));
 			}
 		});
 		GridBagConstraints gbc_comboBoxTrayecto = new GridBagConstraints();

@@ -1,22 +1,27 @@
 package died.izaguirre.haulet.tp.controladores;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.view.Viewer;
 
 import died.izaguirre.haulet.tp.dao.impl.CaminoDaoImpl;
+import died.izaguirre.haulet.tp.dao.impl.IncidenciaDaoImpl;
 import died.izaguirre.haulet.tp.dao.impl.ParadaDaoImpl;
 import died.izaguirre.haulet.tp.estructuras.grafo.GrafoConPeso;
 import died.izaguirre.haulet.tp.gui.menuparadas.CrearParada;
 import died.izaguirre.haulet.tp.gui.utilities.CSSParser;
 import died.izaguirre.haulet.tp.tablas.Camino;
+import died.izaguirre.haulet.tp.tablas.Incidencia;
 import died.izaguirre.haulet.tp.tablas.Parada;
 
 public class ControladorGrafo {
@@ -25,6 +30,8 @@ public class ControladorGrafo {
 	private SwingViewer view = null;
 	private GrafoConPeso grafoPeso = null;
 	private static ControladorGrafo instance = null;
+	private static SpriteManager manager;
+	private ArrayList<Parada> deshabilitadas = new ArrayList<>();
 	
 	public static ControladorGrafo getInstance() 
 	{
@@ -38,7 +45,10 @@ public class ControladorGrafo {
 	}
 	
 	public Graph getGraph() {
-		if(graph == null) view = crearGrafo();
+		if(graph == null) { 
+			view = crearGrafo();
+			manager = new SpriteManager(graph);
+		}
 		return graph;
 	}
 	
@@ -155,6 +165,26 @@ public class ControladorGrafo {
 		graph.nodes().forEach(n -> {
 			despintarNodo(n.getId());
 		});
+	}
+
+	public List<List<Parada>> caminos(Parada origen, Parada destino)
+	{
+		List<List<Parada>> caminos = grafoPeso.caminos(origen, destino);
+		if(!deshabilitadas.isEmpty())
+		return caminos.stream().filter(it -> Collections.disjoint(it,deshabilitadas))
+		.collect(Collectors.toList());
+		else return caminos;
+	}
+	
+	public ArrayList<Parada> comprobarIncidencias() 
+	{
+		IncidenciaDaoImpl dao = new IncidenciaDaoImpl();
+		ArrayList<Incidencia> incidencias = dao.allActivas();
+		deshabilitadas = (ArrayList<Parada>) incidencias.stream()
+				.filter(it -> it.sucedeAhora()).map(Incidencia::getParada)
+				.collect(Collectors.toList());
+		return deshabilitadas;
+		
 	}
 	
 }
