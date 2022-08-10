@@ -1,3 +1,14 @@
+INSERT INTO tp.parada VALUES (14, 1, 'A');
+INSERT INTO tp.parada VALUES (15, 2, 'B');
+INSERT INTO tp.parada VALUES (16, 3, 'C');
+INSERT INTO tp.parada VALUES (17, 4, 'D');
+INSERT INTO tp.parada VALUES (18, 5, 'E');
+INSERT INTO tp.parada VALUES (20, 6, 'F');
+INSERT INTO tp.parada VALUES (21, 7, 'G');
+INSERT INTO tp.parada VALUES (22, 8, 'H');
+INSERT INTO tp.parada VALUES (23, 9, 'I');
+INSERT INTO tp.parada VALUES (24, 10, 'J');
+
 INSERT INTO tp.camino VALUES (25, 14, 15, 11, 11);
 INSERT INTO tp.camino VALUES (26, 14, 20, 2, 1);
 INSERT INTO tp.camino VALUES (27, 15, 21, 2, 1);
@@ -45,16 +56,6 @@ INSERT INTO tp.linea VALUES (50, 'Economica', 20, 6, 'El 25', 'Rojo', false, fal
 INSERT INTO tp.linea VALUES (51, 'Economica', 20, 6, 'El 26', 'Rojo', false, false, 1, 6);
 INSERT INTO tp.linea VALUES (52, 'Economica', 20, 6, 'El 27', 'Rojo', false, false, 1, 6);
 
-INSERT INTO tp.parada VALUES (14, 1, 'A');
-INSERT INTO tp.parada VALUES (15, 2, 'B');
-INSERT INTO tp.parada VALUES (16, 3, 'C');
-INSERT INTO tp.parada VALUES (17, 4, 'D');
-INSERT INTO tp.parada VALUES (18, 5, 'E');
-INSERT INTO tp.parada VALUES (20, 6, 'F');
-INSERT INTO tp.parada VALUES (21, 7, 'G');
-INSERT INTO tp.parada VALUES (22, 8, 'H');
-INSERT INTO tp.parada VALUES (23, 9, 'I');
-INSERT INTO tp.parada VALUES (24, 10, 'J');
 
 INSERT INTO tp.posee VALUES (14, 23, 0);
 INSERT INTO tp.posee VALUES (15, 23, 1);
