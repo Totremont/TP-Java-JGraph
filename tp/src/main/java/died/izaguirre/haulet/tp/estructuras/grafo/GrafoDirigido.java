@@ -37,7 +37,7 @@ public class GrafoDirigido {
 		return result;
 	}
 	
-	private Camino encontrarCamino(Parada or, Parada dest) {
+	public Camino encontrarCamino(Parada or, Parada dest) {
 		return aristas.stream().filter(a -> a.getOrigen().equals(or) && a.getDestino().equals(dest)).findFirst().get();
 	}
 
