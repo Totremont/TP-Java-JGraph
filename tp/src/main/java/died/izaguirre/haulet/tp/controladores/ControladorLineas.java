@@ -1,5 +1,6 @@
 package died.izaguirre.haulet.tp.controladores;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -206,8 +207,25 @@ public class ControladorLineas {
 			public void actionPerformed(ActionEvent e) {
 				Linea l;
 				if (camposRellenados() && !origenDestinoIguales()) {
+					
+					if(vista.getTrayectoCBx().getSelectedItem() == null) {
+						Frame errorFrame = new JFrame("Error de validación");
+						JOptionPane.showMessageDialog(errorFrame,
+								"No se pudo crear la línea, no hay un trayecto disponible para el origen y destino especificado.",
+								"Error de validación", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
 					List<Camino> trayectoPorAristas = caminosNombre.get(vista.getTrayectoCBx().getSelectedItem());
-
+					
+					if(trayectoPorAristas.isEmpty() || trayectoPorAristas == null) {
+						Frame errorFrame = new JFrame("Error de validación");
+						JOptionPane.showMessageDialog(errorFrame,
+								"No se pudo crear la línea, no hay un trayecto disponible para el origen y destino especificado.",
+								"Error de validación", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
 					// Obtengo las paradas
 					List<Parada> trayectoPorParadas = new ArrayList<Parada>();
 					for (Camino c : trayectoPorAristas) {
@@ -247,7 +265,7 @@ public class ControladorLineas {
 //					System.out.println("No se puede crear la linea");
 					JFrame errorFrame = new JFrame("Error de validación");
 					JOptionPane.showMessageDialog(errorFrame,
-							"No se pudo crear la línea, asegurese de completar todos los campos.",
+							"No se pudo crear la línea, asegurese de completar todos los campos y que el origen y destino sean diferentes.",
 							"Error de validación", JOptionPane.ERROR_MESSAGE);
 				}
 			}
