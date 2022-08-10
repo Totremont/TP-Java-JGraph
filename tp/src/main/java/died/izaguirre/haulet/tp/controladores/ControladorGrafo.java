@@ -167,11 +167,11 @@ public class ControladorGrafo {
 	}
 	
 	public void pintarNodo(Parada p) {
-		pintarNodo(p.getCalle());
+		pintarNodo(p.getId().toString());
 	}
 	
 	public void despintarNodo(Parada p) {
-		despintarNodo(p.getCalle());
+		despintarNodo(p.getId().toString());
 	}
 	
 	public void pintarNodos(List<Parada> paradas) {
@@ -183,12 +183,12 @@ public class ControladorGrafo {
 	}
 	
 	public void pintarTrayectoByParadas(List<Parada> trayecto) {
-		List<String> ids = trayecto.stream().map(t -> t.getCalle()).collect(Collectors.toList());
+		List<String> ids = trayecto.stream().map(t -> t.getId().toString()).collect(Collectors.toList());
 		graph.nodes().forEach(n -> {
-			if(ids.contains(n.getId())) {
-				pintarNodo(n.getId());
+			if(ids.contains(n.getId().toString())) {
+				pintarNodo(n.getId().toString());
 			}else {
-				despintarNodo(n.getId());
+				despintarNodo(n.getId().toString());
 			}
 		});
 	}
