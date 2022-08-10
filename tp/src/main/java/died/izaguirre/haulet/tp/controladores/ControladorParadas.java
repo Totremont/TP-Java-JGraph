@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
@@ -148,41 +149,73 @@ public class ControladorParadas {
 	}
 
 	private void agregarTablaListener() {
+		
+		JTable table = vista.getTable();
+		
+//		vista.getTable().addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				int fila = vista.getTable().rowAtPoint(e.getPoint());
+//				int columna = vista.getTable().columnAtPoint(e.getPoint());
+//
+//				if (fila < 0 || columna < 0)
+//					return;
+//
+//				if (columna == 2) { // Columna que contiene el boton eliminar
+//					Integer nroParada = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
+//					ParadaDao aux = new ParadaDaoImpl();
+//					try {
+//						Parada eliminar = paradasTabla.stream().filter(p -> p.getNroParada().equals(nroParada))
+//								.findFirst().get();
+//						aux.removeByNroParada(nroParada);
+//						grafo.eliminarParada(eliminar);
+//						eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
+//												// la parada de la BDD tambien
+//						paradasTabla.remove(eliminar);
+//						adyacentesDeUnaParada.remove(eliminar);
+//					} catch (SQLException excp) {
+//						JFrame error = new JFrame();
+//						JOptionPane.showMessageDialog(error,
+//								"No se pudo eliminar la parada, verifique no esté siendo utilizada por alguna línea o incidencia.",
+//								"Error.", JOptionPane.ERROR_MESSAGE);
+//					}
+//				} else {
+////					actualizarResumen(fila, columna);
+//				}
+//			}
+//		});
+		
+		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
-		vista.getTable().addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				int fila = vista.getTable().rowAtPoint(e.getPoint());
-				int columna = vista.getTable().columnAtPoint(e.getPoint());
-
-				if (fila < 0 || columna < 0)
-					return;
-
-				if (columna == 2) { // Columna que contiene el boton eliminar
-					Integer nroParada = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
+			public void valueChanged(ListSelectionEvent e) {
+				if((table.getSelectedColumn() == 2) && !e.getValueIsAdjusting() ) {
+					Integer nroParada = (Integer) table.getValueAt(table.getSelectedRow(), 0);
 					ParadaDao aux = new ParadaDaoImpl();
 					try {
 						Parada eliminar = paradasTabla.stream().filter(p -> p.getNroParada().equals(nroParada))
 								.findFirst().get();
 						aux.removeByNroParada(nroParada);
 						grafo.eliminarParada(eliminar);
-						eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
+						eliminarParada(table.getSelectedRow()); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
 												// la parada de la BDD tambien
 						paradasTabla.remove(eliminar);
 						adyacentesDeUnaParada.remove(eliminar);
+						table.clearSelection();
+						ultimaParadaSeleccionada = null;
+						adyacentesDeLaUltimaSeleccionada = new ArrayList<>();
 					} catch (SQLException excp) {
 						JFrame error = new JFrame();
 						JOptionPane.showMessageDialog(error,
 								"No se pudo eliminar la parada, verifique no esté siendo utilizada por alguna línea o incidencia.",
 								"Error.", JOptionPane.ERROR_MESSAGE);
 					}
-				} else {
-//					actualizarResumen(fila, columna);
 				}
 			}
+			
 		});
 		
-		ListSelectionModel rowSM = vista.getTable().getSelectionModel();
+		ListSelectionModel rowSM = table.getSelectionModel();
 		rowSM.addListSelectionListener(new ListSelectionListener() {
 
 		    public void valueChanged(ListSelectionEvent e) {
@@ -193,7 +226,7 @@ public class ControladorParadas {
 		            (ListSelectionModel)e.getSource();
 
 		        if (lsm.isSelectionEmpty()) {
-		            
+		            return;
 		        } else {
 		            int selectedRow = lsm.getMinSelectionIndex();
 		            actualizarResumen((Integer) selectedRow, 0);
@@ -230,30 +263,14 @@ public class ControladorParadas {
 	}
 
 	private void actualizarResumen(Integer fila, Integer columna) {
-		Integer nroParada = (Integer) vista.getTable().getValueAt(fila, 0);
-//		ControladorGrafo cg = ControladorGrafo.getInstance();
-//		CRUD dao = new ParadaDaoImpl();
-//		try {
-//			Parada parada = ((ParadaDao) dao).findByNroParada(nroParada);
-//			ultimaParadaSeleccionada = parada;
-//
-//			adyacentesDeLaUltimaSeleccionada = cg.getGrafoPeso().adyacentesDe(parada).stream()
-//					.collect(Collectors.toList());
-//			Integer adyacentesCount = adyacentesDeLaUltimaSeleccionada.size();
-//
-//			vista.getCalleResumenTxt().setText(parada.getCalle());
-//			vista.getParadasAdyResumenTxt().setText(adyacentesCount.toString());
-//			vista.getNumeroParadaResumenTxt().setText("Número# " + parada.getNroParada().toString());
-//		} catch (SQLException e) {
-//			System.out.println("Problema al encontrar el numero de parada en la bdd.");
-//		}		
-		Parada p = paradasTabla.stream().filter(x -> x.getNroParada().equals(nroParada)).findFirst().get();
-		
-		ultimaParadaSeleccionada = p;
-		adyacentesDeLaUltimaSeleccionada = adyacentesDeUnaParada.get(p);
-		vista.getCalleResumenTxt().setText(p.getCalle());
-		vista.getParadasAdyResumenTxt().setText(""+adyacentesDeLaUltimaSeleccionada.size());
-		vista.getNumeroParadaResumenTxt().setText("Número# " + p.getNroParada().toString());
+			Integer nroParada = (Integer) vista.getTable().getValueAt(fila, 0);
+			Parada p = paradasTabla.stream().filter(x -> x.getNroParada().equals(nroParada)).findFirst().get();
+			
+			ultimaParadaSeleccionada = p;
+			adyacentesDeLaUltimaSeleccionada = adyacentesDeUnaParada.get(p);
+			vista.getCalleResumenTxt().setText(p.getCalle());
+			vista.getParadasAdyResumenTxt().setText(""+adyacentesDeLaUltimaSeleccionada.size());
+			vista.getNumeroParadaResumenTxt().setText("Número# " + p.getNroParada().toString());
 
 	}
 
