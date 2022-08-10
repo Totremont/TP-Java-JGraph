@@ -201,14 +201,17 @@ public class ControladorCrearCamino {
 					caux.add(c);
 					Camino nuevo = caux.find(c.getOrigen(), c.getDestino());
 					cg.agregarCamino(nuevo);
-					
+
 					agregarCaminoTabla(c);
 				} catch (SQLException excp) {
-					System.out.println(
-							"No se pudo crear el camino, probablemente porque ya exista uno entre esas dos paradas");
+					JOptionPane.showMessageDialog(vista,
+							"No se pudo crear el camino, verifique que no exista ya uno entre las paradas elegidas.",
+							"Error de validación.", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				System.out.println("No se puede crear el camino.");
+				JOptionPane.showMessageDialog(vista,
+						"No se pudo crear el camino, complete todos los campos y verifique que el origen y destino sean distintos.",
+						"Error de validación.", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}
