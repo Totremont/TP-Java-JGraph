@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import died.izaguirre.haulet.tp.dao.impl.IncidenciaDaoImpl;
 import died.izaguirre.haulet.tp.estructuras.matriz.Matriz;
 import died.izaguirre.haulet.tp.tablas.Camino;
+import died.izaguirre.haulet.tp.tablas.Incidencia;
 import died.izaguirre.haulet.tp.tablas.Parada;
 
 public class GrafoDirigido {
@@ -16,6 +18,7 @@ public class GrafoDirigido {
 	protected ArrayList<Camino> aristas;
 	protected Matriz adyacencia; // El orden de las filas y columnas es el orden de los nodos
 	protected ArrayList<ArrayList<Parada>> caminos;
+	protected List<Parada> deshabilitadas = new ArrayList<>();
 
 	public GrafoDirigido(ArrayList<Parada> nodos, ArrayList<Camino> aristas) {
 		super();
@@ -137,6 +140,16 @@ public class GrafoDirigido {
 				}
 			}
 		}
+	}
+	
+	private void comprobarIncidencias() 
+	{
+		IncidenciaDaoImpl dao = new IncidenciaDaoImpl();
+		ArrayList<Incidencia> incidencias = dao.allActivas();
+		deshabilitadas = incidencias.stream()
+				.filter(it -> it.sucedeAhora()).map(Incidencia::getParada)
+				.collect(Collectors.toList());				
+		
 	}
 	
 	public void eliminarNodo(Parada nodo) 

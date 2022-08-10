@@ -28,7 +28,6 @@ public class VerInfoLinea extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField nombreLinea;
-	private JTextField capSentadoTxt;
 	private MenuVerLineas menu;
 	private Integer idLinea;
 	private ControladorInfoLineas controlador;
@@ -44,6 +43,7 @@ public class VerInfoLinea extends JDialog {
 	private JButton salirButton;
 	private JLabel capParadoLabel;
 	private JSpinner paradoSpinner;
+	private JSpinner sentadoSpinner;
 
 	/**
 	 * Launch the application.
@@ -243,15 +243,13 @@ public class VerInfoLinea extends JDialog {
 			contentPanel.add(capSentadoLabel, gbc_capSentadoLabel);
 		}
 		{
-			capSentadoTxt = new JTextField();
-			capSentadoTxt.setEditable(false);
-			GridBagConstraints gbc_capSentadoTxt = new GridBagConstraints();
-			gbc_capSentadoTxt.insets = new Insets(0, 0, 5, 5);
-			gbc_capSentadoTxt.fill = GridBagConstraints.HORIZONTAL;
-			gbc_capSentadoTxt.gridx = 2;
-			gbc_capSentadoTxt.gridy = 3;
-			contentPanel.add(capSentadoTxt, gbc_capSentadoTxt);
-			capSentadoTxt.setColumns(10);
+			sentadoSpinner = new JSpinner();
+			sentadoSpinner.setModel(new SpinnerNumberModel(new Integer(10), new Integer(1), null, new Integer(1)));
+			GridBagConstraints gbc_sentadoSpinner = new GridBagConstraints();
+			gbc_sentadoSpinner.insets = new Insets(0, 0, 5, 5);
+			gbc_sentadoSpinner.gridx = 2;
+			gbc_sentadoSpinner.gridy = 3;
+			contentPanel.add(sentadoSpinner, gbc_sentadoSpinner);
 		}
 		{
 			capParadoLabel = new JLabel("Cap. Parado");
@@ -321,13 +319,13 @@ public class VerInfoLinea extends JDialog {
 		this.nombreLinea = nombreLinea;
 	}
 
-	public JTextField getCapSentadoTxt() {
-		return capSentadoTxt;
+	public JSpinner getCapSentadoTxt() {
+		return sentadoSpinner;
 	}
 
-	public void setCapSentadoTxt(JTextField capSentadoTxt) {
-		this.capSentadoTxt = capSentadoTxt;
-	}
+//	public void setCapSentadoTxt(JTextField capSentadoTxt) {
+//		this.capSentadoTxt = capSentadoTxt;
+//	}
 
 	public MenuVerLineas getMenu() {
 		return menu;

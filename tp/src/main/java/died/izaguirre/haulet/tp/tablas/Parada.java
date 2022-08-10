@@ -38,6 +38,10 @@ public class Parada {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	@Override
 	public String toString() {

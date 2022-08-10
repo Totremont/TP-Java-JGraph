@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -483,13 +484,49 @@ public class ControladorLineas {
 		LineaDaoImpl lineaDao = new LineaDaoImpl();
 		return lineaDao.getAll();
 	}
-
-	public static List<List<Posee>> getTrayectoLineas(List<Linea> lineas2) {
+									//Este metodo contempla las paradas deshabilitadas y sugiere nuevo trayecto
+	public static List<List<Parada>> getTrayectoLineas(List<Linea> lineas2) 
+	{
 		PoseeDaoImpl poseeDao = new PoseeDaoImpl();
-		List<List<Posee>> aux = new ArrayList<>();
+		ControladorGrafo grafo = ControladorGrafo.getInstance();
+		GrafoConPeso grafoPeso = grafo.getGrafoPeso();
+		List<Parada> deshabilitadas= grafo.comprobarIncidencias();
+		
+		List<List<Parada>> aux = new ArrayList<>();
 		lineas2.forEach(it -> {
-			aux.add(poseeDao.paradasDeLinea(it.getId()));
-		});
+			aux.add(poseeDao.paradasDeLinea(it.getId()).stream()
+					.map(Posee::getParada).collect(Collectors.toList()));
+		});	//Obtiene las paradas por las que pasa cada linea
+		int indexIt = 0;
+		if(!deshabilitadas.isEmpty())
+		for(List<Parada> it : aux)
+		{
+			if(!Collections.disjoint(it, deshabilitadas)) 	//Si una de esas paradas esta deshabilitada...
+			{
+				List<List<Parada>> alternativos = grafo.caminos(it.get(0), it.get(it.size()-1));	//Se busca otro camino
+				if(alternativos.isEmpty()) 
+				{
+					aux.set(indexIt, new ArrayList<>());
+				}else 
+				{
+					//Busca camino mas corto
+					List<List<Camino>> caminos = new ArrayList<>();
+					alternativos.forEach(al -> caminos.add(grafoPeso.toListCaminos(al)));
+					int distanciaMinima = grafoPeso.distanciaTotal(caminos.get(0));
+					int posMinima = 0;
+					if(caminos.size() > 1) for(int i = 1; i<caminos.size(); i++) 
+					{
+						int distancia = grafoPeso.distanciaTotal(caminos.get(i));
+						if(distanciaMinima > distancia) { 
+							distanciaMinima = distancia;
+							posMinima = i;
+						}
+					}
+					aux.set(indexIt,alternativos.get(posMinima));
+				}
+			}
+			indexIt++;
+		};
 		return aux;
 
 	}

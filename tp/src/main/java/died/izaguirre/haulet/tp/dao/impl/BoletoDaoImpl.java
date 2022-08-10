@@ -27,7 +27,7 @@ public class BoletoDaoImpl implements BoletoDao {
 		try (PreparedStatement pstm = con.prepareStatement("INSERT INTO tp.boleto (id_linea,monto) VALUES (?,?)",
 				PreparedStatement.RETURN_GENERATED_KEYS)) {
 			pstm.setInt(1, t.getLinea().getId());
-			pstm.setDouble(2, t.getMonto());
+			pstm.setInt(2, t.getMonto());
 			pstm.executeUpdate();
 			ResultSet rs = pstm.getGeneratedKeys();
 			if(rs.next()) t.setId(rs.getInt(1));
@@ -67,7 +67,7 @@ public class BoletoDaoImpl implements BoletoDao {
 				Boleto auxBoleto = new Boleto();
 				auxBoleto.setId(rs.getInt(1));
 				auxBoleto.setLinea(this.getLinea(rs.getInt(2)));
-				auxBoleto.setMonto(rs.getDouble(3));
+				auxBoleto.setMonto(rs.getInt(3));
 				boletos.add(auxBoleto);
 			}
 
@@ -93,7 +93,7 @@ public class BoletoDaoImpl implements BoletoDao {
 				auxBoleto = new Boleto();
 				auxBoleto.setId(rs.getInt(1));
 				auxBoleto.setLinea(this.getLinea(rs.getInt(2)));
-				auxBoleto.setMonto(rs.getDouble(3));
+				auxBoleto.setMonto(rs.getInt(3));
 			}
 
 		} catch (SQLException e) {
