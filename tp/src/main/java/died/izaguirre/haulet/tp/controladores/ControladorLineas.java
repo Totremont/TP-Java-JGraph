@@ -209,7 +209,7 @@ public class ControladorLineas {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Linea l;
-				if (camposRellenados() && !origenDestinoIguales()) {
+				if (camposRellenados()) {
 					
 					if(vista.getTrayectoCBx().getSelectedItem() == null) {
 						Frame errorFrame = new JFrame("Error de validación");
@@ -268,7 +268,7 @@ public class ControladorLineas {
 //					System.out.println("No se puede crear la linea");
 					JFrame errorFrame = new JFrame("Error de validación");
 					JOptionPane.showMessageDialog(errorFrame,
-							"No se pudo crear la línea, asegurese de completar todos los campos y que el origen y destino sean diferentes.",
+							"No se pudo crear la línea, asegurese de completar todos los campos.",
 							"Error de validación", JOptionPane.ERROR_MESSAGE);
 				}
 			}
