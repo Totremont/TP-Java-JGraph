@@ -117,6 +117,7 @@ public class ControladorParadas {
 		nuevaParada[2] = imgDelete;
 
 		vista.getTableModel().addRow(nuevaParada);
+		paradasTabla.add(p);
 	}
 
 	private void filtrarTablaListener() {
