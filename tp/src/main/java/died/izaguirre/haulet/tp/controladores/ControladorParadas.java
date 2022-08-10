@@ -6,7 +6,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
@@ -34,6 +36,8 @@ public class ControladorParadas {
 	private ParadasPanel vista;
 	private static List<Parada> paradas = new ArrayList<Parada>();
 	private List<Parada> adyacentesDeLaUltimaSeleccionada;
+	private List<Parada> paradasTabla = new ArrayList<Parada>();
+	private Map<Parada, List<Parada>> adyacentesDeUnaParada = new HashMap<>();
 	private Parada ultimaParadaSeleccionada;
 	private ControladorGrafo grafo = ControladorGrafo.getInstance();
 
@@ -152,11 +156,14 @@ public class ControladorParadas {
 					Integer nroParada = (Integer) ((DefaultTableModel) vista.getTable().getModel()).getValueAt(fila, 0);
 					ParadaDao aux = new ParadaDaoImpl();
 					try {
-						Parada eliminar = aux.findByNroParada(nroParada);
+						Parada eliminar = paradasTabla.stream().filter(p -> p.getNroParada().equals(nroParada))
+								.findFirst().get();
 						aux.removeByNroParada(nroParada);
 						grafo.eliminarParada(eliminar);
 						eliminarParada(fila); // Metodo que elimina una fila de la tabla (debe encargarse de eliminar
 												// la parada de la BDD tambien
+						paradasTabla.remove(eliminar);
+						adyacentesDeUnaParada.remove(eliminar);
 					} catch (SQLException excp) {
 						JFrame error = new JFrame();
 						JOptionPane.showMessageDialog(error,
@@ -181,9 +188,15 @@ public class ControladorParadas {
 	private void cargarTabla() {
 		ParadaDao aux = new ParadaDaoImpl();
 		paradas = aux.getAll();
-
-		for (Parada p : paradas)
+		ControladorGrafo cg = ControladorGrafo.getInstance();
+		
+		for (Parada p : paradas) {
 			agregarParadaTabla(p);
+			paradasTabla.add(p);
+			GrafoConPeso gcp = cg.getGrafoPeso();
+			List<Parada> listAux = gcp.adyacentesDe(p);
+			adyacentesDeUnaParada.put(p, listAux);
+		}
 	}
 
 	public static ArrayList<Parada> buscarParadas() {
@@ -193,22 +206,29 @@ public class ControladorParadas {
 
 	private void actualizarResumen(Integer fila, Integer columna) {
 		Integer nroParada = (Integer) vista.getTable().getValueAt(fila, 0);
-		ControladorGrafo cg = ControladorGrafo.getInstance();
-		CRUD dao = new ParadaDaoImpl();
-		try {
-			Parada parada = ((ParadaDao) dao).findByNroParada(nroParada);
-			ultimaParadaSeleccionada = parada;
-
-			adyacentesDeLaUltimaSeleccionada = cg.getGrafoPeso().adyacentesDe(parada).stream()
-					.collect(Collectors.toList());
-			Integer adyacentesCount = adyacentesDeLaUltimaSeleccionada.size();
-
-			vista.getCalleResumenTxt().setText(parada.getCalle());
-			vista.getParadasAdyResumenTxt().setText(adyacentesCount.toString());
-			vista.getNumeroParadaResumenTxt().setText("Número# " + parada.getNroParada().toString());
-		} catch (SQLException e) {
-			System.out.println("Problema al encontrar el numero de parada en la bdd.");
-		}
+//		ControladorGrafo cg = ControladorGrafo.getInstance();
+//		CRUD dao = new ParadaDaoImpl();
+//		try {
+//			Parada parada = ((ParadaDao) dao).findByNroParada(nroParada);
+//			ultimaParadaSeleccionada = parada;
+//
+//			adyacentesDeLaUltimaSeleccionada = cg.getGrafoPeso().adyacentesDe(parada).stream()
+//					.collect(Collectors.toList());
+//			Integer adyacentesCount = adyacentesDeLaUltimaSeleccionada.size();
+//
+//			vista.getCalleResumenTxt().setText(parada.getCalle());
+//			vista.getParadasAdyResumenTxt().setText(adyacentesCount.toString());
+//			vista.getNumeroParadaResumenTxt().setText("Número# " + parada.getNroParada().toString());
+//		} catch (SQLException e) {
+//			System.out.println("Problema al encontrar el numero de parada en la bdd.");
+//		}		
+		Parada p = paradasTabla.stream().filter(x -> x.getNroParada().equals(nroParada)).findFirst().get();
+		
+		ultimaParadaSeleccionada = p;
+		adyacentesDeLaUltimaSeleccionada = adyacentesDeUnaParada.get(p);
+		vista.getCalleResumenTxt().setText(p.getCalle());
+		vista.getParadasAdyResumenTxt().setText(""+adyacentesDeLaUltimaSeleccionada.size());
+		vista.getNumeroParadaResumenTxt().setText("Número# " + p.getNroParada().toString());
 
 	}
 
