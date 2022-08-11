@@ -3,6 +3,8 @@ package died.izaguirre.haulet.tp.controladores;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -65,6 +67,7 @@ public class ControladorCrearParada {
 					return;
 				}
 				vista.getPanelPadre().getControlador().agregarParadaTabla(p);
+				vista.getPanelPadre().getControlador().agregarParadaAlMap(p, new ArrayList<Parada>());
 				vista.dispose();
 				JFrame creada = new JFrame();
 				JOptionPane.showMessageDialog(creada, "Parada creada exitosamente.", "Información.",

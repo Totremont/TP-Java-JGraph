@@ -1,0 +1,20 @@
+Configuración de la base de datos:
+
+Utilizamos la base de datos de PostgresSQL.
+Para poder conectarse hay que configurar unos parámetros en el código que se encuentran en la clase DBConnection, dentro del paquete died.izaguirre.haulet.tp.dao.
+
+Dichos parámetros son los atributos de clase:
+
+	private static final String DRIVER = "";
+	private static final String url="";
+	private static final String user="";
+	private static final String pw="";
+
+Ya tienen valores por defecto pero fueron utilizados para una base de datos local, con el fin de hacer pruebas.
+
+En el primer atributo cargamos el driver de postgresql, no debería modificarse a menos que se utilize otro motor de base de datos.
+
+En el atributo de url va el enlace a la base de datos, con su respectivo protocolo 
+"jdbc:postgresql://" seguido del enlace a la bdd con su puerto.
+
+En el atributo user y pw van, respectivamente, el usuario y contraseña para conectarse con la base de datos.

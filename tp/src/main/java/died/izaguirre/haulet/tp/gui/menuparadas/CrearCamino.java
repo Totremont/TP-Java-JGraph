@@ -306,16 +306,32 @@ public class CrearCamino extends JDialog {
 		this.crearButton = crearButton;
 	}
 
-	public void setDestinoCBx(JComboBox destinoCBx) {
+	public void setSalirButton(JButton salirButton) {
+		this.salirButton = salirButton;
+	}
+
+	public ParadasPanel getPanelPadre() {
+		return panelPadre;
+	}
+
+	public void setPanelPadre(ParadasPanel panelPadre) {
+		this.panelPadre = panelPadre;
+	}
+
+	public TableRowSorter<TableModel> getTableSorter() {
+		return tableSorter;
+	}
+
+	public void setTableSorter(TableRowSorter<TableModel> tableSorter) {
+		this.tableSorter = tableSorter;
+	}
+
+	public void setDestinoCBx(JComboBox<Parada> destinoCBx) {
 		this.destinoCBx = destinoCBx;
 	}
 
-	public void setOrigenCBx(JComboBox origenCBx) {
+	public void setOrigenCBx(JComboBox<Parada> origenCBx) {
 		this.origenCBx = origenCBx;
-	}
-
-	public void setSalirButton(JButton salirButton) {
-		this.salirButton = salirButton;
 	}
 
 }
