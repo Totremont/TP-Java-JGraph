@@ -204,6 +204,7 @@ public class ControladorParadas {
 						table.clearSelection();
 						ultimaParadaSeleccionada = null;
 						adyacentesDeLaUltimaSeleccionada = new ArrayList<>();
+						resumenInicial();
 					} catch (SQLException excp) {
 						JFrame error = new JFrame();
 						JOptionPane.showMessageDialog(error,
@@ -273,5 +274,41 @@ public class ControladorParadas {
 			vista.getNumeroParadaResumenTxt().setText("Número# " + p.getNroParada().toString());
 
 	}
+	
+	public void agregarParadaAlMap(Parada p, List<Parada> paradas) {
+		adyacentesDeUnaParada.put(p, paradas);
+	}
 
+	public static ParadaDao getParadasDao() {
+		return paradasDao;
+	}
+
+	public ParadasPanel getVista() {
+		return vista;
+	}
+
+	public static List<Parada> getParadas() {
+		return paradas;
+	}
+
+	public List<Parada> getAdyacentesDeLaUltimaSeleccionada() {
+		return adyacentesDeLaUltimaSeleccionada;
+	}
+
+	public List<Parada> getParadasTabla() {
+		return paradasTabla;
+	}
+
+	public Map<Parada, List<Parada>> getAdyacentesDeUnaParada() {
+		return adyacentesDeUnaParada;
+	}
+
+	public Parada getUltimaParadaSeleccionada() {
+		return ultimaParadaSeleccionada;
+	}
+
+	public ControladorGrafo getGrafo() {
+		return grafo;
+	}
+	
 }

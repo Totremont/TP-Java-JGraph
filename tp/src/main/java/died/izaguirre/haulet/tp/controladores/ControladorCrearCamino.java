@@ -201,7 +201,8 @@ public class ControladorCrearCamino {
 					caux.add(c);
 					Camino nuevo = caux.find(c.getOrigen(), c.getDestino());
 					cg.agregarCamino(nuevo);
-
+					//TODO
+					vista.getPanelPadre().getControlador().getAdyacentesDeUnaParada().get(origen).add(destino);
 					agregarCaminoTabla(c);
 				} catch (SQLException excp) {
 					JOptionPane.showMessageDialog(vista,
