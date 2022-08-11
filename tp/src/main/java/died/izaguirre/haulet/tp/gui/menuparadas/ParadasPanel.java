@@ -254,6 +254,9 @@ public class ParadasPanel extends JPanel {
 		scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		add(scrollPane, BorderLayout.CENTER);
 		table.getTableHeader().setReorderingAllowed(false);
+		tableSorter.setSortable(0, false);
+		tableSorter.setSortable(1, false);
+		tableSorter.setSortable(2, false);
 //		table.setColumnSelectionAllowed(false);
 		calleResumenTxt.setPreferredSize(lblNewLabel_3.getPreferredSize());
 		controlador = new ControladorParadas(this);

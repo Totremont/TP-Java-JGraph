@@ -66,6 +66,9 @@ public class ControladorCrearCamino {
 						if (!existeLinaQuePasaPor(or, dest)) {
 							eliminarDeBdd(or, dest);
 							eliminarDeTabla(fila);
+							Parada key = vista.getPanelPadre().getControlador().getAdyacentesDeUnaParada().keySet().stream().filter(k -> k.equals(or)).findFirst().get();
+                            Parada aEliminar = vista.getPanelPadre().getControlador().getAdyacentesDeUnaParada().keySet().stream().filter(k -> k.equals(dest)).findFirst().get();
+                            vista.getPanelPadre().getControlador().getAdyacentesDeUnaParada().get(key).remove(aEliminar);
 						} else {
 							JOptionPane.showMessageDialog(vista,
 									"No se puede eliminar este camino, verifique que no esté siendo utilizador por alguna línea.",
@@ -202,7 +205,8 @@ public class ControladorCrearCamino {
 					Camino nuevo = caux.find(c.getOrigen(), c.getDestino());
 					cg.agregarCamino(nuevo);
 					//TODO
-					vista.getPanelPadre().getControlador().getAdyacentesDeUnaParada().get(origen).add(destino);
+					Parada key = vista.getPanelPadre().getControlador().getAdyacentesDeUnaParada().keySet().stream().filter(k -> k.equals(origen)).findFirst().get();
+                    vista.getPanelPadre().getControlador().getAdyacentesDeUnaParada().get(key).add(destino);
 					agregarCaminoTabla(c);
 				} catch (SQLException excp) {
 					JOptionPane.showMessageDialog(vista,

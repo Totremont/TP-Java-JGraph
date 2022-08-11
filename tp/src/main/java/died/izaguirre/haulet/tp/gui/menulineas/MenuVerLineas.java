@@ -444,8 +444,15 @@ public class MenuVerLineas extends JPanel {
 		table.getColumnModel().getColumn(1).setCellRenderer(alinear);
 		table.getColumnModel().getColumn(2).setCellRenderer(alinear);
 		tableSorter = new TableRowSorter<TableModel>(table.getModel());
+		tableSorter.setSortable(0, false);
+		tableSorter.setSortable(1, false);
+		tableSorter.setSortable(2, false);
+		tableSorter.setSortable(3, false);
+		tableSorter.setSortable(4, false);
+		tableSorter.setSortable(5, false);
 		table.setRowSorter(tableSorter);
 		scrollPane.setViewportView(table);
+		table.getTableHeader().setReorderingAllowed(false);
 
 		controlador = new ControladorLineas(this);
 	}

@@ -142,7 +142,7 @@ public class CrearCamino extends JDialog {
 				crear.add(destinoCBx, gbc_destinoCBx);
 			}
 			{
-				JLabel lblNewLabel_4 = new JLabel("Capacidad");
+				JLabel lblNewLabel_4 = new JLabel("Velocidad");
 				GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
 				gbc_lblNewLabel_4.anchor = GridBagConstraints.WEST;
 				gbc_lblNewLabel_4.insets = new Insets(0, 0, 5, 5);
@@ -198,7 +198,7 @@ public class CrearCamino extends JDialog {
 				{
 					table = new JTable();
 					tableModel = new DefaultTableModel(new Object[][] {},
-							new String[] { "Origen", "Destino", "Capacidad", "Distancia [km]", "Eliminar" }) {
+							new String[] { "Origen", "Destino", "Velocidad [Km/h]", "Distancia [km]", "Eliminar" }) {
 						/**
 								 * 
 								 */
@@ -239,6 +239,11 @@ public class CrearCamino extends JDialog {
 		tableSorter = new TableRowSorter<>(tableModel);
 		table.setRowSorter(tableSorter);
 		table.getTableHeader().setReorderingAllowed(false);
+		tableSorter.setSortable(0, false);
+		tableSorter.setSortable(1, false);
+		tableSorter.setSortable(2, false);
+		tableSorter.setSortable(3, false);
+		tableSorter.setSortable(4, false);
 		setLocationRelativeTo(panelPadre.getVentanaPadre());
 	}
 

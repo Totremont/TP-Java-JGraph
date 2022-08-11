@@ -24,7 +24,7 @@ public class GrafoDirigido {
 		super();
 		this.nodos = nodos;
 		this.aristas = aristas;
-		this.adyacencia = new Matriz(nodos.size());
+		//this.adyacencia = new Matriz(nodos.size());
 	}
 
 	public List<Camino> toListCaminos(List<Parada> paradas){
@@ -84,6 +84,7 @@ public class GrafoDirigido {
 	}
 
 	public Matriz getMatrizAdyacencia() {
+		this.adyacencia = new Matriz(nodos.size());
 		listaCaminos();
 		this.adyacencia.modificarMatriz((i, j) -> {
 			if (caminos.get(i).contains(nodos.get(j)))

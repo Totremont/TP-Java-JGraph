@@ -381,6 +381,7 @@ public class ControladorLineas {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
 				int fila = vista.getTable().rowAtPoint(e.getPoint());
 				int columna = vista.getTable().columnAtPoint(e.getPoint());
 

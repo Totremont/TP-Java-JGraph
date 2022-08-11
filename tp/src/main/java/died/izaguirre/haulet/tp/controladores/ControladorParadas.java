@@ -224,7 +224,7 @@ public class ControladorParadas {
 		    public void valueChanged(ListSelectionEvent e) {
 		        //Ignore extra messages.
 		        if (e.getValueIsAdjusting()) return;
-
+				ControladorGrafo.getInstance().despintar();
 		        ListSelectionModel lsm =
 		            (ListSelectionModel)e.getSource();
 
