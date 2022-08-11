@@ -115,6 +115,7 @@ public class PrincipalPanel extends JPanel {
 		despintar();
 		cargarParadas();
 		cargarLineas();
+		pintarIncidencias();
 	}
 	
 	private void comprarBoleto() 
@@ -160,6 +161,12 @@ public class PrincipalPanel extends JPanel {
 		float tiempoTotal = grafoPeso.tiempoTotal(camino);
 		String formattedString = String.format("%.2f", tiempoTotal);
 		tiempoEstimado.setText(formattedString + " Hs");
+	}
+	
+	private void pintarIncidencias() 
+	{
+		List<Parada> deshabilitadas = controladorGrafo.comprobarIncidencias();
+		controladorGrafo.pintarIncidencias(deshabilitadas);
 	}
 
 	

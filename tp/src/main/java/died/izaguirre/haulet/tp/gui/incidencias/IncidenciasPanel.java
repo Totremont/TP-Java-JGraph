@@ -7,7 +7,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
-
+import died.izaguirre.haulet.tp.controladores.ControladorGrafo;
 import died.izaguirre.haulet.tp.controladores.ControladorIncidencia;
 
 import died.izaguirre.haulet.tp.gui.utilities.TableUtility;
@@ -82,6 +82,7 @@ public class IncidenciasPanel extends JPanel {
 	public IncidenciasPanel(JFrame padre) {
 		
 		this.padre = padre;
+		ControladorGrafo.getInstance().despintarIncidencias();
 		crearInterfaz();
 		buscarIncidencias();
 		actualizarTabla();

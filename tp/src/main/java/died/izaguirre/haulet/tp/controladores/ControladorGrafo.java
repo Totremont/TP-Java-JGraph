@@ -2,15 +2,18 @@ package died.izaguirre.haulet.tp.controladores;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.graphstream.algorithm.Toolkit;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.spriteManager.Sprite;
 import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.view.Viewer;
@@ -126,6 +129,8 @@ public class ControladorGrafo {
 
 		graph.setAttribute("ui.quality");
 		graph.setAttribute("ui.antialias");
+		
+		manager = new SpriteManager(graph);
 
 		return viewer; // Objecto que muestra el grafo. Se acopla al resto del GUI
 
@@ -141,8 +146,26 @@ public class ControladorGrafo {
 		});
 
 	}
+	
+	public void pintarIncidencias(List<Parada> paradas) 
+	{
+		int pos = 0;
+		for(Node node : graph) 
+		{
+			boolean valor = paradas.stream().anyMatch(p -> p.getId().toString().equals(node.getId()));
+			if(valor) 
+			{
+				Sprite sprite = manager.addSprite("deshabilitada" + pos);
+				//double p1[] = Toolkit.nodePosition(it);
+				//sprite.setPosition(p1[0], p1[1], p1[2]);
+				sprite.attachToNode(node.getId());
+				pos++;
+			}
+		}
+	}
 
 	public void despintar() {
+		
 		graph.edges().forEach(it -> {
 			if (it.hasAttribute("ui.class"))
 				it.removeAttribute("ui.class");
@@ -151,6 +174,23 @@ public class ControladorGrafo {
 			if (it.hasAttribute("ui.class"))
 				it.removeAttribute("ui.class");
 		});
+	}
+	
+	public void despintarIncidencias() 
+	{
+		List<Sprite> sprites = new ArrayList<>();
+		if(manager.getSpriteCount() > 0) 
+		{
+			Iterator itr = manager.spriteIterator();
+			do 
+			{
+				Sprite element = (Sprite) itr.next();
+				sprites.add(element);
+	        	element.detach();
+			}
+			while(itr.hasNext());
+			sprites.forEach(it -> manager.removeSprite(it.getId()));
+		}
 	}
 
 	public void pintarNodo(String id) {

@@ -55,6 +55,7 @@ public class ControladorParadas {
 		// this();
 		this.vista = vista;
 		adyacentesDeLaUltimaSeleccionada = new ArrayList<Parada>();
+		grafo.despintarIncidencias();
 		inicializar();
 	}
 

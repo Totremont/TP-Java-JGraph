@@ -10,7 +10,7 @@ node {
     fill-color: DarkGoldenRod;
     text-color : Azure;
     text-size: 12;
-    text-alignment : above;
+    text-alignment : at-left;
     text-background-color : #5F9EA080;
     text-background-mode : rounded-box;
 
@@ -35,3 +35,11 @@ edge.marked {
 node.marked {
 	fill-color : MediumSpringGreen;
 }
+
+sprite {
+	shape: box;
+	size: 15px, 15px;
+	fill-mode: image-scaled;
+	fill-image: url('exclamation.png');
+}
+

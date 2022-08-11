@@ -74,6 +74,7 @@ public class ControladorLineas {
 	}
 
 	private void inicializarList() {
+		controladorGrafo.despintarIncidencias();
 		tipoLineaListener(); // Para habilitar/deshabilitar los botones wifi y aire
 		crearLineaListener(); // Para generar la linea y mostrarla cuando se crea
 		crearTablaListener(); // Para detectar si elijo Info. - Ver camino - Eliminar en la tabla
