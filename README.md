@@ -25,6 +25,15 @@ temporalmente el uso de ciertas rutas (por ejemplo, por una protesta o manifesta
 Además, se pueden agregar nuevos nodos (paradas) y aristas (rutas, calles) al grafo que compone la ciudad y visualizar esos
 cambios directamente.
 
+![imagen](https://github.com/Totremont/TP-Java-JGraph/assets/68341449/2eb886e7-66a1-45a4-a23c-e599ed808e77)
+
+![imagen](https://github.com/Totremont/TP-Java-JGraph/assets/68341449/b4949afe-0757-4288-b7f7-fe272cf7f453)
+
+![imagen](https://github.com/Totremont/TP-Java-JGraph/assets/68341449/12504246-6aaa-409c-8221-0f14b7a2a00b)
+
+
+
+
 ## Cuestiones de configuración
 
 Para poder correr el programa se debe tener en consideración lo siguiente.
